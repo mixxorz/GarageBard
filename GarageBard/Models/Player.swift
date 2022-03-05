@@ -58,13 +58,15 @@ class BardEngine {
         // Convoluted way to delete all tracks except the current one
         // Delete tracks up to the selected track's index
         if track.id != 0 {
-            for i in 0...track.id - 1 {
+            for _ in 0...track.id - 1 {
                 sequencer.deleteTrack(trackIndex: 0)
             }
         }
         // 0th track is now our selected track. Delete the rest
-        for i in 1...sequencer.trackCount - 1 {
-            sequencer.deleteTrack(trackIndex: 1)
+        if sequencer.trackCount > 1 {
+            for _ in 1...sequencer.trackCount - 1 {
+                sequencer.deleteTrack(trackIndex: 1)
+            }
         }
         
         sequencer.rewind()
@@ -107,7 +109,8 @@ class Player {
     func setSong(song: Song) {
         songValue.value = song
         
-        if trackValue.value == nil {
+        // Set default track when setting a song
+        if trackValue.value == nil || !song.tracks.contains(trackValue.value!) {
             trackValue.value = song.tracks[0]
         }
         
