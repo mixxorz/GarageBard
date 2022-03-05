@@ -95,6 +95,11 @@ class Player {
     
     func setSong(song: Song) {
         songValue.value = song
+        
+        if trackValue.value == nil {
+            trackValue.value = song.tracks[0]
+        }
+        
         isPlayingValue.value = false
         bardEngine.loadSong(song: song, track: song.tracks[0])
     }

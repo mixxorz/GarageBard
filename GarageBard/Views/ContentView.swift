@@ -15,6 +15,8 @@ func space(_ value: Int) -> CGFloat {
 struct ContentView: View {
     @ObservedObject var model = PlayerViewModel()
     
+    @State var color = 0
+    
     var body: some View {
         VStack {
             VStack {
@@ -31,8 +33,7 @@ struct ContentView: View {
                         selection: $model.track,
                         content: {
                             ForEach(model.song?.tracks ?? []) { track in
-                                Text(track.name.capitalized)
-                                    .tag(track)
+                                Text(track.name).tag(track as Track?)
                             }
                         }
                     )
