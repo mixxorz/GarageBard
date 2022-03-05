@@ -15,6 +15,18 @@ func space(_ value: Int) -> CGFloat {
     return CGFloat(value * 4)
 }
 
+extension Binding {
+    func onChange(_ handler: @escaping (Value) -> Void) -> Binding<Value> {
+        Binding(
+            get: { self.wrappedValue },
+            set: { newValue in
+                self.wrappedValue = newValue
+                handler(newValue)
+            }
+        )
+    }
+}
+
 struct ProgressBar: View {
     @Binding var value: Float
     
@@ -53,20 +65,7 @@ struct PlayButton: View {
     }
 }
 
-struct Track: Hashable, Identifiable, Equatable {
-    var id: Int
-    var name: String
-    var track: MidiNoteTrack?
-    
-    static func ==(lhs: Track, rhs: Track) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(name)
-    }
-}
+
 
 struct PlayerView: View {
     @State var progressValue: Float = 0.5
@@ -116,7 +115,7 @@ struct PlayerView: View {
 }
 
 
-class Player: ObservableObject {
+class OldPlayer: ObservableObject {
     var engine: AudioEngine
     var sequencer: AppleSequencer
     var sampler: MIDISampler
@@ -144,7 +143,7 @@ class Player: ObservableObject {
         }
     }
     
-    func selectSong(name: String) {
+    func selectSong(name: String, track: Int) {
         guard let asset = NSDataAsset(name: name) else {
             fatalError("Missing data asset")
         }
@@ -153,7 +152,7 @@ class Player: ObservableObject {
         sequencer.loadMIDIFile(fromData: data)
         sequencer.rewind()
         sequencer.preroll()
-        message = "Song selected"
+        message = "Song selected: \(name) - Track \(track)"
     }
     
     func play() {
@@ -169,7 +168,11 @@ struct ContentView: View {
     @State private var tempo: Int = 120
     @State private var notes: [String] = []
     
-    @ObservedObject private var player: Player = Player()
+    @ObservedObject private var player: OldPlayer = OldPlayer()
+    
+    func trackChanged(to track: Track) {
+        player.selectSong(name: songName, track: track.id)
+    }
     
     var body: some View {
         VStack() {
@@ -177,48 +180,10 @@ struct ContentView: View {
                 isPlaying: $isPlaying,
                 songName: songName,
                 tracks: tracks,
-                selectedTrack: $selectedTrack,
+                selectedTrack: $selectedTrack.onChange(trackChanged),
                 tempo: tempo,
                 onPlay: {
-                    notes = ["Starting..."]
-                    print("Testing")
-                    
-                    let sampler = MIDISampler()
-                    let engine = AudioEngine()
-                    
-                    guard let asset = NSDataAsset(name: songName) else {
-                        fatalError("Missing data asset")
-                    }
-                    let data: Data = asset.data
-                    let sequencer = AppleSequencer(fromData: data)
-                    sequencer.enableLooping()
-                    
-                    func myCallBack(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity){
-                        let mstat = MIDIStatusType.from(byte: status)
-                        if mstat == .noteOn {
-                            sampler.play(noteNumber: note, velocity: velocity, channel: 1)
-                            notes.append("Note: " + String(note))
-                            notes.append("Is playing: " + String(sequencer.isPlaying))
-                        } else if mstat == .noteOff {
-                            sampler.stop(noteNumber: note, channel: 1)
-                        }
-                    }
-                    let instrument = MIDICallbackInstrument(callback: myCallBack)
-                    sequencer.setGlobalMIDIOutput(instrument.midiIn)
-                    sequencer.debug()
-                    
-                    do {
-                        try engine.start()
-                    } catch {
-                        Log("Couldn't start AudioKit")
-                    }
-
-                    sequencer.preroll()
-                    // sequencer.play()
-                    notes.append("Playing...")
-                    
                     player.play()
-                    
                 }
             )
             List {
@@ -251,7 +216,7 @@ struct ContentView: View {
             }
             selectedTrack = tracks[0]
             
-            player.selectSong(name: songName)
+            player.selectSong(name: songName, track: 0)
             player.$message.sink { message in
                 notes.append(message)
             }
