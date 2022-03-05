@@ -54,10 +54,21 @@ class BardEngine {
         let data: Data = asset.data
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
+        
+        // Convoluted way to delete all tracks except the current one
+        // Delete tracks up to the selected track's index
+        if track.id != 0 {
+            for i in 0...track.id - 1 {
+                sequencer.deleteTrack(trackIndex: 0)
+            }
+        }
+        // 0th track is now our selected track. Delete the rest
+        for i in 1...sequencer.trackCount - 1 {
+            sequencer.deleteTrack(trackIndex: 1)
+        }
+        
         sequencer.rewind()
         sequencer.preroll()
-        
-        // TODO: Load track into sequencer
     }
     
     func play() {
@@ -111,7 +122,6 @@ class Player {
     }
     
     func loadSongFromName(songName: String) {
-        print("Load song from name! \(songName)")
         let midi = MidiData()
         guard let asset = NSDataAsset(name: songName) else {
             fatalError("Missing data asset")
