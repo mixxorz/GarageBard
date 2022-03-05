@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AudioKit",
+        "repositoryURL": "https://github.com/AudioKit/AudioKit.git",
+        "state": {
+          "branch": null,
+          "revision": "86c9285d673baa7f7955e8f2c1550e5e9740bada",
+          "version": "5.3.3"
+        }
+      },
+      {
+        "package": "AudioKitEX",
+        "repositoryURL": "https://github.com/AudioKit/AudioKitEX.git",
+        "state": {
+          "branch": null,
+          "revision": "57e2af5a924706ede3994440ffea3d0b2c003a08",
+          "version": "5.3.2"
+        }
+      },
+      {
+        "package": "DunneAudioKit",
+        "repositoryURL": "https://github.com/AudioKit/DunneAudioKit.git",
+        "state": {
+          "branch": null,
+          "revision": "83a7cd388ecb9237fba1ffe4129fab32a54c1acb",
+          "version": "5.3.1"
+        }
+      },
+      {
+        "package": "KissFFT",
+        "repositoryURL": "https://github.com/AudioKit/KissFFT",
+        "state": {
+          "branch": null,
+          "revision": "dd0636e151724b8ba2e0908eba4d99a6ff24d00c",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
