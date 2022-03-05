@@ -37,6 +37,7 @@ class Player {
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
     
     private let bardEngine = BardEngine()
+    private var timer: Timer?
     
     func setSong(song: Song) {
         songValue.value = song
@@ -62,16 +63,21 @@ class Player {
     }
     
     func play() {
-        bardEngine.play()
-        isPlayingValue.value = true
+        self.isPlayingValue.value = true
+        // Give some time for the user to switch to the game
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
+            self.bardEngine.play()
+        }
     }
     
     func pause() {
+        timer?.invalidate()
         bardEngine.pause()
         isPlayingValue.value = false
     }
     
     func stop() {
+        timer?.invalidate()
         bardEngine.stop()
         isPlayingValue.value = false
     }

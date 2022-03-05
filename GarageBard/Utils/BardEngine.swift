@@ -9,24 +9,22 @@ import Foundation
 import SwiftUI
 import AudioKit
 import MidiParser
+import Carbon.HIToolbox
+
+let DEMO_MODE = false
 
 class BardEngine {
-    private let engine = AudioEngine()
-    private let sequencer = AppleSequencer()
-    private let sampler = MIDISampler()
+    private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
+    private let bardController = BardController()
     
     init() {
-        sequencer.setGlobalMIDIOutput(instrument.midiIn)
-        try? engine.start()
-        
-        
         func midiCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
             let mstat = MIDIStatusType.from(byte: status)
             if mstat == .noteOn {
-                sampler.play(noteNumber: note, velocity: velocity, channel: 1)
+                bardController.noteOn(note)
             } else if mstat == .noteOff {
-                sampler.stop(noteNumber: note, channel: 1)
+                bardController.noteOff(note)
             }
         }
         
@@ -41,6 +39,12 @@ class BardEngine {
         let data: Data = asset.data
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
+        
+        // Demo mode plays the song using the default AppleSequencer
+        if !DEMO_MODE {
+            // Otherwise, use hook it up with the callback instrument
+            sequencer.setGlobalMIDIOutput(instrument.midiIn)
+        }
         
         // Convoluted way to delete all tracks except the current one
         // Delete tracks up to the selected track's index
