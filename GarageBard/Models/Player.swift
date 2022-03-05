@@ -9,13 +9,15 @@ import SwiftUI
 import Foundation
 import Combine
 import AudioKit
+import MidiParser
 
-struct Track: Identifiable {
+struct Track: Hashable, Identifiable {
     var id: Int
     var name: String
 }
 
-struct Song {
+struct Song: Identifiable {
+    var id: String { self.name }
     var name: String
     var tracks: [Track]
 }
@@ -93,23 +95,48 @@ class Player {
     
     func setSong(song: Song) {
         songValue.value = song
+        isPlayingValue.value = false
         bardEngine.loadSong(song: song, track: song.tracks[0])
     }
     
     func setTrack(track: Track) {
         trackValue.value = track
+        isPlayingValue.value = false
         bardEngine.loadSong(song: songValue.value!, track: track)
+    }
+    
+    func loadSongFromName(songName: String) {
+        print("Load song from name! \(songName)")
+        let midi = MidiData()
+        guard let asset = NSDataAsset(name: songName) else {
+            fatalError("Missing data asset")
+        }
+        let data: Data = asset.data
+        midi.load(data: data)
+        
+        // Load track options
+        let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
+            if (track.trackName != "") {
+                return Track(id: index, name: track.trackName)
+            }
+            return Track(id: index, name: "Track " + String(index))
+        }
+        
+        setSong(song: Song(name: songName, tracks: tracks))
     }
     
     func play() {
         bardEngine.play()
+        isPlayingValue.value = true
     }
     
     func pause() {
         bardEngine.pause()
+        isPlayingValue.value = false
     }
     
     func stop() {
         bardEngine.stop()
+        isPlayingValue.value = false
     }
 }
