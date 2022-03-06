@@ -7,10 +7,39 @@
 
 import SwiftUI
 
+
+class TimeFormatter {
+    let formatter = DateComponentsFormatter()
+    
+    static let instance = TimeFormatter()
+    
+    init() {
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+    }
+    
+    func format(_ duration: Double) -> String {
+        guard let str = formatter.string(from: duration) else {
+            return ""
+        }
+        
+        // Drop leading minute zero
+        if str.hasPrefix("0") && str.count > 4 {
+            return String(str.dropFirst())
+        }
+        
+        return str
+    }
+}
+
+
 struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
     @EnvironmentObject var model: Model
     
     var song: Song
+    
+    let formatter = TimeFormatter.instance
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -28,7 +57,7 @@ struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
                 Text(song.name)
                     .foregroundColor(Color.white)
                 Spacer()
-                Text("2:45")
+                Text(formatter.format(song.durationInSeconds))
                     .font(.system(size: 10.0))
                     .foregroundColor(Color("grey400"))
             }
@@ -43,7 +72,7 @@ struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
 
 struct PlaylistItemRow_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistItemRow<FakePlayerViewModel>(song: Song(name: "Flow - Final Fantasy XIV", tracks: []))
+        PlaylistItemRow<FakePlayerViewModel>(song: Song(name: "Flow - Final Fantasy XIV", durationInSeconds: 200.0, tracks: []))
             .frame(maxWidth: space(100))
             .padding(.horizontal, space(4))
             .preferredColorScheme(.dark)

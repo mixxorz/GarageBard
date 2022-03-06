@@ -17,6 +17,7 @@ struct Track: Hashable, Identifiable {
 struct Song: Identifiable {
     var id: String { self.name }
     var name: String
+    var durationInSeconds: Double
     var tracks: [Track]
 }
 

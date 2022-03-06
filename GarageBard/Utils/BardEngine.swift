@@ -90,6 +90,9 @@ class BardEngine {
         let data: Data = asset.data
         midi.load(data: data)
         
+        let tmpSequencer = AppleSequencer()
+        tmpSequencer.loadMIDIFile(fromData: data)
+        
         // Load track options
         let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
             if (track.trackName != "") {
@@ -98,7 +101,7 @@ class BardEngine {
             return Track(id: index, name: "Track " + String(index))
         }
         
-        return Song(name: songName, tracks: tracks)
+        return Song(name: songName, durationInSeconds: tmpSequencer.length.seconds, tracks: tracks)
     }
     
     func play() {
