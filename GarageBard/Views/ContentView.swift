@@ -15,55 +15,121 @@ func space(_ value: Int) -> CGFloat {
 struct ContentView: View {
     @ObservedObject var model = PlayerViewModel()
     
-    @State var color = 0
+    @State var isTrackPopoverOpen = false
     
+    let tracks = [
+        "Track 1",
+        "Track 2",
+        "Track 3",
+        "Track 4",
+        "Track 5",
+        "Track 6",
+        "Track 7",
+        "Track 8",
+        "Track 9",
+        "Track 10",
+        "Track 11",
+        "Track 12",
+        "Track 13",
+        "Track 14",
+        "Track 15",
+        "Track 16",
+    ]
+
     var body: some View {
-        VStack {
+        ZStack {
+            Color("grey600")
             VStack {
-                Text(model.song?.name ?? "No song selected")
-                    .font(.system(size: 16.0))
-                    .padding(.vertical, space(1))
-                ProgressBar(value: 0.5)
-                    .frame(height: space(2))
-                    .padding(.horizontal, space(5))
-                    .padding(.vertical, space(1))
-                HStack {
-                    Picker(
-                        "Filter",
-                        selection: $model.track,
-                        content: {
-                            ForEach(model.song?.tracks ?? []) { track in
-                                Text(track.name).tag(track as Track?)
+                VStack {
+                    HStack(alignment: .bottom) {
+                        Text("1:02")
+                            .font(.system(size: 10.0))
+                        Spacer()
+                        Text(model.song?.name ?? "No song selected")
+                            .font(.system(size: 14.0))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("-2:51")
+                            .font(.system(size: 10.0))
+                    }
+                    ProgressBar(value: 0.5)
+                        .frame(height: space(1))
+                    HStack(spacing: space(4)) {
+    //                    Picker(
+    //                        "Filter",
+    //                        selection: $model.track,
+    //                        content: {
+    //                            ForEach(model.song?.tracks ?? []) { track in
+    //                                Text(track.name).tag(track as Track?)
+    //                            }
+    //                        }
+    //                    )
+    //                        .frame(width: space(35))
+                        Button(action: { self.isTrackPopoverOpen = true }) {
+                            Image(systemName: "pianokeys")
+                                .font(.system(size: 20.0))
+                                .foregroundColor(Color("grey400"))
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        .popover(isPresented: $isTrackPopoverOpen, content: {
+                            List {
+                                Section {
+                                    Label("Track 1", systemImage: "pianokeys")
+                                    Label("Track 2", systemImage: "pianokeys")
+                                    Label("Track 3", systemImage: "pianokeys")
+                                    Label("Track 4", systemImage: "pianokeys")
+                                    Label("Track 5", systemImage: "pianokeys")
+                                    Label("Track 6", systemImage: "pianokeys")
+                                    Label("Track 7", systemImage: "pianokeys")
+                                }
+                            }
+                        })
+                        Spacer()
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                        Image(systemName: "stop.fill")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                        Spacer()
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                    }
+                    .padding(.vertical, space(2))
+                }
+                .padding(space(4))
+                .foregroundColor(Color("grey400"))
+                ZStack {
+                    Color("grey700")
+                    ScrollView {
+                        VStack {
+                            ForEach(0..<100) { index in
+                                PlaylistItemRow()
                             }
                         }
-                    )
-                        .frame(width: space(30))
-                    PlayButton(
-                        isPlaying: model.isPlaying,
-                        action: model.playOrPause
-                    )
-                    Text("120 BPM")
-                        .frame(width: space(15))
-                }
-                HStack {
-                    Button(action: {
-                        model.loadSongFromName(songName: "still-alive")
-                    }) {
-                        Text("Still alive")
-                    }
-                    Button(action: {
-                        model.loadSongFromName(songName: "for-sure-sax")
-                    }) {
-                        Text("For sure - Sax")
-                    }
-                    Button(action: {
-                        model.loadSongFromName(songName: "for-sure-all")
-                    }) {
-                        Text("For sure - All")
+                        .padding(space(4))
                     }
                 }
+                
+//                HStack {
+//                    Button(action: {
+//                        model.loadSongFromName(songName: "still-alive")
+//                    }) {
+//                        Text("Still alive")
+//                    }
+//                    Button(action: {
+//                        model.loadSongFromName(songName: "for-sure-sax")
+//                    }) {
+//                        Text("For sure - Sax")
+//                    }
+//                    Button(action: {
+//                        model.loadSongFromName(songName: "for-sure-all")
+//                    }) {
+//                        Text("For sure - All")
+//                    }
+//                }
             }
-            .padding(.vertical, space(5))
         }
         .frame(width: space(100), height: space(150))
     }
@@ -73,6 +139,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ContentView()
+                .preferredColorScheme(.light)
         }
     }
 }

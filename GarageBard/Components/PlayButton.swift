@@ -16,7 +16,6 @@ struct PlayButton: View {
         Button(action: action) {
             Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                 .font(.system(size: 48.0))
-                .padding(.horizontal, space(5))
         }
         .buttonStyle(PlainButtonStyle())
     }
