@@ -44,6 +44,10 @@ class PlayerViewModel: ObservableObject {
         }
     }
     
+    func stop() {
+        model.stop()
+    }
+    
     func setSong(song: Song) {
         model.setSong(song: song)
     }

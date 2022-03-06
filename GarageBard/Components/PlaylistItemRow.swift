@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct PlaylistItemRow: View {
+    var name: String
+    var action: () -> Void
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 10.0))
-                    .foregroundColor(Color("grey400"))
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+                Button(action: action) {
+                    Image(systemName: "forward.end.fill")
+                        .font(.system(size: 10.0))
+                        .foregroundColor(Color("grey400"))
+                }
+                .buttonStyle(.plain)
+                Text(name)
                     .foregroundColor(Color.white)
                 Spacer()
                 Text("2:45")
@@ -29,6 +35,6 @@ struct PlaylistItemRow: View {
 
 struct PlaylistItemRow_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistItemRow()
+        PlaylistItemRow(name: "Flow - Final Fantasy XIV", action: {})
     }
 }

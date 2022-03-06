@@ -85,12 +85,22 @@ struct ContentView: View {
                             }
                         })
                         Spacer()
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
-                        Image(systemName: "stop.fill")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
+                        Button(action: {
+                            model.playOrPause()
+                        }) {
+                            Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                                .font(.system(size: 20.0))
+                                .foregroundColor(Color("grey400"))
+                        }
+                        .buttonStyle(.plain)
+                        Button(action: {
+                            model.stop()
+                        }) {
+                            Image(systemName: "stop.fill")
+                                .font(.system(size: 20.0))
+                                .foregroundColor(Color("grey400"))
+                        }
+                        .buttonStyle(.plain)
                         Spacer()
                         Image(systemName: "ellipsis")
                             .font(.system(size: 20.0))
@@ -104,9 +114,21 @@ struct ContentView: View {
                     Color("grey700")
                     ScrollView {
                         VStack {
-                            ForEach(0..<100) { index in
-                                PlaylistItemRow()
-                            }
+                            PlaylistItemRow(
+                                name: "Still Alive",
+                                action: {
+                                    model.loadSongFromName(songName: "still-alive")
+                            })
+                            PlaylistItemRow(
+                                name: "For Sure - Sax",
+                                action: {
+                                    model.loadSongFromName(songName: "for-sure-sax")
+                            })
+                            PlaylistItemRow(
+                                name: "For Sure - All",
+                                action: {
+                                    model.loadSongFromName(songName: "for-sure-all")
+                            })
                         }
                         .padding(space(4))
                     }
@@ -139,7 +161,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ContentView()
-                .preferredColorScheme(.light)
+                .preferredColorScheme(.dark)
         }
     }
 }
