@@ -7,7 +7,7 @@
 		<key>GarageBard.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Hello World (Playground) 1.xcscheme</key>
 		<dict>
@@ -29,6 +29,24 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>5EA3895427D2663500C4C2D3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5EA3896527D2663600C4C2D3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5EA3896F27D2663600C4C2D3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

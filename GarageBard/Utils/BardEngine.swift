@@ -85,14 +85,17 @@ class BardEngine {
     
     func play() {
         sequencer.play()
+        bardController.start()
     }
     
     func pause() {
         sequencer.stop()
+        bardController.stop()
     }
     
     func stop() {
         sequencer.rewind()
         sequencer.stop()
+        bardController.stop()
     }
 }

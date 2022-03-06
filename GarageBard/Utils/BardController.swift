@@ -9,6 +9,12 @@ import Foundation
 import Carbon.HIToolbox
 import AudioKit
 
+
+struct Note {
+    let keyCode: CGKeyCode
+    let desiredState: Bool
+}
+
 class BardController {
     private var hasAccessibilityPermissions = false
     private let sourceRef = CGEventSource(stateID: .combinedSessionState)
@@ -63,27 +69,32 @@ class BardController {
         71: kVK_ANSI_T,
         59: kVK_ANSI_S,
     ]
+    private var keyBuffer: CGKeyCode?
+    private let queue = DispatchQueue(label: "bardcontroller.queue", qos: .userInteractive)
+    private var noteBuffer: [Note] = []
+    private var running = false
     
-    init() {
-        let promptFlag = kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString
-        let options: CFDictionary = NSDictionary(dictionary: [promptFlag: true])
+    var tickRateMs: UInt32
+    
+    init(tickRateMs: UInt32 = 25) {
+        self.tickRateMs = tickRateMs
+        
+        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
         self.hasAccessibilityPermissions = AXIsProcessTrustedWithOptions(options)
-    }
-    
-    private func validate(note: MIDINoteNumber) -> CGKeyCode? {
+        
         if sourceRef == nil {
             NSLog("BardController: No event source")
-            return nil
         }
         
         if !hasAccessibilityPermissions {
             NSLog("Do not have accessbility permissions")
-            return nil
         }
+    }
+    
+    private func getKeyCode(note: MIDINoteNumber) -> CGKeyCode? {
+        let keyNumber = noteKeyMap[Int(note)] ?? -1
         
-        let keyNumber = noteKeyMap[Int(note)] ?? 0
-        
-        if keyNumber == 0 {
+        if keyNumber == -1 {
             NSLog("Note '\(note)' is out of bounds")
             return nil
         }
@@ -91,27 +102,75 @@ class BardController {
         return CGKeyCode(keyNumber)
     }
     
-    func noteOn(_ note: MIDINoteNumber) {
-        if let keyCode = validate(note: note) {
-            let keyDownEvent = CGEvent(
-                keyboardEventSource: sourceRef,
-                virtualKey: keyCode,
-                keyDown: true
-            )
+    private func keyDown(_ keyCode: CGKeyCode) {
+        let keyDownEvent = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: keyCode,
+            keyDown: true
+        )
 
-            keyDownEvent?.post(tap: .cghidEventTap)
+        keyDownEvent?.post(tap: .cghidEventTap)
+    }
+    
+    private func keyUp(_ keyCode: CGKeyCode) {
+        let keyUpEvent = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: keyCode,
+            keyDown: false
+        )
+
+        keyUpEvent?.post(tap: .cghidEventTap)
+    }
+    
+    func noteOn(_ note: MIDINoteNumber) {
+        if let keyCode = getKeyCode(note: note) {
+            noteBuffer.append(Note(keyCode: keyCode, desiredState: true))
         }
     }
     
     func noteOff(_ note: MIDINoteNumber) {
-        if let keyCode = validate(note: note) {
-            let keyUpEvent = CGEvent(
-                keyboardEventSource: sourceRef,
-                virtualKey: keyCode,
-                keyDown: false
-            )
-
-            keyUpEvent?.post(tap: .cghidEventTap)
+        if let keyCode = getKeyCode(note: note) {
+            noteBuffer.append(Note(keyCode: keyCode, desiredState: false))
         }
+    }
+    
+    func start() {
+        let tickRate = self.tickRateMs * 1000
+        
+        if !running {
+            running = true
+            
+            queue.async {
+                while self.running {
+                    // Sleeping here effectively sets a limit for how fast two consecutive key-presses can happen
+                    // We want to set this limit so that notes in quick succession remain distinct
+                    usleep(tickRate)
+                    if let note = self.noteBuffer.first {
+                        self.noteBuffer.removeFirst()
+                        
+                        if note.desiredState {
+                            if let prevKeyCode = self.keyBuffer {
+                                self.keyUp(prevKeyCode)
+                            }
+                            self.keyDown(note.keyCode)
+                            
+                            // If the next note is already queued, preemptively stop the current note right away
+                            if self.noteBuffer.first != nil {
+                                self.keyUp(note.keyCode)
+                            } else {
+                                self.keyBuffer = note.keyCode
+                            }
+                        } else {
+                            self.keyUp(note.keyCode)
+                            self.keyBuffer = nil
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func stop() {
+        running = false
     }
 }
