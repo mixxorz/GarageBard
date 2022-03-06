@@ -10,26 +10,40 @@ import SwiftUI
 import AudioKit
 import MidiParser
 import Carbon.HIToolbox
+import Combine
 
 let DEMO_MODE = false
 
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
+    private let controlInstrument = MIDICallbackInstrument()
     private let nullInstrument = MIDICallbackInstrument()
     private let bardController = BardController()
     
+    @Published private(set) var isPlaying: Bool = false
+    
     init() {
-        func midiCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
-            let mstat = MIDIStatusType.from(byte: status)
-            if mstat == .noteOn {
-                bardController.noteOn(note)
-            } else if mstat == .noteOff {
-                bardController.noteOff(note)
-            }
+        instrument.callback = instrumentCallback
+        controlInstrument.callback = controlCallback
+    }
+    
+    private func instrumentCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
+        let mstat = MIDIStatusType.from(byte: status)
+        if mstat == .noteOn {
+            print("Note ON: \(note)")
+            bardController.noteOn(note)
+        } else if mstat == .noteOff {
+            bardController.noteOff(note)
         }
-        
-        instrument.callback = midiCallback
+    }
+    
+    private func controlCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
+        let mstat = MIDIStatusType.from(byte: status)
+        if mstat == .noteOn {
+            print("Stopping")
+            stop()
+        }
     }
     
     func loadSong(song: Song, track: Track) {
@@ -47,6 +61,18 @@ class BardEngine {
             sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
             sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
         }
+        
+        let controlTrack = sequencer.newTrack()
+        controlTrack?.add(
+            midiNoteData: MIDINoteData(
+                noteNumber: 60,
+                velocity: 60,
+                channel: MIDIChannel(1),
+                duration: Duration(beats: 1),
+                position: sequencer.length
+            )
+        )
+        controlTrack?.setMIDIOutput(controlInstrument.midiIn)
         
         sequencer.rewind()
         sequencer.preroll()
@@ -74,16 +100,19 @@ class BardEngine {
     func play() {
         sequencer.play()
         bardController.start()
+        isPlaying = true
     }
     
     func pause() {
         sequencer.stop()
         bardController.stop()
+        isPlaying = false
     }
     
     func stop() {
         sequencer.rewind()
         sequencer.stop()
         bardController.stop()
+        isPlaying = false
     }
 }

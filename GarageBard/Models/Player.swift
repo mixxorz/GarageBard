@@ -37,7 +37,12 @@ class Player {
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
     
     private let bardEngine = BardEngine()
+    private var bardEngineSubscription: Cancellable!
     private var timer: Timer?
+    
+    init() {
+        bardEngineSubscription = bardEngine.$isPlaying.assign(to: \.isPlayingValue.value, on: self)
+    }
     
     func setSong(song: Song) {
         songValue.value = song
@@ -47,13 +52,11 @@ class Player {
             trackValue.value = song.tracks[0]
         }
         
-        isPlayingValue.value = false
         bardEngine.loadSong(song: song, track: song.tracks[0])
     }
     
     func setTrack(track: Track) {
         trackValue.value = track
-        isPlayingValue.value = false
         bardEngine.loadSong(song: songValue.value!, track: track)
     }
     
@@ -73,12 +76,10 @@ class Player {
     func pause() {
         timer?.invalidate()
         bardEngine.pause()
-        isPlayingValue.value = false
     }
     
     func stop() {
         timer?.invalidate()
         bardEngine.stop()
-        isPlayingValue.value = false
     }
 }
