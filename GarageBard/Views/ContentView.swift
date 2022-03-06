@@ -101,6 +101,7 @@ struct ContentView<Model: PlayerViewModelProtocol>: View {
                 }
             }
         }
+        .edgesIgnoringSafeArea(.all)
         .frame(width: space(100), height: space(150))
     }
 }
