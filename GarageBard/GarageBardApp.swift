@@ -15,7 +15,9 @@ struct GarageBardApp: App {
         WindowGroup {
             ContentView<PlayerViewModel>()
                 .environment(\.colorScheme, .dark)
+                .edgesIgnoringSafeArea(.all)
                 .environmentObject(playerViewModel)
         }
+        .windowStyle(.hiddenTitleBar)
     }
 }

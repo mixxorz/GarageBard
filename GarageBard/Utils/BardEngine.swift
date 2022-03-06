@@ -59,7 +59,11 @@ class BardEngine {
         if !DEMO_MODE {
             // Otherwise, use hook it up with the callback instruments
             sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
-            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
+            if sequencer.tracks.indices.contains(track.id) {
+                sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
+            } else {
+                NSLog("BardEngine: Couldn't find track.")
+            }
         }
         
         let controlTrack = sequencer.newTrack()

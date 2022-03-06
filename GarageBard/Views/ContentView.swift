@@ -74,6 +74,7 @@ struct ContentView<Model: PlayerViewModelProtocol>: View {
                     .padding(.vertical, space(2))
                 }
                 .padding(space(4))
+                .padding(.top, space(4))
                 .foregroundColor(Color("grey400"))
                 ZStack {
                     Color("grey700")
@@ -101,7 +102,6 @@ struct ContentView<Model: PlayerViewModelProtocol>: View {
             }
         }
         .frame(width: space(100), height: space(150))
-        .environmentObject(model)
     }
 }
 
