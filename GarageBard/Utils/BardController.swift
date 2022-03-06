@@ -151,6 +151,7 @@ class BardController {
                         if note.desiredState {
                             if let prevKeyCode = self.keyBuffer {
                                 self.keyUp(prevKeyCode)
+                                usleep(tickRate)
                             }
                             self.keyDown(note.keyCode)
                             
