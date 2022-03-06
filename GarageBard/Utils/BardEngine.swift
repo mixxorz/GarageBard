@@ -16,6 +16,7 @@ let DEMO_MODE = false
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
+    private let nullInstrument = MIDICallbackInstrument()
     private let bardController = BardController()
     
     init() {
@@ -42,22 +43,9 @@ class BardEngine {
         
         // Demo mode plays the song using the default AppleSequencer
         if !DEMO_MODE {
-            // Otherwise, use hook it up with the callback instrument
-            sequencer.setGlobalMIDIOutput(instrument.midiIn)
-        }
-        
-        // Convoluted way to delete all tracks except the current one
-        // Delete tracks up to the selected track's index
-        if track.id != 0 {
-            for _ in 0...track.id - 1 {
-                sequencer.deleteTrack(trackIndex: 0)
-            }
-        }
-        // 0th track is now our selected track. Delete the rest
-        if sequencer.trackCount > 1 {
-            for _ in 1...sequencer.trackCount - 1 {
-                sequencer.deleteTrack(trackIndex: 1)
-            }
+            // Otherwise, use hook it up with the callback instruments
+            sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
+            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
         }
         
         sequencer.rewind()
