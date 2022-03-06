@@ -13,11 +13,13 @@ struct PlaylistItemRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
+            HStack(spacing: 0) {
                 Button(action: action) {
                     Image(systemName: "forward.end.fill")
                         .font(.system(size: 10.0))
                         .foregroundColor(Color("grey400"))
+                        .frame(width: space(8), height: space(8))
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 Text(name)
@@ -27,7 +29,6 @@ struct PlaylistItemRow: View {
                     .font(.system(size: 10.0))
                     .foregroundColor(Color("grey400"))
             }
-            .padding(.vertical, space(2))
             Divider()
         }
     }
@@ -36,5 +37,8 @@ struct PlaylistItemRow: View {
 struct PlaylistItemRow_Previews: PreviewProvider {
     static var previews: some View {
         PlaylistItemRow(name: "Flow - Final Fantasy XIV", action: {})
+            .frame(maxWidth: space(100))
+            .padding(.horizontal, space(4))
+            .preferredColorScheme(.dark)
     }
 }
