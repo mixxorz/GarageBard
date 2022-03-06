@@ -13,6 +13,12 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var track: Track?
     var isPlaying: Bool = false
     
+    
+    init(song: Song?, track: Track?) {
+        self.song = song
+        self.track = track
+    }
+    
     func playOrPause() {
     }
     

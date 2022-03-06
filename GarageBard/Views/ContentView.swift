@@ -110,7 +110,7 @@ struct ContentView_Previews: PreviewProvider {
         Group {
             ContentView<FakePlayerViewModel>()
                 .preferredColorScheme(.dark)
-                .environmentObject(FakePlayerViewModel())
+                .environmentObject(FakePlayerViewModel(song: nil, track: nil))
         }
     }
 }
