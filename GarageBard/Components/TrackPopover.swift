@@ -26,10 +26,11 @@ struct Row: View {
                     Image(systemName: "speaker.wave.2.fill")
                 }
             }
+            .padding(.vertical, space(2))
+            .padding(.horizontal, space(1))
+            .contentShape(RoundedRectangle(cornerRadius: space(1), style: .continuous))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, space(2))
-        .padding(.horizontal, space(1))
         .buttonStyle(.plain)
         .background(
             RoundedRectangle(cornerRadius: space(1), style: .continuous)
