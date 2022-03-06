@@ -7,14 +7,17 @@
 
 import SwiftUI
 
-struct PlaylistItemRow: View {
-    var name: String
-    var action: () -> Void
+struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var model: Model
+    
+    var song: Song
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 0) {
-                Button(action: action) {
+                Button(action: {
+                    model.setSong(song: song)
+                }) {
                     Image(systemName: "forward.end.fill")
                         .font(.system(size: 10.0))
                         .foregroundColor(Color("grey400"))
@@ -22,7 +25,7 @@ struct PlaylistItemRow: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                Text(name)
+                Text(song.name)
                     .foregroundColor(Color.white)
                 Spacer()
                 Text("2:45")
@@ -31,14 +34,19 @@ struct PlaylistItemRow: View {
             }
             Divider()
         }
+        .contentShape(Rectangle())
+        .onTapGesture(count: 2, perform: {
+            model.setSong(song: song)
+        })
     }
 }
 
 struct PlaylistItemRow_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistItemRow(name: "Flow - Final Fantasy XIV", action: {})
+        PlaylistItemRow<FakePlayerViewModel>(song: Song(name: "Flow - Final Fantasy XIV", tracks: []))
             .frame(maxWidth: space(100))
             .padding(.horizontal, space(4))
             .preferredColorScheme(.dark)
+            .environmentObject(FakePlayerViewModel(song: nil, track: nil))
     }
 }

@@ -10,29 +10,26 @@ import SwiftUI
 struct SongLibrary<Model: PlayerViewModelProtocol>: View {
     @EnvironmentObject var model: Model
     
+    @State private var songs: [Song] = []
+    
     var body: some View {
         ZStack {
             Color("grey700")
             ScrollView {
                 VStack {
-                    PlaylistItemRow(
-                        name: "Still Alive",
-                        action: {
-                            model.loadSongFromName(songName: "still-alive")
-                    })
-                    PlaylistItemRow(
-                        name: "For Sure - Sax",
-                        action: {
-                            model.loadSongFromName(songName: "for-sure-sax")
-                    })
-                    PlaylistItemRow(
-                        name: "For Sure - All",
-                        action: {
-                            model.loadSongFromName(songName: "for-sure-all")
-                    })
+                    ForEach(songs) { song in
+                        PlaylistItemRow<Model>(song: song)
+                    }
                 }
                 .padding(space(4))
             }
+        }
+        .onAppear {
+            let stillAlive: Song = model.loadSongFromName(songName: "still-alive")
+            let forSureSax = model.loadSongFromName(songName: "for-sure-sax")
+            let forSureAll = model.loadSongFromName(songName: "for-sure-all")
+            
+            songs = [stillAlive, forSureSax, forSureAll]
         }
     }
 }

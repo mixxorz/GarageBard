@@ -60,9 +60,8 @@ class Player {
         bardEngine.loadSong(song: songValue.value!, track: track)
     }
     
-    func loadSongFromName(songName: String) {
-        let song = bardEngine.loadSong(fromName: songName)
-        setSong(song: song)
+    func loadSongFromName(songName: String) -> Song {
+        return bardEngine.loadSong(fromName: songName)
     }
     
     func play() {

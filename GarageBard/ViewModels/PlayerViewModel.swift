@@ -55,7 +55,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
         model.setTrack(track: track)
     }
     
-    func loadSongFromName(songName: String) {
-        model.loadSongFromName(songName: songName)
+    func loadSongFromName(songName: String) -> Song {
+        return model.loadSongFromName(songName: songName)
     }
 }
