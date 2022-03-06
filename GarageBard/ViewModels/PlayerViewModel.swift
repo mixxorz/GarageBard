@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 
-class PlayerViewModel: ObservableObject {
+class PlayerViewModel: PlayerViewModelProtocol {
     @Published var song: Song? = nil
     @Published var track: Track? = nil
     @Published var isPlaying: Bool = false
@@ -19,7 +19,6 @@ class PlayerViewModel: ObservableObject {
     private var songSubscription: Cancellable!
     private var trackSubscription: Cancellable!
     private var isPlayingSubscription: Cancellable!
-    
     private var setTrackSubscription: Cancellable!
     
     init(model: Player = Player()) {

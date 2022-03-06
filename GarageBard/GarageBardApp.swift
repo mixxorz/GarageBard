@@ -9,10 +9,13 @@ import SwiftUI
 
 @main
 struct GarageBardApp: App {
+    @ObservedObject var playerViewModel = PlayerViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView<PlayerViewModel>()
                 .environment(\.colorScheme, .dark)
+                .environmentObject(playerViewModel)
         }
     }
 }
