@@ -70,61 +70,48 @@ class BardController {
         self.hasAccessibilityPermissions = AXIsProcessTrustedWithOptions(options)
     }
     
-    func noteOn(_ note: MIDINoteNumber) {
+    private func validate(note: MIDINoteNumber) -> CGKeyCode? {
         if sourceRef == nil {
             NSLog("BardController: No event source")
-            return
+            return nil
         }
         
         if !hasAccessibilityPermissions {
             NSLog("Do not have accessbility permissions")
-            return
+            return nil
         }
         
         let keyNumber = noteKeyMap[Int(note)] ?? 0
         
         if keyNumber == 0 {
             NSLog("Note '\(note)' is out of bounds")
-            return
+            return nil
         }
         
-        let keyCode = CGKeyCode(keyNumber)
+        return CGKeyCode(keyNumber)
+    }
+    
+    func noteOn(_ note: MIDINoteNumber) {
+        if let keyCode = validate(note: note) {
+            let keyDownEvent = CGEvent(
+                keyboardEventSource: sourceRef,
+                virtualKey: keyCode,
+                keyDown: true
+            )
 
-        let keyDownEvent = CGEvent(
-            keyboardEventSource: sourceRef,
-            virtualKey: keyCode,
-            keyDown: true
-        )
-
-        keyDownEvent?.post(tap: .cghidEventTap)
+            keyDownEvent?.post(tap: .cghidEventTap)
+        }
     }
     
     func noteOff(_ note: MIDINoteNumber) {
-        if sourceRef == nil {
-            NSLog("BardController: No event source")
-            return
-        }
-        
-        if !hasAccessibilityPermissions {
-            NSLog("Do not have accessbility permissions")
-            return
-        }
-        
-        let keyNumber = noteKeyMap[Int(note)] ?? 0
-        
-        if keyNumber == 0 {
-            NSLog("Note '\(note)' is out of bounds")
-            return
-        }
-        
-        let keyCode = CGKeyCode(keyNumber)
+        if let keyCode = validate(note: note) {
+            let keyUpEvent = CGEvent(
+                keyboardEventSource: sourceRef,
+                virtualKey: keyCode,
+                keyDown: false
+            )
 
-        let keyUpEvent = CGEvent(
-            keyboardEventSource: sourceRef,
-            virtualKey: keyCode,
-            keyDown: false
-        )
-
-        keyUpEvent?.post(tap: .cghidEventTap)
+            keyUpEvent?.post(tap: .cghidEventTap)
+        }
     }
 }
