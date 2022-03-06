@@ -17,7 +17,6 @@
 		5E693B4F27D3CDC000EAA678 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B4E27D3CDC000EAA678 /* PlayerViewModel.swift */; };
 		5E693B5327D3D10900EAA678 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5227D3D10900EAA678 /* ProgressBar.swift */; };
 		5E693B5527D3D12E00EAA678 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5427D3D12E00EAA678 /* PlayButton.swift */; };
-		5E693B5727D3D87600EAA678 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5E693B5627D3D87600EAA678 /* Info.plist */; };
 		5E693B5A27D3F18900EAA678 /* BardEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5927D3F18900EAA678 /* BardEngine.swift */; };
 		5E693B5E27D3F95000EAA678 /* BardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5D27D3F95000EAA678 /* BardController.swift */; };
 		5EA3895927D2663500C4C2D3 /* GarageBardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3895827D2663500C4C2D3 /* GarageBardApp.swift */; };
@@ -374,7 +373,6 @@
 			files = (
 				5EA3896027D2663600C4C2D3 /* Preview Assets.xcassets in Resources */,
 				5EA3895D27D2663600C4C2D3 /* Assets.xcassets in Resources */,
-				5E693B5727D3D87600EAA678 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
