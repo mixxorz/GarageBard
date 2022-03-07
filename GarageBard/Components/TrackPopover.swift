@@ -26,8 +26,7 @@ struct Row: View {
                     Image(systemName: "speaker.wave.2.fill")
                 }
             }
-            .padding(.vertical, space(2))
-            .padding(.horizontal, space(1))
+            .padding(space(1))
             .contentShape(RoundedRectangle(cornerRadius: space(1), style: .continuous))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,7 +35,7 @@ struct Row: View {
             RoundedRectangle(cornerRadius: space(1), style: .continuous)
                 .fill(isHovering ? Color.accentColor : Color.clear)
         )
-        .foregroundColor(isHovering ? Color.primary : Color("grey400"))
+        .foregroundColor(isHovering ? Color.white : Color.primary)
         .onHover { hovering in
             isHovering = hovering
         }
@@ -56,9 +55,6 @@ struct TrackPopover<Model: PlayerViewModelProtocol>: View {
                     ForEach(tracks.indices) { index in
                         let track = tracks[index]
                         VStack(spacing: 0) {
-                            if (index != 0) {
-                                Divider()
-                            }
                             Row(track: track, selected: model.track == track)
                                 .padding(.horizontal, -space(1))
                         }
@@ -71,6 +67,7 @@ struct TrackPopover<Model: PlayerViewModelProtocol>: View {
                     .padding(space(1))
             }
         }
+        .foregroundColor(Color.primary)
         .padding(space(1))
     }
 }
@@ -91,6 +88,16 @@ struct TrackPopover_Previews: PreviewProvider {
     
     static var previews: some View {
         TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
+            .preferredColorScheme(.light)
+            .environmentObject(
+                FakePlayerViewModel(
+                    song: song,
+                    track: song.tracks[1]
+                )
+            )
+        
+        TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
+            .preferredColorScheme(.dark)
             .environmentObject(
                 FakePlayerViewModel(
                     song: song,
