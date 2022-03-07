@@ -34,7 +34,6 @@ class BardEngine {
     private func instrumentCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
-            print("Note ON: \(note)")
             bardController.noteOn(note)
         } else if mstat == .noteOff {
             bardController.noteOff(note)
@@ -44,7 +43,6 @@ class BardEngine {
     private func controlCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
-            print("Stopping")
             stop()
         }
     }
