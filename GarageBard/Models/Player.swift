@@ -51,6 +51,8 @@ class Player {
     }
     
     func setSong(song: Song) {
+        stop()
+        
         songValue.value = song
         
         // Set default track when setting a song
@@ -62,6 +64,8 @@ class Player {
     }
     
     func setTrack(track: Track) {
+        stop()
+        
         trackValue.value = track
         bardEngine.loadSong(song: songValue.value!, track: track)
     }
