@@ -12,6 +12,9 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var song: Song? { get set }
     var track: Track? { get set }
     var isPlaying: Bool { get set }
+    var currentPosition: Double { get set }
+    var currentProgress: Double { get set }
+    var timeLeft: Double { get set }
     
     func playOrPause()
     func stop()

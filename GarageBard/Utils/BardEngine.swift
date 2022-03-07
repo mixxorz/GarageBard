@@ -21,7 +21,10 @@ class BardEngine {
     private let nullInstrument = MIDICallbackInstrument()
     private let bardController = BardController()
     
+    private var timer: Timer?
+    
     @Published private(set) var isPlaying: Bool = false
+    @Published private(set) var currentPosition: Double = 0
     
     init() {
         instrument.callback = instrumentCallback
@@ -108,11 +111,17 @@ class BardEngine {
         sequencer.play()
         bardController.start()
         isPlaying = true
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0 / sequencer.tempo, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            self.currentPosition = 60 / self.sequencer.tempo * self.sequencer.currentPosition.beats
+        }
     }
     
     func pause() {
         sequencer.stop()
         bardController.stop()
+        timer?.invalidate()
         isPlaying = false
     }
     
@@ -120,6 +129,8 @@ class BardEngine {
         sequencer.rewind()
         sequencer.stop()
         bardController.stop()
+        timer?.invalidate()
+        currentPosition = 0
         isPlaying = false
     }
 }

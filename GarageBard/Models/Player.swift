@@ -31,18 +31,23 @@ class Player {
     var isPlaying: AnyPublisher<Bool, Never> {
         isPlayingValue.eraseToAnyPublisher()
     }
+    var currentPosition: AnyPublisher<Double, Never> {
+        currentPositionValue.eraseToAnyPublisher()
+    }
     
     // State variables
     private let songValue = CurrentValueSubject<Song?, Never>(nil)
     private let trackValue = CurrentValueSubject<Track?, Never>(nil)
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
+    private let currentPositionValue = CurrentValueSubject<Double, Never>(0)
     
     private let bardEngine = BardEngine()
-    private var bardEngineSubscription: Cancellable!
+    private var cancellables = Set<AnyCancellable>()
     private var timer: Timer?
     
     init() {
-        bardEngineSubscription = bardEngine.$isPlaying.assign(to: \.isPlayingValue.value, on: self)
+        bardEngine.$isPlaying.assign(to: \.isPlayingValue.value, on: self).store(in: &cancellables)
+        bardEngine.$currentPosition.assign(to: \.currentPositionValue.value, on: self).store(in: &cancellables)
     }
     
     func setSong(song: Song) {

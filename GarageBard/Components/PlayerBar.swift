@@ -12,20 +12,24 @@ struct PlayerBar<Model: PlayerViewModelProtocol>: View {
     
     @State var isTrackPopoverOpen = false
     
+    let formatter = TimeFormatter.instance
+    
     var body: some View {
         VStack {
             HStack(alignment: .bottom) {
-                Text("1:02")
+                Text(model.currentProgress > 0 ? formatter.format(model.currentPosition) : "")
                     .font(.system(size: 10.0))
+                    .frame(width: space(16), alignment: .leading)
                 Spacer()
                 Text(model.song?.name ?? "No song selected")
                     .font(.system(size: 14.0))
                     .foregroundColor(.white)
                 Spacer()
-                Text("-2:51")
+                Text(model.currentProgress > 0 ? formatter.format(model.timeLeft) : "")
                     .font(.system(size: 10.0))
+                    .frame(width: space(16), alignment: .trailing)
             }
-            ProgressBar(value: 0.5)
+            ProgressBar(value: model.currentProgress)
                 .frame(height: space(1))
             HStack(spacing: space(4)) {
                 Button(action: { self.isTrackPopoverOpen = true }) {
@@ -75,7 +79,7 @@ struct PlayerBar_Previews: PreviewProvider {
     static var previews: some View {
         PlayerBar<FakePlayerViewModel>()
             .preferredColorScheme(.dark)
-            .environmentObject(FakePlayerViewModel(song: nil, track: nil))
+            .environmentObject(FakePlayerViewModel(song: nil, track: nil, isPlaying: true, currentProgress: 0.8))
             .frame(maxWidth: space(100))
     }
 }
