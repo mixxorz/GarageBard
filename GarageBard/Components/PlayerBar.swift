@@ -24,6 +24,7 @@ struct PlayerBar<Model: PlayerViewModelProtocol>: View {
                 Text(model.song?.name ?? "No song selected")
                     .font(.system(size: 14.0))
                     .foregroundColor(.white)
+                    .lineLimit(1)
                 Spacer()
                 Text(model.currentProgress > 0 ? formatter.format(model.timeLeft) : "")
                     .font(.system(size: 10.0))
@@ -80,6 +81,22 @@ struct PlayerBar_Previews: PreviewProvider {
         PlayerBar<FakePlayerViewModel>()
             .preferredColorScheme(.dark)
             .environmentObject(FakePlayerViewModel(song: nil, track: nil, isPlaying: true, currentProgress: 0.8))
+            .frame(maxWidth: space(100))
+        
+        PlayerBar<FakePlayerViewModel>()
+            .preferredColorScheme(.dark)
+            .environmentObject(
+                FakePlayerViewModel(
+                    song: Song(
+                        name: "This is a really long song title that breaks into multiple lines",
+                        durationInSeconds: 123.0,
+                        tracks: []
+                    ),
+                    track: nil,
+                    isPlaying: true,
+                    currentProgress: 0.8
+                )
+            )
             .frame(maxWidth: space(100))
     }
 }
