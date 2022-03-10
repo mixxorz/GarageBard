@@ -34,9 +34,6 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     func stop() {
     }
     
-    func setSong(song: Song) {
-    }
-    
     func loadSongFromName(songName: String) -> Song {
         return Song(
             name: songName,

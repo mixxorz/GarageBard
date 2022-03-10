@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var model: Model
+struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
     
     var song: Song
     
@@ -18,7 +18,7 @@ struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
         VStack(alignment: .leading) {
             HStack(spacing: 0) {
                 Button(action: {
-                    model.setSong(song: song)
+                    vm.song = song
                 }) {
                     Image(systemName: "forward.end.fill")
                         .font(.system(size: 10.0))
@@ -38,7 +38,7 @@ struct PlaylistItemRow<Model: PlayerViewModelProtocol>: View {
         }
         .contentShape(Rectangle())
         .onTapGesture(count: 2, perform: {
-            model.setSong(song: song)
+            vm.song = song
         })
     }
 }

@@ -14,7 +14,7 @@ struct Track: Hashable, Identifiable {
     var name: String
 }
 
-struct Song: Identifiable {
+struct Song: Identifiable, Equatable {
     var id: String { self.name }
     var name: String
     var durationInSeconds: Double
@@ -64,12 +64,10 @@ class Player {
     }
     
     func setTrack(track: Track) {
-        if track != trackValue.value {
-            stop()
-            
-            trackValue.value = track
-            bardEngine.loadSong(song: songValue.value!, track: track)
-        }
+        stop()
+        
+        trackValue.value = track
+        bardEngine.loadSong(song: songValue.value!, track: track)
     }
     
     func loadSongFromName(songName: String) -> Song {
