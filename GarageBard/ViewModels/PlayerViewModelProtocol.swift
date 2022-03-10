@@ -15,9 +15,9 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var currentPosition: Double { get }
     var currentProgress: Double { get }
     var timeLeft: Double { get }
+    var songs: [Song] { get }
     
     func playOrPause()
     func stop()
-    func loadSongFromName(songName: String) -> Song
-    func loadSongFromURL(url: URL) -> Song
+    func openLoadSongDialog()
 }

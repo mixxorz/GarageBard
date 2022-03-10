@@ -15,7 +15,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var currentPosition: Double = 0
     var currentProgress: Double = 0
     var timeLeft: Double = 0
-    
+    var songs: [Song] = []
     
     init(song: Song?, track: Track?, isPlaying: Bool = false, currentProgress: Double = 0.3) {
         self.song = song
@@ -34,25 +34,6 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     func stop() {
     }
     
-    func loadSongFromName(songName: String) -> Song {
-        return Song(
-            name: songName,
-            durationInSeconds: 200.0,
-            tracks: [
-                Track(id: 0, name: "Saxophone"),
-                Track(id: 1, name: "Guitar"),
-            ]
-        )
-    }
-    
-    func loadSongFromURL(url: URL) -> Song {
-        return Song(
-            name: "Song Loaded From Path",
-            durationInSeconds: 200.0,
-            tracks: [
-                Track(id: 0, name: "Saxophone"),
-                Track(id: 1, name: "Guitar"),
-            ]
-        )
+    func openLoadSongDialog() {
     }
 }

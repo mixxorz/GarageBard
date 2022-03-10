@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 
 class PlayerViewModel: PlayerViewModelProtocol {
@@ -16,6 +17,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published private(set) var currentPosition: Double = 0
     @Published private(set) var currentProgress: Double = 0
     @Published private(set) var timeLeft: Double = 0
+    @Published private(set) var songs: [Song] = []
     
     private var model: Player
     
@@ -27,6 +29,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
         model.song.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.song }.assign(to: &$song)
         model.track.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.track }.assign(to: &$track)
         model.isPlaying.receive(on: DispatchQueue.main).assign(to: &$isPlaying)
+        model.songs.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.songs }.assign(to: &$songs)
         model.currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
             self.currentPosition = position
@@ -69,11 +72,16 @@ class PlayerViewModel: PlayerViewModelProtocol {
         model.stop()
     }
     
-    func loadSongFromName(songName: String) -> Song {
-        return model.loadSongFromName(songName: songName)
-    }
-    
-    func loadSongFromURL(url: URL) -> Song {
-        return model.loadSongFromPath(url: url)
+    func openLoadSongDialog() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.midi]
+        
+        if panel.runModal() == .OK {
+            if let url = panel.url {
+                model.loadSongFromURL(url: url)
+            }
+        }
     }
 }

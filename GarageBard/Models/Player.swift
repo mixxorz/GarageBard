@@ -35,12 +35,16 @@ class Player {
     var currentPosition: AnyPublisher<Double, Never> {
         currentPositionValue.eraseToAnyPublisher()
     }
+    var songs: AnyPublisher<[Song], Never> {
+        songsValue.eraseToAnyPublisher()
+    }
     
     // State variables
     private let songValue = CurrentValueSubject<Song?, Never>(nil)
     private let trackValue = CurrentValueSubject<Track?, Never>(nil)
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
     private let currentPositionValue = CurrentValueSubject<Double, Never>(0)
+    private let songsValue = CurrentValueSubject<[Song], Never>([])
     
     private let bardEngine = BardEngine()
     private var cancellables = Set<AnyCancellable>()
@@ -71,12 +75,9 @@ class Player {
         bardEngine.loadSong(song: songValue.value!, track: track)
     }
     
-    func loadSongFromName(songName: String) -> Song {
-        return bardEngine.loadSong(fromName: songName)
-    }
-    
-    func loadSongFromPath(url: URL) -> Song {
-        return bardEngine.loadSong(fromURL: url)
+    func loadSongFromURL(url: URL) {
+        let song = bardEngine.loadSong(fromURL: url)
+        songsValue.value.append(song)
     }
     
     func play() {
