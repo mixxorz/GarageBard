@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Row: View {
-    @EnvironmentObject var model: PlayerViewModel
+    @EnvironmentObject var vm: PlayerViewModel
     
     @State var isHovering: Bool = false
     
@@ -17,7 +17,7 @@ struct Row: View {
     
     var body: some View {
         Button(action: {
-            model.setTrack(track: track)
+            vm.track = track
         }) {
             HStack {
                 Text(track.name.capitalized)
@@ -88,6 +88,7 @@ struct TrackPopover_Previews: PreviewProvider {
     
     static var previews: some View {
         TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
+            .frame(width: 200)
             .preferredColorScheme(.light)
             .environmentObject(
                 FakePlayerViewModel(
@@ -97,6 +98,7 @@ struct TrackPopover_Previews: PreviewProvider {
             )
         
         TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
+            .frame(width: 200)
             .preferredColorScheme(.dark)
             .environmentObject(
                 FakePlayerViewModel(

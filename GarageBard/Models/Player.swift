@@ -64,10 +64,12 @@ class Player {
     }
     
     func setTrack(track: Track) {
-        stop()
-        
-        trackValue.value = track
-        bardEngine.loadSong(song: songValue.value!, track: track)
+        if track != trackValue.value {
+            stop()
+            
+            trackValue.value = track
+            bardEngine.loadSong(song: songValue.value!, track: track)
+        }
     }
     
     func loadSongFromName(songName: String) -> Song {

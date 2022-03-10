@@ -12,10 +12,10 @@ import Combine
 class PlayerViewModel: PlayerViewModelProtocol {
     @Published var song: Song? = nil
     @Published var track: Track? = nil
-    @Published var isPlaying: Bool = false
-    @Published var currentPosition: Double = 0
-    @Published var currentProgress: Double = 0
-    @Published var timeLeft: Double = 0
+    @Published private(set) var isPlaying: Bool = false
+    @Published private(set) var currentPosition: Double = 0
+    @Published private(set) var currentProgress: Double = 0
+    @Published private(set) var timeLeft: Double = 0
     
     private var model: Player
     
@@ -47,7 +47,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
         $track.sink(receiveValue: { [weak self] in
             guard let self = self else { return }
             
-            if $0 != nil && $0 != self.track {
+            if $0 != nil {
                 self.model.setTrack(track: $0!)
             }
         }).store(in: &cancellables)
@@ -67,10 +67,6 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     func setSong(song: Song) {
         model.setSong(song: song)
-    }
-    
-    func setTrack(track: Track) {
-        model.setTrack(track: track)
     }
     
     func loadSongFromName(songName: String) -> Song {
