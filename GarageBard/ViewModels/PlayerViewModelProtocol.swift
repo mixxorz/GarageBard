@@ -19,4 +19,5 @@ protocol PlayerViewModelProtocol: ObservableObject {
     func playOrPause()
     func stop()
     func loadSongFromName(songName: String) -> Song
+    func loadSongFromURL(url: URL) -> Song
 }

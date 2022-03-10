@@ -17,6 +17,7 @@ struct Track: Hashable, Identifiable {
 struct Song: Identifiable, Equatable {
     var id: String { self.name }
     var name: String
+    var url: URL?
     var durationInSeconds: Double
     var tracks: [Track]
 }
@@ -72,6 +73,10 @@ class Player {
     
     func loadSongFromName(songName: String) -> Song {
         return bardEngine.loadSong(fromName: songName)
+    }
+    
+    func loadSongFromPath(url: URL) -> Song {
+        return bardEngine.loadSong(fromURL: url)
     }
     
     func play() {

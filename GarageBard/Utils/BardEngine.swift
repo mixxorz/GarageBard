@@ -49,10 +49,20 @@ class BardEngine {
     
     func loadSong(song: Song, track: Track) {
         // Load song into sequencer
-        guard let asset = NSDataAsset(name: song.name) else {
-            fatalError("Missing data asset")
+        let data: Data
+        if let url = song.url {
+            do {
+                data = try Data(contentsOf: url)
+            } catch {
+                NSLog("BardEngine: \(error)")
+                return
+            }
+        } else {
+            guard let asset = NSDataAsset(name: song.name) else {
+                fatalError("Missing data asset")
+            }
+            data = asset.data
         }
-        let data: Data = asset.data
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
         
@@ -105,12 +115,35 @@ class BardEngine {
         return Song(name: songName, durationInSeconds: tmpSequencer.length.seconds, tracks: tracks)
     }
     
+    func loadSong(fromURL url: URL) -> Song {
+        let midi = MidiData()
+        let tmpSequencer = AppleSequencer()
+        
+        do {
+            let data = try Data(contentsOf: url)
+            midi.load(data: data)
+            tmpSequencer.loadMIDIFile(fromData: data)
+        } catch {
+            fatalError("Error opening file: \(error)")
+        }
+        
+        // Load track options
+        let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
+            if (track.trackName != "") {
+                return Track(id: index, name: track.trackName)
+            }
+            return Track(id: index, name: "Track " + String(index))
+        }
+        
+        return Song(name: url.lastPathComponent, url: url, durationInSeconds: tmpSequencer.length.seconds, tracks: tracks)
+    }
+    
     func play() {
         sequencer.play()
         bardController.start()
         isPlaying = true
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0 / sequencer.tempo, repeats: true) { [weak self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.currentPosition = 60 / self.sequencer.tempo * self.sequencer.currentPosition.beats
         }

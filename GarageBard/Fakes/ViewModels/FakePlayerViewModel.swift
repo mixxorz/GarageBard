@@ -44,4 +44,15 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
             ]
         )
     }
+    
+    func loadSongFromURL(url: URL) -> Song {
+        return Song(
+            name: "Song Loaded From Path",
+            durationInSeconds: 200.0,
+            tracks: [
+                Track(id: 0, name: "Saxophone"),
+                Track(id: 1, name: "Guitar"),
+            ]
+        )
+    }
 }

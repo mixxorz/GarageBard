@@ -72,4 +72,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     func loadSongFromName(songName: String) -> Song {
         return model.loadSongFromName(songName: songName)
     }
+    
+    func loadSongFromURL(url: URL) -> Song {
+        return model.loadSongFromPath(url: url)
+    }
 }
