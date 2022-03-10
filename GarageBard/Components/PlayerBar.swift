@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PlayerBar<Model: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var model: Model
+struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
     
     @State var isTrackPopoverOpen = false
     
@@ -17,56 +17,66 @@ struct PlayerBar<Model: PlayerViewModelProtocol>: View {
     var body: some View {
         VStack {
             HStack(alignment: .bottom) {
-                Text(model.currentProgress > 0 ? formatter.format(model.currentPosition) : "")
+                Text(vm.currentProgress > 0 ? formatter.format(vm.currentPosition) : "")
                     .font(.system(size: 10.0))
                     .frame(width: space(16), alignment: .leading)
                 Spacer()
-                Text(model.song?.name ?? "No song selected")
+                Text(vm.song?.name ?? "No song selected")
                     .font(.system(size: 14.0))
                     .foregroundColor(.white)
                     .lineLimit(1)
                 Spacer()
-                Text(model.currentProgress > 0 ? formatter.format(model.timeLeft) : "")
+                Text(vm.currentProgress > 0 ? formatter.format(vm.timeLeft) : "")
                     .font(.system(size: 10.0))
                     .frame(width: space(16), alignment: .trailing)
             }
-            ProgressBar(value: model.currentProgress)
+            ProgressBar(value: vm.currentProgress)
                 .frame(height: space(1))
-            HStack(spacing: space(4)) {
-                Button(action: { self.isTrackPopoverOpen = true }) {
-                    Image(systemName: "pianokeys")
-                        .font(.system(size: 20.0))
-                        .foregroundColor(Color("grey400"))
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                .popover(
-                    isPresented: $isTrackPopoverOpen,
-                    arrowEdge: .bottom,
-                    content: {
-                        TrackPopover<Model>(tracks: model.song?.tracks ?? [])
+            ZStack {
+                HStack(spacing: space(4)) {
+                    Button(action: { self.isTrackPopoverOpen = true }) {
+                        Image(systemName: "pianokeys")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
                     }
-                )
-                Spacer()
-                Button(action: {
-                    model.playOrPause()
-                }) {
-                    Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                    .buttonStyle(BorderlessButtonStyle())
+                    .popover(
+                        isPresented: $isTrackPopoverOpen,
+                        arrowEdge: .bottom,
+                        content: {
+                            TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
+                        }
+                    )
+                    Spacer()
+                }
+                HStack(spacing: space(4)) {
+                    Button(action: vm.playOrPause) {
+                        Image(systemName: vm.isPlaying ? "pause.fill" : "play.fill")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                    }
+                    .buttonStyle(.plain)
+                    Button(action: vm.stop) {
+                        Image(systemName: "stop.fill")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                    }
+                    .buttonStyle(.plain)
+                }
+                HStack(spacing: space(4)) {
+                    Spacer()
+                    Button(action: vm.openLoadSongDialog) {
+                        Image(systemName: "folder.badge.plus")
+                            .font(.system(size: 20.0))
+                            .foregroundColor(Color("grey400"))
+                            .frame(width: 32)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    Image(systemName: "ellipsis")
                         .font(.system(size: 20.0))
                         .foregroundColor(Color("grey400"))
+                    
                 }
-                .buttonStyle(.plain)
-                Button(action: {
-                    model.stop()
-                }) {
-                    Image(systemName: "stop.fill")
-                        .font(.system(size: 20.0))
-                        .foregroundColor(Color("grey400"))
-                }
-                .buttonStyle(.plain)
-                Spacer()
-                Image(systemName: "ellipsis")
-                    .font(.system(size: 20.0))
-                    .foregroundColor(Color("grey400"))
             }
             .padding(.vertical, space(2))
         }

@@ -18,10 +18,6 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                     ForEach(vm.songs) { song in
                         PlaylistItemRow<ViewModel>(song: song)
                     }
-                    Text("Choose song")
-                        .onTapGesture {
-                            vm.openLoadSongDialog()
-                        }
                 }
                 .padding(space(4))
             }
