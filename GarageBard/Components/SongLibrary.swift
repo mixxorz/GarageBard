@@ -26,9 +26,19 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
 }
 
 struct SongLibrary_Previews: PreviewProvider {
+    static let vm = FakePlayerViewModel(song: nil, track: nil)
+    
     static var previews: some View {
         SongLibrary<FakePlayerViewModel>()
             .frame(maxWidth: space(100))
-            .environmentObject(FakePlayerViewModel(song: nil, track: nil))
+            .environmentObject(vm)
+            .onAppear {
+                vm.makeSong(name: "Song 1")
+                vm.makeSong(name: "Song 2")
+                vm.makeSong(name: "Song 3")
+                vm.makeSong(name: "Song 4")
+                vm.makeSong(name: "Song 5")
+                vm.makeSong(name: "Song 6")
+            }
     }
 }

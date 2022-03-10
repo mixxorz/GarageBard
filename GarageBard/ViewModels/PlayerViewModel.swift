@@ -84,4 +84,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
             }
         }
     }
+    
+    func loadSong(fromURL url: URL) {
+        model.loadSongFromURL(url: url)
+    }
 }

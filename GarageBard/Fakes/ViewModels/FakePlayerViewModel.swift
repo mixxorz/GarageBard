@@ -9,6 +9,7 @@ import Foundation
 
 
 class FakePlayerViewModel: PlayerViewModelProtocol {
+    
     var song: Song?
     var track: Track?
     var isPlaying: Bool = false
@@ -35,5 +36,14 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
     
     func openLoadSongDialog() {
+    }
+    
+    func makeSong(name: String) {
+        songs.append(
+            Song(name: name, durationInSeconds: 123.0, tracks: [])
+        )
+    }
+    
+    func loadSong(fromURL url: URL) {
     }
 }
