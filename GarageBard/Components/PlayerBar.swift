@@ -7,6 +7,32 @@
 
 import SwiftUI
 
+struct PlayerButton: View {
+    
+    var action: () -> Void
+    var iconName: String
+    
+    @State var isHovering = false
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .frame(width: space(8), height: space(6))
+                    .foregroundColor(.white)
+                    .opacity(isHovering ? 0.1 : 0)
+                Image(systemName: iconName)
+                    .font(.system(size: 20.0))
+                    .foregroundColor(Color("grey400"))
+            }
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            isHovering = hovering
+        }
+    }
+}
+
 struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     
@@ -33,13 +59,8 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             ProgressBar(value: vm.currentProgress)
                 .frame(height: space(1))
             ZStack {
-                HStack(spacing: space(4)) {
-                    Button(action: { self.isTrackPopoverOpen = true }) {
-                        Image(systemName: "pianokeys")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
+                HStack {
+                    PlayerButton(action: { self.isTrackPopoverOpen = true }, iconName: "pianokeys")
                     .popover(
                         isPresented: $isTrackPopoverOpen,
                         arrowEdge: .bottom,
@@ -49,33 +70,14 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     )
                     Spacer()
                 }
-                HStack(spacing: space(4)) {
-                    Button(action: vm.playOrPause) {
-                        Image(systemName: vm.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
-                    }
-                    .buttonStyle(.plain)
-                    Button(action: vm.stop) {
-                        Image(systemName: "stop.fill")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
-                    }
-                    .buttonStyle(.plain)
+                HStack(spacing: space(2)) {
+                    PlayerButton(action: vm.playOrPause, iconName: vm.isPlaying ? "pause.fill" : "play.fill")
+                    PlayerButton(action: vm.stop, iconName: "stop.fill")
                 }
-                HStack(spacing: space(4)) {
+                HStack {
                     Spacer()
-                    Button(action: vm.openLoadSongDialog) {
-                        Image(systemName: "folder.badge.plus")
-                            .font(.system(size: 20.0))
-                            .foregroundColor(Color("grey400"))
-                            .frame(width: 32)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 20.0))
-                        .foregroundColor(Color("grey400"))
-                    
+                    PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
+                    PlayerButton(action: {}, iconName: "ellipsis")
                 }
             }
             .padding(.vertical, space(2))
