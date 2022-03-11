@@ -68,16 +68,22 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                             TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
                         }
                     )
+                    .help("Tracks")
                     Spacer()
                 }
                 HStack(spacing: space(2)) {
                     PlayerButton(action: vm.playOrPause, iconName: vm.isPlaying ? "pause.fill" : "play.fill")
+                        .help(vm.isPlaying ? "Pause" : "Play")
+                        .keyboardShortcut(.space, modifiers: [])
                     PlayerButton(action: vm.stop, iconName: "stop.fill")
+                        .help("Stop")
                 }
                 HStack {
                     Spacer()
                     PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
+                        .help("Add song")
                     PlayerButton(action: {}, iconName: "ellipsis")
+                        .help("Settings")
                 }
             }
             .padding(.vertical, space(2))
