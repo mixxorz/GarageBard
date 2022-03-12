@@ -58,6 +58,9 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     .frame(width: space(16), alignment: .trailing)
             }
             ProgressBar(value: vm.currentProgress)
+                .onSeek { percentage in
+                    print(percentage)
+                }
                 .frame(height: space(1))
             ZStack {
                 HStack {
