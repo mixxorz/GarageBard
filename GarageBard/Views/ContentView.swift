@@ -12,15 +12,18 @@ func space(_ value: Int) -> CGFloat {
     return CGFloat(value * 4)
 }
 
-struct ContentView<Model: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var model: Model
+struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
     
     var body: some View {
         ZStack {
             Color("grey600")
             VStack {
-                PlayerBar<Model>()
-                SongLibrary<Model>()
+                PlayerBar<ViewModel>()
+                SongLibrary<ViewModel>()
+            }
+            .overlay {
+                Notifications<ViewModel>()
             }
         }
         .edgesIgnoringSafeArea(.all)
