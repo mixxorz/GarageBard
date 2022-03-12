@@ -33,6 +33,7 @@
 		5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E227DC1C62004AD546 /* PopoverMenu.swift */; };
 		5EF408E827DCA272004AD546 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E727DCA272004AD546 /* Toast.swift */; };
 		5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E927DCA5EB004AD546 /* Notifications.swift */; };
+		5EF408EC27DCB976004AD546 /* SongLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408EB27DCB975004AD546 /* SongLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		5EF408E227DC1C62004AD546 /* PopoverMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverMenu.swift; sourceTree = "<group>"; };
 		5EF408E727DCA272004AD546 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		5EF408E927DCA5EB004AD546 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		5EF408EB27DCB975004AD546 /* SongLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 		5E693B4A27D3C11800EAA678 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5EF408EB27DCB975004AD546 /* SongLoader.swift */,
 				5E693B4B27D3C14C00EAA678 /* Player.swift */,
 			);
 			path = Models;
@@ -402,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EA3895B27D2663500C4C2D3 /* ContentView.swift in Sources */,
+				5EF408EC27DCB976004AD546 /* SongLoader.swift in Sources */,
 				5E431BC427D51EC9005016D3 /* PlayerViewModelProtocol.swift in Sources */,
 				5EF408E827DCA272004AD546 /* Toast.swift in Sources */,
 				5E06FCB227D4DCD000214BE3 /* PlaylistItemRow.swift in Sources */,

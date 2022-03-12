@@ -45,7 +45,7 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
 
 struct PlaylistItemRow_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistItemRow<FakePlayerViewModel>(song: Song(name: "Flow - Final Fantasy XIV", durationInSeconds: 200.0, tracks: []))
+        PlaylistItemRow<FakePlayerViewModel>(song: createSong())
             .frame(maxWidth: space(100))
             .padding(.horizontal, space(4))
             .preferredColorScheme(.dark)

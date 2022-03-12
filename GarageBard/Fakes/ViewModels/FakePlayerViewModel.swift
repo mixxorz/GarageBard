@@ -8,6 +8,22 @@
 import Foundation
 
 
+func createSong(name: String = "GarageBard", durationInSeconds: Double = 150.0) -> Song {
+     return Song(
+        name: name,
+        url: URL(fileURLWithPath: "some.mid"),
+        durationInSeconds: durationInSeconds,
+        tracks: [
+            Track(id: 0, name: "Saxophone"),
+            Track(id: 1, name: "Guitar"),
+            Track(id: 2, name: "Lute"),
+            Track(id: 3, name: "Drum Kit"),
+            Track(id: 4, name: "Electric Guitar"),
+            Track(id: 5, name: "Violin")
+        ]
+    )
+}
+
 class FakePlayerViewModel: PlayerViewModelProtocol {
     var song: Song?
     var track: Track?
@@ -41,7 +57,12 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     
     func makeSong(name: String) {
         songs.append(
-            Song(name: name, durationInSeconds: 123.0, tracks: [])
+            Song(
+                name: name,
+                url: URL(fileURLWithPath: "some.mid"),
+                durationInSeconds: 123.0,
+                tracks: []
+            )
         )
     }
     

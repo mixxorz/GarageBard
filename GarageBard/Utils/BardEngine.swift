@@ -70,32 +70,21 @@ class BardEngine {
         }
     }
     
-    func loadSong(song: Song, track: Track) {
+    func loadSong(song: Song) {
         // Load song into sequencer
         let data: Data
-        if let url = song.url {
-            do {
-                data = try Data(contentsOf: url)
-            } catch {
-                NSLog("BardEngine: \(error)")
-                return
-            }
-        } else {
-            guard let asset = NSDataAsset(name: song.name) else {
-                fatalError("Missing data asset")
-            }
-            data = asset.data
+        
+        do {
+            data = try Data(contentsOf: song.url)
+        } catch {
+            NSLog("BardEngine: \(error)")
+            return
         }
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
         
         // Otherwise, use hook it up with the callback instruments
-        sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
-        if sequencer.tracks.indices.contains(track.id) {
-            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
-        } else {
-            NSLog("BardEngine: Couldn't find track.")
-        }
+        loadTrack(track: song.tracks[0])
         
         let controlTrack = sequencer.newTrack()
         controlTrack?.add(
@@ -113,54 +102,23 @@ class BardEngine {
         sequencer.preroll()
     }
     
-    func loadSong(fromName songName: String) -> Song {
-        let midi = MidiData()
-        guard let asset = NSDataAsset(name: songName) else {
-            fatalError("Missing data asset")
-        }
-        let data: Data = asset.data
-        midi.load(data: data)
+    func loadTrack(track: Track) {
+        let wasPlaying = sequencer.isPlaying
         
-        let tmpSequencer = AppleSequencer()
-        tmpSequencer.loadMIDIFile(fromData: data)
-        
-        // Load track options
-        let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
-            if (track.trackName != "") {
-                return Track(id: index, name: track.trackName)
-            }
-            return Track(id: index, name: "Track " + String(index))
+        if wasPlaying {
+            sequencer.stop()
         }
         
-        return Song(name: songName, durationInSeconds: tmpSequencer.length.seconds, tracks: tracks)
-    }
-    
-    func loadSong(fromURL url: URL) -> Song {
-        let midi = MidiData()
-        let tmpSequencer = AppleSequencer()
-        
-        do {
-            let data = try Data(contentsOf: url)
-            midi.load(data: data)
-            tmpSequencer.loadMIDIFile(fromData: data)
-        } catch {
-            fatalError("Error opening file: \(error)")
+        sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
+        if sequencer.tracks.indices.contains(track.id) {
+            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
+        } else {
+            NSLog("BardEngine: Couldn't find track.")
         }
         
-        // Load track options
-        let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
-            if (track.trackName != "") {
-                return Track(id: index, name: track.trackName)
-            }
-            return Track(id: index, name: "Track " + String(index))
+        if wasPlaying {
+            sequencer.play()
         }
-        
-        return Song(
-            name: url.lastPathComponent,
-            url: url,
-            durationInSeconds: tmpSequencer.seconds(duration: tmpSequencer.length),
-            tracks: tracks
-        )
     }
     
     func play() {

@@ -13,18 +13,6 @@ enum PlayMode {
     case listen, perform
 }
 
-struct Track: Hashable, Identifiable {
-    var id: Int
-    var name: String
-}
-
-struct Song: Identifiable, Equatable {
-    var id: String { self.name }
-    var name: String
-    var url: URL?
-    var durationInSeconds: Double
-    var tracks: [Track]
-}
 
 class Player {
     var song: AnyPublisher<Song?, Never> {
@@ -55,6 +43,7 @@ class Player {
     private let playModeValue = CurrentValueSubject<PlayMode, Never>(.perform)
     
     private let bardEngine = BardEngine()
+    private let songLoader = SongLoader()
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -74,14 +63,12 @@ class Player {
             trackValue.value = song.tracks[0]
         }
         
-        bardEngine.loadSong(song: song, track: song.tracks[0])
+        bardEngine.loadSong(song: song)
     }
     
     func setTrack(track: Track) {
-        stop()
-        
         trackValue.value = track
-        bardEngine.loadSong(song: songValue.value!, track: track)
+        bardEngine.loadTrack(track: track)
     }
     
     func setPlayMode(playMode: PlayMode) {
@@ -89,7 +76,7 @@ class Player {
     }
     
     func loadSongFromURL(url: URL) {
-        let song = bardEngine.loadSong(fromURL: url)
+        let song = songLoader.openSong(fromURL: url)
         songsValue.value.append(song)
     }
     

@@ -133,11 +133,7 @@ struct PlayerBar_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
             .environmentObject(
                 FakePlayerViewModel(
-                    song: Song(
-                        name: "This is a really long song title that breaks into multiple lines",
-                        durationInSeconds: 123.0,
-                        tracks: []
-                    ),
+                    song: createSong(name: "This is a really long song title that breaks into multiple lines"),
                     track: nil,
                     isPlaying: true,
                     currentProgress: 0.8
