@@ -12,34 +12,6 @@ import MidiParser
 import Carbon.HIToolbox
 import Combine
 
-extension AppleSequencer {
-    
-    /// Returns the timestamp in real seconds at the given beat
-    /// - parameter beats: Position at which the timestamp is desired
-    func getSecondsAt(beats: Double) -> Double {
-        if beats <= 0 {
-            return 0
-        }
-        
-        let tempo = getTempo(at: beats - 1)
-        var tempoStartedAt: Double = 0
-        
-        for (curBeat, curTempo) in allTempoEvents {
-            if curBeat <= beats && curTempo == tempo {
-                tempoStartedAt = curBeat
-            }
-        }
-        
-        let duration = 60 * (beats - tempoStartedAt) / tempo
-        
-        if tempoStartedAt == 0 {
-            return duration
-        }
-        
-        return getSecondsAt(beats: tempoStartedAt) + duration
-    }
-}
-
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
@@ -186,7 +158,7 @@ class BardEngine {
         return Song(
             name: url.lastPathComponent,
             url: url,
-            durationInSeconds: tmpSequencer.getSecondsAt(beats: tmpSequencer.length.beats),
+            durationInSeconds: tmpSequencer.seconds(duration: tmpSequencer.length),
             tracks: tracks
         )
     }
@@ -200,10 +172,7 @@ class BardEngine {
             
             timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
                 guard let self = self else { return }
-                self.currentPosition = self.sequencer.getSecondsAt(beats: self.sequencer.currentPosition.beats)
-                
-                print("getSecondsAt: \(self.currentPosition)")
-                print("seconds: \(self.sequencer.seconds(duration: self.sequencer.currentPosition))")
+                self.currentPosition = self.sequencer.seconds(duration: self.sequencer.currentPosition)
             }
         }
     }
