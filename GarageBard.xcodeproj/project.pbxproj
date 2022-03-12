@@ -29,8 +29,6 @@
 		5EE9E07327D31686006F70BD /* MidiParser.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EE9E07227D31686006F70BD /* MidiParser.xcframework */; };
 		5EE9E07427D31686006F70BD /* MidiParser.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EE9E07227D31686006F70BD /* MidiParser.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07727D3778F006F70BD /* AudioKit */; };
-		5EE9E07B27D3796B006F70BD /* AudioKitEX in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07A27D3796B006F70BD /* AudioKitEX */; };
-		5EE9E07F27D3870B006F70BD /* DunneAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07E27D3870B006F70BD /* DunneAudioKit */; };
 		5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3524727D6478C006E3A06 /* TimeFormatter.swift */; };
 		5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E227DC1C62004AD546 /* PopoverMenu.swift */; };
 /* End PBXBuildFile section */
@@ -101,8 +99,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EE9E07B27D3796B006F70BD /* AudioKitEX in Frameworks */,
-				5EE9E07F27D3870B006F70BD /* DunneAudioKit in Frameworks */,
 				5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */,
 				5EE9E07327D31686006F70BD /* MidiParser.xcframework in Frameworks */,
 			);
@@ -281,8 +277,6 @@
 			name = GarageBard;
 			packageProductDependencies = (
 				5EE9E07727D3778F006F70BD /* AudioKit */,
-				5EE9E07A27D3796B006F70BD /* AudioKitEX */,
-				5EE9E07E27D3870B006F70BD /* DunneAudioKit */,
 			);
 			productName = GarageBard;
 			productReference = 5EA3895527D2663500C4C2D3 /* GarageBard.app */;
@@ -358,8 +352,6 @@
 			mainGroup = 5EA3894C27D2663500C4C2D3;
 			packageReferences = (
 				5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */,
-				5EE9E07927D3796B006F70BD /* XCRemoteSwiftPackageReference "AudioKitEX" */,
-				5EE9E07D27D3870B006F70BD /* XCRemoteSwiftPackageReference "DunneAudioKit" */,
 			);
 			productRefGroup = 5EA3895627D2663500C4C2D3 /* Products */;
 			projectDirPath = "";
@@ -740,22 +732,6 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		5EE9E07927D3796B006F70BD /* XCRemoteSwiftPackageReference "AudioKitEX" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AudioKit/AudioKitEX.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-		5EE9E07D27D3870B006F70BD /* XCRemoteSwiftPackageReference "DunneAudioKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AudioKit/DunneAudioKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -763,16 +739,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
-		};
-		5EE9E07A27D3796B006F70BD /* AudioKitEX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5EE9E07927D3796B006F70BD /* XCRemoteSwiftPackageReference "AudioKitEX" */;
-			productName = AudioKitEX;
-		};
-		5EE9E07E27D3870B006F70BD /* DunneAudioKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5EE9E07D27D3870B006F70BD /* XCRemoteSwiftPackageReference "DunneAudioKit" */;
-			productName = DunneAudioKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
