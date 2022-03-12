@@ -12,13 +12,13 @@ import MidiParser
 import Carbon.HIToolbox
 import Combine
 
-let DEMO_MODE = false
-
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
     private let controlInstrument = MIDICallbackInstrument()
     private let nullInstrument = MIDICallbackInstrument()
+    private let sampler = MIDISampler()
+    private let engine = AudioEngine()
     private let bardController = BardController()
     
     private var timer: Timer?
@@ -29,14 +29,23 @@ class BardEngine {
     init() {
         instrument.callback = instrumentCallback
         controlInstrument.callback = controlCallback
+        engine.output = sampler
+        
+        try? engine.start()
+    }
+    
+    deinit {
+        engine.stop()
     }
     
     private func instrumentCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
             bardController.noteOn(note)
+            sampler.play(noteNumber: note, velocity: velocity, channel: 1)
         } else if mstat == .noteOff {
             bardController.noteOff(note)
+            sampler.stop(noteNumber: note, channel: 1)
         }
     }
     
@@ -66,15 +75,12 @@ class BardEngine {
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
         
-        // Demo mode plays the song using the default AppleSequencer
-        if !DEMO_MODE {
-            // Otherwise, use hook it up with the callback instruments
-            sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
-            if sequencer.tracks.indices.contains(track.id) {
-                sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
-            } else {
-                NSLog("BardEngine: Couldn't find track.")
-            }
+        // Otherwise, use hook it up with the callback instruments
+        sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
+        if sequencer.tracks.indices.contains(track.id) {
+            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
+        } else {
+            NSLog("BardEngine: Couldn't find track.")
         }
         
         let controlTrack = sequencer.newTrack()

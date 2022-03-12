@@ -48,7 +48,6 @@ class Player {
     
     private let bardEngine = BardEngine()
     private var cancellables = Set<AnyCancellable>()
-    private var timer: Timer?
     
     init() {
         bardEngine.$isPlaying.assign(to: \.isPlayingValue.value, on: self).store(in: &cancellables)
@@ -82,19 +81,14 @@ class Player {
     
     func play() {
         self.isPlayingValue.value = true
-        // Give some time for the user to switch to the game
-        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { timer in
-            self.bardEngine.play()
-        }
+        self.bardEngine.play()
     }
     
     func pause() {
-        timer?.invalidate()
         bardEngine.pause()
     }
     
     func stop() {
-        timer?.invalidate()
         bardEngine.stop()
     }
 }

@@ -29,11 +29,28 @@ struct ContentView<Model: PlayerViewModelProtocol>: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+     static let song = Song(
+        name: "My Song",
+        durationInSeconds: 150.0,
+        tracks: [
+            Track(id: 0, name: "Saxophone"),
+            Track(id: 1, name: "Guitar"),
+            Track(id: 2, name: "Lute"),
+            Track(id: 3, name: "Drum Kit"),
+            Track(id: 4, name: "Electric Guitar"),
+            Track(id: 5, name: "Violin")
+        ]
+    )
+    
     static var previews: some View {
         Group {
             ContentView<FakePlayerViewModel>()
                 .preferredColorScheme(.dark)
-                .environmentObject(FakePlayerViewModel(song: nil, track: nil))
+                .environmentObject(
+                    FakePlayerViewModel(
+                        song: song, track: song.tracks[0]
+                    )
+                )
         }
     }
 }

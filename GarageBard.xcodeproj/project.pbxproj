@@ -32,6 +32,7 @@
 		5EE9E07B27D3796B006F70BD /* AudioKitEX in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07A27D3796B006F70BD /* AudioKitEX */; };
 		5EE9E07F27D3870B006F70BD /* DunneAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07E27D3870B006F70BD /* DunneAudioKit */; };
 		5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3524727D6478C006E3A06 /* TimeFormatter.swift */; };
+		5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E227DC1C62004AD546 /* PopoverMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		5EA3897627D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		5EE9E07227D31686006F70BD /* MidiParser.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MidiParser.xcframework; path = Carthage/Build/MidiParser.xcframework; sourceTree = "<group>"; };
 		5EF3524727D6478C006E3A06 /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
+		5EF408E227DC1C62004AD546 /* PopoverMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				5E431BC127D50954005016D3 /* TrackPopover.swift */,
 				5E431BC927D52C2E005016D3 /* PlayerBar.swift */,
 				5E431BCB27D52CE4005016D3 /* SongLibrary.swift */,
+				5EF408E227DC1C62004AD546 /* PopoverMenu.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				5E693B4C27D3C14C00EAA678 /* Player.swift in Sources */,
 				5E693B5327D3D10900EAA678 /* ProgressBar.swift in Sources */,
 				5EA3895927D2663500C4C2D3 /* GarageBardApp.swift in Sources */,
+				5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */,
 				5E431BCC27D52CE4005016D3 /* SongLibrary.swift in Sources */,
 				5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */,
 				5E693B5527D3D12E00EAA678 /* PlayButton.swift in Sources */,

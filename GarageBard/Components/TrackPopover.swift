@@ -7,61 +7,25 @@
 
 import SwiftUI
 
-struct Row: View {
-    @EnvironmentObject var vm: PlayerViewModel
-    
-    @State var isHovering: Bool = false
-    
-    var track: Track
-    var selected: Bool
-    
-    var body: some View {
-        Button(action: {
-            vm.track = track
-        }) {
-            HStack {
-                Text(track.name.capitalized)
-                Spacer()
-                if selected {
-                    Image(systemName: "speaker.wave.2.fill")
-                }
-            }
-            .padding(space(1))
-            .contentShape(RoundedRectangle(cornerRadius: space(1), style: .continuous))
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .buttonStyle(.plain)
-        .background(
-            RoundedRectangle(cornerRadius: space(1), style: .continuous)
-                .fill(isHovering ? Color.accentColor : Color.clear)
-        )
-        .foregroundColor(isHovering ? Color.white : Color.primary)
-        .onHover { hovering in
-            isHovering = hovering
-        }
-    }
-}
-
-
-struct TrackPopover<Model: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var model: Model
+struct TrackPopover<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
     
     var tracks: [Track]
     
     var body: some View {
         VStack {
             if tracks.isNotEmpty {
-                VStack(spacing: 0) {
-                    ForEach(tracks.indices) { index in
-                        let track = tracks[index]
-                        VStack(spacing: 0) {
-                            Row(track: track, selected: model.track == track)
-                                .padding(.horizontal, -space(1))
+                PopoverMenu {
+                    ForEach(tracks) { track in
+                        PopoverMenuItem(action: { vm.track = track }) {
+                            Text(track.name.capitalized)
+                            Spacer()
+                            if vm.track == track {
+                                Image(systemName: "speaker.wave.2.fill")
+                            }
                         }
-                        .padding(.horizontal, space(1))
                     }
                 }
-                .frame(minWidth: space(38))
             } else {
                 Text("No tracks")
                     .padding(space(1))
