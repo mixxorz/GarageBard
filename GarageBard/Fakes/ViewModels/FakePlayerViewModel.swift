@@ -9,7 +9,6 @@ import Foundation
 
 
 class FakePlayerViewModel: PlayerViewModelProtocol {
-    
     var song: Song?
     var track: Track?
     var isPlaying: Bool = false
@@ -46,5 +45,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
     
     func loadSong(fromURL url: URL) {
+    }
+    
+    func seek(progress: Double, end: Bool) {
     }
 }

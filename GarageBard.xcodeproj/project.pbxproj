@@ -169,13 +169,13 @@
 		5E693B5127D3D0B900EAA678 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				5E693B5227D3D10900EAA678 /* ProgressBar.swift */,
 				5E693B5427D3D12E00EAA678 /* PlayButton.swift */,
-				5E06FCB127D4DCD000214BE3 /* PlaylistItemRow.swift */,
-				5E431BC127D50954005016D3 /* TrackPopover.swift */,
 				5E431BC927D52C2E005016D3 /* PlayerBar.swift */,
-				5E431BCB27D52CE4005016D3 /* SongLibrary.swift */,
+				5E06FCB127D4DCD000214BE3 /* PlaylistItemRow.swift */,
 				5EF408E227DC1C62004AD546 /* PopoverMenu.swift */,
+				5E693B5227D3D10900EAA678 /* ProgressBar.swift */,
+				5E431BCB27D52CE4005016D3 /* SongLibrary.swift */,
+				5E431BC127D50954005016D3 /* TrackPopover.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -183,8 +183,8 @@
 		5E693B5827D3F17C00EAA678 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5E693B5927D3F18900EAA678 /* BardEngine.swift */,
 				5E693B5D27D3F95000EAA678 /* BardController.swift */,
+				5E693B5927D3F18900EAA678 /* BardEngine.swift */,
 				5EF3524727D6478C006E3A06 /* TimeFormatter.swift */,
 			);
 			path = Utils;
@@ -214,17 +214,17 @@
 		5EA3895727D2663500C4C2D3 /* GarageBard */ = {
 			isa = PBXGroup;
 			children = (
-				5E431BC527D52196005016D3 /* Fakes */,
-				5E693B5827D3F17C00EAA678 /* Utils */,
-				5E693B5127D3D0B900EAA678 /* Components */,
-				5E693B5027D3D09500EAA678 /* Views */,
-				5E693B4D27D3CDA300EAA678 /* ViewModels */,
-				5E693B4A27D3C11800EAA678 /* Models */,
-				5EA3895827D2663500C4C2D3 /* GarageBardApp.swift */,
 				5EA3895C27D2663600C4C2D3 /* Assets.xcassets */,
+				5E693B5127D3D0B900EAA678 /* Components */,
+				5E431BC527D52196005016D3 /* Fakes */,
 				5EA3896127D2663600C4C2D3 /* GarageBard.entitlements */,
-				5EA3895E27D2663600C4C2D3 /* Preview Content */,
+				5EA3895827D2663500C4C2D3 /* GarageBardApp.swift */,
 				5E693B5627D3D87600EAA678 /* Info.plist */,
+				5E693B4A27D3C11800EAA678 /* Models */,
+				5EA3895E27D2663600C4C2D3 /* Preview Content */,
+				5E693B5827D3F17C00EAA678 /* Utils */,
+				5E693B4D27D3CDA300EAA678 /* ViewModels */,
+				5E693B5027D3D09500EAA678 /* Views */,
 			);
 			path = GarageBard;
 			sourceTree = "<group>";

@@ -22,6 +22,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     private var model: Player
     
+    private var seekTimer: Timer?
+    private var isSeeking: Bool = false
     private var cancellables = Set<AnyCancellable>()
     
     init(model: Player = Player()) {
@@ -36,10 +38,14 @@ class PlayerViewModel: PlayerViewModelProtocol {
             self.currentPosition = position
             
             if let song = self.song {
-                self.currentProgress = position / song.durationInSeconds
+                if !self.isSeeking {
+                    self.currentProgress = position / song.durationInSeconds
+                }
                 self.timeLeft = position - song.durationInSeconds
             } else {
-                self.currentProgress = 0
+                if !self.isSeeking {
+                    self.currentProgress = 0
+                }
                 self.timeLeft = 0
             }
         }).store(in: &cancellables)
@@ -93,5 +99,22 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     func loadSong(fromURL url: URL) {
         model.loadSongFromURL(url: url)
+    }
+    
+    func seek(progress: Double, end: Bool) {
+        if song != nil {
+            isSeeking = true
+            currentProgress = progress
+            // Make sure to debounce the seek calls
+            seekTimer?.invalidate()
+            seekTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
+                self?.model.seek(progress)
+                
+                if end {
+                    self?.isSeeking = false
+                }
+            }
+        }
+        
     }
 }

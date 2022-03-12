@@ -58,10 +58,12 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     .frame(width: space(16), alignment: .trailing)
             }
             ProgressBar(value: vm.currentProgress)
-                .onSeek { percentage in
-                    print(percentage)
-                }
                 .frame(height: space(1))
+                .onSeek(seekAction: { percentage in
+                    vm.seek(progress: percentage, end: false)
+                }, seekEndAction: { percentage in
+                    vm.seek(progress: percentage, end: true)
+                })
             ZStack {
                 HStack {
                     PlayerButton(action: { self.isTrackPopoverOpen = true }, iconName: "pianokeys")

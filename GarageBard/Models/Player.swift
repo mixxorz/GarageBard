@@ -104,4 +104,10 @@ class Player {
     func stop() {
         bardEngine.stop()
     }
+    
+    func seek(_ progress: Double) {
+        if let song = songValue.value {
+            bardEngine.setTime(song.durationInSeconds * progress)
+        }
+    }
 }

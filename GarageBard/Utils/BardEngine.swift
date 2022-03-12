@@ -192,4 +192,9 @@ class BardEngine {
         currentPosition = 0
         isPlaying = false
     }
+    
+    func setTime(_ timestamp: Double) {
+        sequencer.setTime(sequencer.duration(seconds: timestamp).beats)
+    }
+    
 }
