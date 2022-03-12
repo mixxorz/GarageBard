@@ -28,11 +28,10 @@ struct TrackPopover<ViewModel: PlayerViewModelProtocol>: View {
                 }
             } else {
                 Text("No tracks")
-                    .padding(space(1))
+                    .padding(space(2))
             }
         }
         .foregroundColor(Color.primary)
-        .padding(space(1))
     }
 }
 

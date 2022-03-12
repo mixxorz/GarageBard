@@ -134,6 +134,12 @@ class BardController {
         }
     }
     
+    func allNotesOff() {
+        for (_, key) in noteKeyMap {
+            self.keyUp(CGKeyCode(key))
+        }
+    }
+    
     func start() {
         let tickRate = self.tickRateMs * 1000
         
@@ -167,6 +173,9 @@ class BardController {
                         }
                     }
                 }
+                
+                // Lift all keys when stopping
+                self.allNotesOff()
             }
         }
     }

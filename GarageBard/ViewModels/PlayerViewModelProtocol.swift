@@ -16,6 +16,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var currentProgress: Double { get }
     var timeLeft: Double { get }
     var songs: [Song] { get }
+    var playMode: PlayMode { get set }
     
     func playOrPause()
     func stop()

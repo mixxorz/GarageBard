@@ -17,6 +17,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var currentProgress: Double = 0
     var timeLeft: Double = 0
     var songs: [Song] = []
+    var playMode: PlayMode = .perform
     
     init(song: Song?, track: Track?, isPlaying: Bool = false, currentProgress: Double = 0.3) {
         self.song = song

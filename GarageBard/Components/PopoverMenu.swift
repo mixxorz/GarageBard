@@ -48,7 +48,7 @@ struct PopoverMenu<Content: View>: View {
         VStack(spacing: 0, content: content)
         .foregroundColor(Color.primary)
         .frame(minWidth: space(38))
-//        .padding(space(1))
+        .padding(space(1))
     }
 }
 

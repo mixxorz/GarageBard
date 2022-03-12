@@ -18,6 +18,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published private(set) var currentProgress: Double = 0
     @Published private(set) var timeLeft: Double = 0
     @Published private(set) var songs: [Song] = []
+    @Published var playMode: PlayMode = .perform
     
     private var model: Player
     
@@ -57,6 +58,11 @@ class PlayerViewModel: PlayerViewModelProtocol {
             if let newTrack = $0 {
                 self.model.setTrack(track: newTrack)
             }
+        }).store(in: &cancellables)
+        
+        $playMode.sink(receiveValue: { [weak self] in
+            guard let self = self else { return }
+            self.model.setPlayMode(playMode: $0)
         }).store(in: &cancellables)
     }
     

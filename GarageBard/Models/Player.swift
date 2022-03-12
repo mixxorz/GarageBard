@@ -9,6 +9,10 @@ import SwiftUI
 import Foundation
 import Combine
 
+enum PlayMode {
+    case listen, perform
+}
+
 struct Track: Hashable, Identifiable {
     var id: Int
     var name: String
@@ -38,6 +42,9 @@ class Player {
     var songs: AnyPublisher<[Song], Never> {
         songsValue.eraseToAnyPublisher()
     }
+    var playMode: AnyPublisher<PlayMode, Never> {
+        playModeValue.eraseToAnyPublisher()
+    }
     
     // State variables
     private let songValue = CurrentValueSubject<Song?, Never>(nil)
@@ -45,6 +52,7 @@ class Player {
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
     private let currentPositionValue = CurrentValueSubject<Double, Never>(0)
     private let songsValue = CurrentValueSubject<[Song], Never>([])
+    private let playModeValue = CurrentValueSubject<PlayMode, Never>(.perform)
     
     private let bardEngine = BardEngine()
     private var cancellables = Set<AnyCancellable>()
@@ -52,6 +60,8 @@ class Player {
     init() {
         bardEngine.$isPlaying.assign(to: \.isPlayingValue.value, on: self).store(in: &cancellables)
         bardEngine.$currentPosition.assign(to: \.currentPositionValue.value, on: self).store(in: &cancellables)
+        
+        playModeValue.assign(to: \.playMode, on: bardEngine).store(in: &cancellables)
     }
     
     func setSong(song: Song) {
@@ -74,13 +84,16 @@ class Player {
         bardEngine.loadSong(song: songValue.value!, track: track)
     }
     
+    func setPlayMode(playMode: PlayMode) {
+        playModeValue.value = playMode
+    }
+    
     func loadSongFromURL(url: URL) {
         let song = bardEngine.loadSong(fromURL: url)
         songsValue.value.append(song)
     }
     
     func play() {
-        self.isPlayingValue.value = true
         self.bardEngine.play()
     }
     

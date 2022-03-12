@@ -37,6 +37,7 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     
     @State var isTrackPopoverOpen = false
+    @State var isSettingsPopoverOpen = false
     
     let formatter = TimeFormatter.instance
     
@@ -82,7 +83,29 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     Spacer()
                     PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
                         .help("Add song")
-                    PlayerButton(action: {}, iconName: "ellipsis")
+                    PlayerButton(action: { self.isSettingsPopoverOpen  = true }, iconName: "ellipsis")
+                        .popover(
+                            isPresented: $isSettingsPopoverOpen,
+                            arrowEdge: .bottom,
+                            content: {
+                                PopoverMenu {
+                                    PopoverMenuItem(action: { vm.playMode = .perform }) {
+                                        Text("Perform")
+                                        Spacer()
+                                        if vm.playMode == .perform {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                    PopoverMenuItem(action: { vm.playMode = .listen }) {
+                                        Text("Listen")
+                                        Spacer()
+                                        if vm.playMode == .listen {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        )
                         .help("Settings")
                 }
             }
