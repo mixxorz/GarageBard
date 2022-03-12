@@ -17,10 +17,12 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var timeLeft: Double { get }
     var songs: [Song] { get }
     var playMode: PlayMode { get set }
+    var hasAccessibilityPermissions: Bool { get }
     
     func playOrPause()
     func stop()
     func openLoadSongDialog()
     func loadSong(fromURL url: URL)
     func seek(progress: Double, end: Bool)
+    func checkAccessibilityPermissions(prompt: Bool)
 }

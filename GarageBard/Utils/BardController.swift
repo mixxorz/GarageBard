@@ -79,8 +79,7 @@ class BardController {
     init(tickRateMs: UInt32 = 25) {
         self.tickRateMs = tickRateMs
         
-        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
-        self.hasAccessibilityPermissions = AXIsProcessTrustedWithOptions(options)
+        self.hasAccessibilityPermissions = AXIsProcessTrusted()
         
         if sourceRef == nil {
             NSLog("BardController: No event source")

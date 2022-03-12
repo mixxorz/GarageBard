@@ -9,15 +9,28 @@ import SwiftUI
 
 struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
+    @Environment(\.controlActiveState) var controlActiveState
     
     var body: some View {
         VStack {
             Spacer()
-            Toast {
-                Text("Hello World")
+            
+            if !vm.hasAccessibilityPermissions {
+                Toast(image: Image(systemName: "gear")) {
+                    Text("GarageBard needs Accessibility access in order to send keystrokes to Final Fantasy XIV.")
+                    Text("Tap to open macOS Accessibility preferences.")
+                }
+                .onTapGesture {
+                    vm.checkAccessibilityPermissions(prompt: true)
+                }
             }
         }
         .padding(space(4))
+        .onChange(of: controlActiveState) { state in
+            if state == .key || state == .active {
+                vm.checkAccessibilityPermissions(prompt: false)
+            }
+        }
     }
 }
 

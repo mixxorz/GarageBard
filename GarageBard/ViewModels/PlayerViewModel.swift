@@ -19,11 +19,13 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published private(set) var timeLeft: Double = 0
     @Published private(set) var songs: [Song] = []
     @Published var playMode: PlayMode = .perform
+    @Published var hasAccessibilityPermissions: Bool = false
     
     private var model: Player
     
     private var seekTimer: Timer?
     private var isSeeking: Bool = false
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(model: Player = Player()) {
@@ -70,6 +72,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
             guard let self = self else { return }
             self.model.setPlayMode(playMode: $0)
         }).store(in: &cancellables)
+        
+        checkAccessibilityPermissions(prompt: false)
     }
     
     func playOrPause() {
@@ -116,5 +120,16 @@ class PlayerViewModel: PlayerViewModelProtocol {
             }
         }
         
+    }
+    
+    func checkAccessibilityPermissions(prompt: Bool) {
+        withAnimation {
+            if prompt {
+                let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
+                self.hasAccessibilityPermissions = AXIsProcessTrustedWithOptions(options)
+            } else {
+                self.hasAccessibilityPermissions = AXIsProcessTrusted()
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var timeLeft: Double = 0
     var songs: [Song] = []
     var playMode: PlayMode = .perform
+    var hasAccessibilityPermissions: Bool = true
     
     init(song: Song?, track: Track?, isPlaying: Bool = false, currentProgress: Double = 0.3) {
         self.song = song
@@ -48,5 +49,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
     
     func seek(progress: Double, end: Bool) {
+    }
+    
+    func checkAccessibilityPermissions(prompt: Bool) {
     }
 }
