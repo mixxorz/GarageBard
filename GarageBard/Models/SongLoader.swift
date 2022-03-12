@@ -8,6 +8,7 @@
 import Foundation
 import AudioKit
 import MidiParser
+import Combine
 
 struct Track: Hashable, Identifiable {
     var id: Int
@@ -23,8 +24,13 @@ struct Song: Identifiable, Equatable {
 }
 
 class SongLoader {
+    
+    var songs: AnyPublisher<[Song], Never> {
+        songsValue.eraseToAnyPublisher()
+    }
+    private let songsValue = CurrentValueSubject<[Song], Never>([])
    
-    func openSong(fromURL url: URL) -> Song {
+    func addSong(fromURL url: URL) {
         let midi = MidiData()
         let sequencer = AppleSequencer()
         
@@ -44,11 +50,13 @@ class SongLoader {
             return Track(id: index, name: "Track " + String(index))
         }
         
-        return Song(
+        let song = Song(
             name: url.lastPathComponent,
             url: url,
             durationInSeconds: sequencer.seconds(duration: sequencer.length),
             tracks: tracks
         )
+        
+        songsValue.value.append(song)
     }
 }

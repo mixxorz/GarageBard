@@ -21,21 +21,23 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published var playMode: PlayMode = .perform
     @Published var hasAccessibilityPermissions: Bool = false
     
-    private var model: Player
+    private var player: Player
+    private var songLoader: SongLoader
     
     private var seekTimer: Timer?
     private var isSeeking: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(model: Player = Player()) {
-        self.model = model
+    init(player: Player = Player(), songLoader: SongLoader = SongLoader()) {
+        self.player = player
+        self.songLoader = songLoader
         
-        model.song.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.song }.assign(to: &$song)
-        model.track.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.track }.assign(to: &$track)
-        model.isPlaying.receive(on: DispatchQueue.main).assign(to: &$isPlaying)
-        model.songs.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.songs }.assign(to: &$songs)
-        model.currentPosition.sink(receiveValue: { [weak self] position in
+        player.song.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.song }.assign(to: &$song)
+        player.track.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.track }.assign(to: &$track)
+        player.isPlaying.receive(on: DispatchQueue.main).assign(to: &$isPlaying)
+        songLoader.songs.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.songs }.assign(to: &$songs)
+        player.currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
             self.currentPosition = position
             
@@ -56,7 +58,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
             guard let self = self else { return }
             
             if let newSong = $0 {
-                self.model.setSong(song: newSong)
+                self.player.setSong(song: newSong)
             }
         }).store(in: &cancellables)
         
@@ -64,13 +66,13 @@ class PlayerViewModel: PlayerViewModelProtocol {
             guard let self = self else { return }
             
             if let newTrack = $0 {
-                self.model.setTrack(track: newTrack)
+                self.player.setTrack(track: newTrack)
             }
         }).store(in: &cancellables)
         
         $playMode.sink(receiveValue: { [weak self] in
             guard let self = self else { return }
-            self.model.setPlayMode(playMode: $0)
+            self.player.setPlayMode(playMode: $0)
         }).store(in: &cancellables)
         
         checkAccessibilityPermissions(prompt: false)
@@ -78,14 +80,14 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     func playOrPause() {
         if isPlaying {
-            model.pause()
+            player.pause()
         } else {
-            model.play()
+            player.play()
         }
     }
     
     func stop() {
-        model.stop()
+        player.stop()
     }
     
     func openLoadSongDialog() {
@@ -96,13 +98,13 @@ class PlayerViewModel: PlayerViewModelProtocol {
         
         if panel.runModal() == .OK {
             if let url = panel.url {
-                model.loadSongFromURL(url: url)
+                songLoader.addSong(fromURL: url)
             }
         }
     }
     
     func loadSong(fromURL url: URL) {
-        model.loadSongFromURL(url: url)
+        songLoader.addSong(fromURL: url)
     }
     
     func seek(progress: Double, end: Bool) {
@@ -112,7 +114,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
             // Make sure to debounce the seek calls
             seekTimer?.invalidate()
             seekTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
-                self?.model.seek(progress)
+                self?.player.seek(progress)
                 
                 if end {
                     self?.isSeeking = false

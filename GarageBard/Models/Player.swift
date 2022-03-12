@@ -27,9 +27,6 @@ class Player {
     var currentPosition: AnyPublisher<Double, Never> {
         currentPositionValue.eraseToAnyPublisher()
     }
-    var songs: AnyPublisher<[Song], Never> {
-        songsValue.eraseToAnyPublisher()
-    }
     var playMode: AnyPublisher<PlayMode, Never> {
         playModeValue.eraseToAnyPublisher()
     }
@@ -39,11 +36,9 @@ class Player {
     private let trackValue = CurrentValueSubject<Track?, Never>(nil)
     private let isPlayingValue = CurrentValueSubject<Bool, Never>(false)
     private let currentPositionValue = CurrentValueSubject<Double, Never>(0)
-    private let songsValue = CurrentValueSubject<[Song], Never>([])
     private let playModeValue = CurrentValueSubject<PlayMode, Never>(.perform)
     
     private let bardEngine = BardEngine()
-    private let songLoader = SongLoader()
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -73,11 +68,6 @@ class Player {
     
     func setPlayMode(playMode: PlayMode) {
         playModeValue.value = playMode
-    }
-    
-    func loadSongFromURL(url: URL) {
-        let song = songLoader.openSong(fromURL: url)
-        songsValue.value.append(song)
     }
     
     func play() {
