@@ -12,6 +12,34 @@ import MidiParser
 import Carbon.HIToolbox
 import Combine
 
+extension AppleSequencer {
+    
+    /// Returns the timestamp in real seconds at the given beat
+    /// - parameter beats: Position at which the timestamp is desired
+    func getSecondsAt(beats: Double) -> Double {
+        if beats <= 0 {
+            return 0
+        }
+        
+        let tempo = getTempo(at: beats - 1)
+        var tempoStartedAt: Double = 0
+        
+        for (curBeat, curTempo) in allTempoEvents {
+            if curBeat <= beats && curTempo == tempo {
+                tempoStartedAt = curBeat
+            }
+        }
+        
+        let duration = 60 * (beats - tempoStartedAt) / tempo
+        
+        if tempoStartedAt == 0 {
+            return duration
+        }
+        
+        return getSecondsAt(beats: tempoStartedAt) + duration
+    }
+}
+
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
@@ -155,7 +183,12 @@ class BardEngine {
             return Track(id: index, name: "Track " + String(index))
         }
         
-        return Song(name: url.lastPathComponent, url: url, durationInSeconds: tmpSequencer.length.seconds, tracks: tracks)
+        return Song(
+            name: url.lastPathComponent,
+            url: url,
+            durationInSeconds: tmpSequencer.getSecondsAt(beats: tmpSequencer.length.beats),
+            tracks: tracks
+        )
     }
     
     func play() {
@@ -167,7 +200,10 @@ class BardEngine {
             
             timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
                 guard let self = self else { return }
-                self.currentPosition = 60 / self.sequencer.tempo * self.sequencer.currentPosition.beats
+                self.currentPosition = self.sequencer.getSecondsAt(beats: self.sequencer.currentPosition.beats)
+                
+                print("getSecondsAt: \(self.currentPosition)")
+                print("seconds: \(self.sequencer.seconds(duration: self.sequencer.currentPosition))")
             }
         }
     }
