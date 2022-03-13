@@ -9,6 +9,15 @@
           "revision": "86c9285d673baa7f7955e8f2c1550e5e9740bada",
           "version": "5.3.3"
         }
+      },
+      {
+        "package": "MidiParser",
+        "repositoryURL": "https://github.com/matsune/MidiParser",
+        "state": {
+          "branch": "master",
+          "revision": "1ae510bde5327156619ddee992c5dbbe0afa359f",
+          "version": null
+        }
       }
     ]
   },

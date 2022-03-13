@@ -26,14 +26,13 @@
 		5EA3896B27D2663600C4C2D3 /* GarageBardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3896A27D2663600C4C2D3 /* GarageBardTests.swift */; };
 		5EA3897527D2663600C4C2D3 /* GarageBardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3897427D2663600C4C2D3 /* GarageBardUITests.swift */; };
 		5EA3897727D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3897627D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift */; };
-		5EE9E07327D31686006F70BD /* MidiParser.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EE9E07227D31686006F70BD /* MidiParser.xcframework */; };
-		5EE9E07427D31686006F70BD /* MidiParser.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EE9E07227D31686006F70BD /* MidiParser.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07727D3778F006F70BD /* AudioKit */; };
 		5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3524727D6478C006E3A06 /* TimeFormatter.swift */; };
 		5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E227DC1C62004AD546 /* PopoverMenu.swift */; };
 		5EF408E827DCA272004AD546 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E727DCA272004AD546 /* Toast.swift */; };
 		5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E927DCA5EB004AD546 /* Notifications.swift */; };
 		5EF408EC27DCB976004AD546 /* SongLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408EB27DCB975004AD546 /* SongLoader.swift */; };
+		5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF408F127DD7FB1004AD546 /* MidiParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +59,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5EE9E07427D31686006F70BD /* MidiParser.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,7 +90,6 @@
 		5EA3897027D2663600C4C2D3 /* GarageBardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GarageBardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EA3897427D2663600C4C2D3 /* GarageBardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardUITests.swift; sourceTree = "<group>"; };
 		5EA3897627D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		5EE9E07227D31686006F70BD /* MidiParser.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MidiParser.xcframework; path = Carthage/Build/MidiParser.xcframework; sourceTree = "<group>"; };
 		5EF3524727D6478C006E3A06 /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 		5EF408E227DC1C62004AD546 /* PopoverMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverMenu.swift; sourceTree = "<group>"; };
 		5EF408E727DCA272004AD546 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
@@ -105,8 +102,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */,
 				5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */,
-				5EE9E07327D31686006F70BD /* MidiParser.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +259,6 @@
 		5EE9E07127D31686006F70BD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5EE9E07227D31686006F70BD /* MidiParser.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -286,6 +282,7 @@
 			name = GarageBard;
 			packageProductDependencies = (
 				5EE9E07727D3778F006F70BD /* AudioKit */,
+				5EF408F127DD7FB1004AD546 /* MidiParser */,
 			);
 			productName = GarageBard;
 			productReference = 5EA3895527D2663500C4C2D3 /* GarageBard.app */;
@@ -361,6 +358,7 @@
 			mainGroup = 5EA3894C27D2663500C4C2D3;
 			packageReferences = (
 				5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */,
+				5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */,
 			);
 			productRefGroup = 5EA3895627D2663500C4C2D3 /* Products */;
 			projectDirPath = "";
@@ -746,6 +744,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/matsune/MidiParser";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -753,6 +759,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
+		};
+		5EF408F127DD7FB1004AD546 /* MidiParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */;
+			productName = MidiParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

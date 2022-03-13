@@ -44,8 +44,8 @@ class SongLoader {
         
         // Load track options
         let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
-            if (track.trackName != "") {
-                return Track(id: index, name: track.trackName)
+            if (track.name != "") {
+                return Track(id: index, name: track.name)
             }
             return Track(id: index, name: "Track " + String(index))
         }
