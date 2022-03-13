@@ -12,6 +12,10 @@ import MidiParser
 import Carbon.HIToolbox
 import Combine
 
+enum PlayMode {
+    case perform, listen
+}
+
 class BardEngine {
     private let sequencer: AppleSequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
@@ -20,10 +24,12 @@ class BardEngine {
     private let sampler = MIDISampler()
     private let engine = AudioEngine()
     private let bardController = BardController()
-    
     private var controlTrack: MusicTrackManager?
+    private var currentPositionTimer: Timer?
     
-    private var timer: Timer?
+    @Published private(set) var isPlaying: Bool = false
+    @Published private(set) var currentPosition: Double = 0
+    
     var playMode: PlayMode = .perform {
         didSet {
             if playMode == .perform {
@@ -34,11 +40,12 @@ class BardEngine {
             }
         }
     }
+    var autoCmdTab: Bool
     
-    @Published private(set) var isPlaying: Bool = false
-    @Published private(set) var currentPosition: Double = 0
-    
-    init() {
+    init(playMode: PlayMode, autoCmdTab: Bool) {
+        self.playMode = playMode
+        self.autoCmdTab = autoCmdTab
+        
         instrument.callback = instrumentCallback
         controlInstrument.callback = controlCallback
         engine.output = sampler
@@ -128,7 +135,7 @@ class BardEngine {
     func play() {
         // Only play if a song is loaded
         if sequencer.length.beats > 0 {
-            if playMode == .perform {
+            if playMode == .perform && autoCmdTab {
                 bardController.cmdTab()
             }
             
@@ -136,7 +143,7 @@ class BardEngine {
             bardController.start()
             isPlaying = true
             
-            timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
+            currentPositionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
                 guard let self = self else { return }
                 self.currentPosition = self.sequencer.seconds(duration: self.sequencer.currentPosition)
             }
@@ -146,7 +153,7 @@ class BardEngine {
     func pause() {
         sequencer.stop()
         bardController.stop()
-        timer?.invalidate()
+        currentPositionTimer?.invalidate()
         isPlaying = false
     }
     
@@ -154,7 +161,7 @@ class BardEngine {
         sequencer.rewind()
         sequencer.stop()
         bardController.stop()
-        timer?.invalidate()
+        currentPositionTimer?.invalidate()
         currentPosition = 0
         isPlaying = false
     }

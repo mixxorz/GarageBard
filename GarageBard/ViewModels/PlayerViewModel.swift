@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import SwiftUI
 
-
 class PlayerViewModel: PlayerViewModelProtocol {
     @Published var song: Song? = nil
     @Published var track: Track? = nil
@@ -18,11 +17,15 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published private(set) var currentProgress: Double = 0
     @Published private(set) var timeLeft: Double = 0
     @Published private(set) var songs: [Song] = []
+    
+    // Settings
     @Published var playMode: PlayMode = .perform
+    @Published var autoCmdTab: Bool = false
+    
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
     
-    private var player: Player
+    private var bardEngine: BardEngine
     private var songLoader: SongLoader
     
     private var seekTimer: Timer?
@@ -30,15 +33,18 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(player: Player = Player(), songLoader: SongLoader = SongLoader()) {
-        self.player = player
+    init(
+        bardEngine: BardEngine = BardEngine(playMode: .perform, autoCmdTab: false),
+        songLoader: SongLoader = SongLoader()
+    ) {
+        self.bardEngine = bardEngine
         self.songLoader = songLoader
         
-        player.song.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.song }.assign(to: &$song)
-        player.track.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.track }.assign(to: &$track)
-        player.isPlaying.receive(on: DispatchQueue.main).assign(to: &$isPlaying)
-        songLoader.songs.receive(on: DispatchQueue.main).filter { [weak self] in $0 != self?.songs }.assign(to: &$songs)
-        player.currentPosition.sink(receiveValue: { [weak self] position in
+        // Update isPlaying when bardEngine finishes playing
+        self.bardEngine.$isPlaying.assign(to: &$isPlaying)
+        
+        // Update playing progress values
+        self.bardEngine.$currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
             self.currentPosition = position
             
@@ -55,77 +61,84 @@ class PlayerViewModel: PlayerViewModelProtocol {
             }
         }).store(in: &cancellables)
         
+        // When the song changes, load it into bardEngine
         $song.sink(receiveValue: { [weak self] in
             guard let self = self else { return }
             
             if let newSong = $0 {
-                self.player.setSong(song: newSong)
+                self.stop()
+                self.track = newSong.tracks.first
+                self.bardEngine.loadSong(song: newSong)
             }
         }).store(in: &cancellables)
         
+        // When the track changes, load it into bardEngine
         $track.sink(receiveValue: { [weak self] in
             guard let self = self else { return }
             
             if let newTrack = $0 {
-                self.player.setTrack(track: newTrack)
+                self.bardEngine.loadTrack(track: newTrack)
             }
         }).store(in: &cancellables)
         
-        $playMode.sink(receiveValue: { [weak self] in
-            guard let self = self else { return }
-            self.player.setPlayMode(playMode: $0)
-        }).store(in: &cancellables)
+        // When the playMode changes, update that in bardEngine
+        $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
         
+        // When autoCmdTab changes, update that in bardEngine
+        $autoCmdTab.assign(to: \.autoCmdTab, on: self.bardEngine).store(in: &cancellables)
+        
+        // Boot up chores
         checkAccessibilityPermissions(prompt: false)
         findXIVProcess()
     }
     
+    /// Open file picker to load a song
+    func openLoadSongDialog() {
+        if let loadedSong = songLoader.openLoadSongDialog() {
+            songs.append(loadedSong)
+        }
+    }
+    
+    /// Load a song given URL
+    func loadSong(fromURL url: URL) {
+        let song = songLoader.openSong(fromURL: url)
+        songs.append(song)
+    }
+    
+    /// Play or pause playback
     func playOrPause() {
         if isPlaying {
-            player.pause()
+            bardEngine.pause()
         } else {
-            player.play()
+            bardEngine.play()
         }
     }
     
+    /// Stop playback
     func stop() {
-        player.stop()
+        bardEngine.stop()
     }
     
-    func openLoadSongDialog() {
-        let panel = NSOpenPanel()
-        panel.allowsMultipleSelection = false
-        panel.canChooseDirectories = false
-        panel.allowedContentTypes = [.midi]
-        
-        if panel.runModal() == .OK {
-            if let url = panel.url {
-                songLoader.addSong(fromURL: url)
-            }
-        }
-    }
-    
-    func loadSong(fromURL url: URL) {
-        songLoader.addSong(fromURL: url)
-    }
-    
+    /// Seek playback
+    /// - parameter progress: Time in seconds to seek
+    /// - parameter end: If done seeking
     func seek(progress: Double, end: Bool) {
-        if song != nil {
+        if let currentSong = song {
             isSeeking = true
             currentProgress = progress
             // Make sure to debounce the seek calls
             seekTimer?.invalidate()
             seekTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
-                self?.player.seek(progress)
+                self?.bardEngine.setTime(currentSong.durationInSeconds * progress)
                 
                 if end {
                     self?.isSeeking = false
                 }
             }
         }
-        
     }
     
+    /// Check if the app currently has accessibility access
     func checkAccessibilityPermissions(prompt: Bool) {
         withAnimation(.spring()) {
             if prompt {
@@ -137,6 +150,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }
     }
     
+    /// Find and save the game process
     func findXIVProcess() {
         ProcessManager.instance.setXIVProcessId()
         

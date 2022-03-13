@@ -108,6 +108,14 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                                             Image(systemName: "checkmark")
                                         }
                                     }
+                                    Divider()
+                                    PopoverMenuItem(action: { vm.autoCmdTab.toggle() }) {
+                                        Text("Cmd+Tab on play")
+                                        Spacer()
+                                        if vm.autoCmdTab {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
                                 }
                             }
                         )

@@ -13,7 +13,6 @@
 		5E431BC827D521AA005016D3 /* FakePlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BC727D521AA005016D3 /* FakePlayerViewModel.swift */; };
 		5E431BCA27D52C2E005016D3 /* PlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BC927D52C2E005016D3 /* PlayerBar.swift */; };
 		5E431BCC27D52CE4005016D3 /* SongLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BCB27D52CE4005016D3 /* SongLibrary.swift */; };
-		5E693B4C27D3C14C00EAA678 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B4B27D3C14C00EAA678 /* Player.swift */; };
 		5E693B4F27D3CDC000EAA678 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B4E27D3CDC000EAA678 /* PlayerViewModel.swift */; };
 		5E693B5327D3D10900EAA678 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5227D3D10900EAA678 /* ProgressBar.swift */; };
 		5E693B5527D3D12E00EAA678 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E693B5427D3D12E00EAA678 /* PlayButton.swift */; };
@@ -73,7 +72,6 @@
 		5E431BC727D521AA005016D3 /* FakePlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakePlayerViewModel.swift; sourceTree = "<group>"; };
 		5E431BC927D52C2E005016D3 /* PlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBar.swift; sourceTree = "<group>"; };
 		5E431BCB27D52CE4005016D3 /* SongLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLibrary.swift; sourceTree = "<group>"; };
-		5E693B4B27D3C14C00EAA678 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5E693B4E27D3CDC000EAA678 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 		5E693B5227D3D10900EAA678 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		5E693B5427D3D12E00EAA678 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
@@ -146,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				5EF408EB27DCB975004AD546 /* SongLoader.swift */,
-				5E693B4B27D3C14C00EAA678 /* Player.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -416,7 +413,6 @@
 				5E431BCA27D52C2E005016D3 /* PlayerBar.swift in Sources */,
 				5E693B5E27D3F95000EAA678 /* BardController.swift in Sources */,
 				5E431BC227D50954005016D3 /* TrackPopover.swift in Sources */,
-				5E693B4C27D3C14C00EAA678 /* Player.swift in Sources */,
 				5E693B5327D3D10900EAA678 /* ProgressBar.swift in Sources */,
 				5EF408F427DD8316004AD546 /* ProcessManager.swift in Sources */,
 				5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */,

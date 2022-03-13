@@ -9,6 +9,7 @@ import Foundation
 import AudioKit
 import MidiParser
 import Combine
+import AppKit
 
 struct Track: Hashable, Identifiable {
     var id: Int
@@ -24,13 +25,9 @@ struct Song: Identifiable, Equatable {
 }
 
 class SongLoader {
-    
-    var songs: AnyPublisher<[Song], Never> {
-        songsValue.eraseToAnyPublisher()
-    }
-    private let songsValue = CurrentValueSubject<[Song], Never>([])
    
-    func addSong(fromURL url: URL) {
+    /// Loads a MIDI song from a URL
+    func openSong(fromURL url: URL) -> Song {
         let midi = MidiData()
         let sequencer = AppleSequencer()
         
@@ -50,13 +47,27 @@ class SongLoader {
             return Track(id: index, name: "Track " + String(index))
         }
         
-        let song = Song(
+        return Song(
             name: url.lastPathComponent,
             url: url,
             durationInSeconds: sequencer.seconds(duration: sequencer.length),
             tracks: tracks
         )
+    }
+    
+    /// Opens a dialog to select a song
+    func openLoadSongDialog() -> Song? {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.midi]
         
-        songsValue.value.append(song)
+        if panel.runModal() == .OK {
+            if let url = panel.url {
+                return openSong(fromURL: url)
+            }
+        }
+        
+        return nil
     }
 }

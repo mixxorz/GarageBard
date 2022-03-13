@@ -17,6 +17,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var timeLeft: Double { get }
     var songs: [Song] { get }
     var playMode: PlayMode { get set }
+    var autoCmdTab: Bool { get set }
     var hasAccessibilityPermissions: Bool { get }
     var foundXIVprocess: Bool { get }
     
