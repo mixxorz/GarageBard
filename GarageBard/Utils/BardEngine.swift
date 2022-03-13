@@ -128,6 +128,10 @@ class BardEngine {
     func play() {
         // Only play if a song is loaded
         if sequencer.length.beats > 0 {
+            if playMode == .perform {
+                bardController.cmdTab()
+            }
+            
             sequencer.play()
             bardController.start()
             isPlaying = true

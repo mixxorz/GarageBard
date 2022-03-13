@@ -148,6 +148,39 @@ class BardController {
         }
     }
     
+    func cmdTab() {
+        // Logically, we shouldn't need to manually trigger the
+        // "cmd" keys, but it's less flaky this way.
+        let cmdDown = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: CGKeyCode(kVK_Command),
+            keyDown: true
+        )
+        let cmdUp = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: CGKeyCode(kVK_Command),
+            keyDown: false
+        )
+        let tabDown = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: CGKeyCode(kVK_Tab),
+            keyDown: true
+        )
+        let tabUp = CGEvent(
+            keyboardEventSource: sourceRef,
+            virtualKey: CGKeyCode(kVK_Tab),
+            keyDown: false
+        )
+        
+        tabDown?.flags = .maskCommand
+        tabUp?.flags = .maskCommand
+        
+        cmdDown?.post(tap: .cghidEventTap)
+        tabDown?.post(tap: .cghidEventTap)
+        tabUp?.post(tap: .cghidEventTap)
+        cmdUp?.post(tap: .cghidEventTap)
+    }
+    
     func start() {
         let tickRate = self.tickRateMs * 1000
         
