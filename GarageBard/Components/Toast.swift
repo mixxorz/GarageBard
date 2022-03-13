@@ -27,6 +27,7 @@ struct Toast<Content: View>: View {
             if image != nil {
                 image
                     .font(.system(size: 20))
+                    .frame(width: space(8))
             }
         }
         .foregroundColor(Color.white)

@@ -20,6 +20,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published private(set) var songs: [Song] = []
     @Published var playMode: PlayMode = .perform
     @Published var hasAccessibilityPermissions: Bool = false
+    @Published var foundXIVprocess: Bool = false
     
     private var player: Player
     private var songLoader: SongLoader
@@ -76,6 +77,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }).store(in: &cancellables)
         
         checkAccessibilityPermissions(prompt: false)
+        findXIVProcess()
     }
     
     func playOrPause() {
@@ -125,12 +127,24 @@ class PlayerViewModel: PlayerViewModelProtocol {
     }
     
     func checkAccessibilityPermissions(prompt: Bool) {
-        withAnimation {
+        withAnimation(.spring()) {
             if prompt {
                 let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
                 self.hasAccessibilityPermissions = AXIsProcessTrustedWithOptions(options)
             } else {
                 self.hasAccessibilityPermissions = AXIsProcessTrusted()
+            }
+        }
+    }
+    
+    func findXIVProcess() {
+        ProcessManager.instance.setXIVProcessId()
+        
+        withAnimation(.spring()) {
+            if ProcessManager.instance.getXIVProcessId() != nil {
+                self.foundXIVprocess = true
+            } else {
+                self.foundXIVprocess = false
             }
         }
     }

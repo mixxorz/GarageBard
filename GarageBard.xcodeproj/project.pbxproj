@@ -33,6 +33,7 @@
 		5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E927DCA5EB004AD546 /* Notifications.swift */; };
 		5EF408EC27DCB976004AD546 /* SongLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408EB27DCB975004AD546 /* SongLoader.swift */; };
 		5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF408F127DD7FB1004AD546 /* MidiParser */; };
+		5EF408F427DD8316004AD546 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408F327DD8316004AD546 /* ProcessManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		5EF408E727DCA272004AD546 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		5EF408E927DCA5EB004AD546 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		5EF408EB27DCB975004AD546 /* SongLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLoader.swift; sourceTree = "<group>"; };
+		5EF408F327DD8316004AD546 /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 			children = (
 				5E693B5D27D3F95000EAA678 /* BardController.swift */,
 				5E693B5927D3F18900EAA678 /* BardEngine.swift */,
+				5EF408F327DD8316004AD546 /* ProcessManager.swift */,
 				5EF3524727D6478C006E3A06 /* TimeFormatter.swift */,
 			);
 			path = Utils;
@@ -415,6 +418,7 @@
 				5E431BC227D50954005016D3 /* TrackPopover.swift in Sources */,
 				5E693B4C27D3C14C00EAA678 /* Player.swift in Sources */,
 				5E693B5327D3D10900EAA678 /* ProgressBar.swift in Sources */,
+				5EF408F427DD8316004AD546 /* ProcessManager.swift in Sources */,
 				5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */,
 				5EA3895927D2663500C4C2D3 /* GarageBardApp.swift in Sources */,
 				5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */,

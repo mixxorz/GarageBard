@@ -72,6 +72,7 @@ class BardController {
     private var keyBuffer: CGKeyCode?
     private let queue = DispatchQueue(label: "bardcontroller.queue", qos: .userInteractive)
     private var noteBuffer: [Note] = []
+    
     private var running = false
     
     var tickRateMs: UInt32
@@ -108,7 +109,11 @@ class BardController {
             keyDown: true
         )
 
-        keyDownEvent?.post(tap: .cghidEventTap)
+        if let pid = ProcessManager.instance.getXIVProcessId() {
+            keyDownEvent?.postToPid(pid)
+        } else {
+            keyDownEvent?.post(tap: .cghidEventTap)
+        }
     }
     
     private func keyUp(_ keyCode: CGKeyCode) {
@@ -117,8 +122,12 @@ class BardController {
             virtualKey: keyCode,
             keyDown: false
         )
-
-        keyUpEvent?.post(tap: .cghidEventTap)
+        
+        if let pid = ProcessManager.instance.getXIVProcessId() {
+            keyUpEvent?.postToPid(pid)
+        } else {
+            keyUpEvent?.post(tap: .cghidEventTap)
+        }
     }
     
     func noteOn(_ note: MIDINoteNumber) {

@@ -18,6 +18,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var songs: [Song] { get }
     var playMode: PlayMode { get set }
     var hasAccessibilityPermissions: Bool { get }
+    var foundXIVprocess: Bool { get }
     
     func playOrPause()
     func stop()
@@ -25,4 +26,5 @@ protocol PlayerViewModelProtocol: ObservableObject {
     func loadSong(fromURL url: URL)
     func seek(progress: Double, end: Bool)
     func checkAccessibilityPermissions(prompt: Bool)
+    func findXIVProcess()
 }

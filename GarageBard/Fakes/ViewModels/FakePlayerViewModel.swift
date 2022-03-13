@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 func createSong(name: String = "GarageBard", durationInSeconds: Double = 150.0) -> Song {
      return Song(
         name: name,
@@ -34,8 +33,16 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var songs: [Song] = []
     var playMode: PlayMode = .perform
     var hasAccessibilityPermissions: Bool = true
+    var foundXIVprocess: Bool = true
     
-    init(song: Song?, track: Track?, isPlaying: Bool = false, currentProgress: Double = 0.3) {
+    init(
+        song: Song? = nil,
+        track: Track? = nil,
+        isPlaying: Bool = false,
+        currentProgress: Double = 0.3,
+        hasAccessibilityPermissions: Bool = true,
+        foundXIVprocess: Bool = true
+    ) {
         self.song = song
         self.track = track
         self.isPlaying = isPlaying
@@ -44,6 +51,9 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
         self.currentPosition = duration * currentProgress
         self.currentProgress = currentProgress
         self.timeLeft = currentPosition - duration
+        
+        self.hasAccessibilityPermissions = hasAccessibilityPermissions
+        self.foundXIVprocess = foundXIVprocess
     }
     
     func playOrPause() {
@@ -73,5 +83,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
     
     func checkAccessibilityPermissions(prompt: Bool) {
+    }
+    
+    func findXIVProcess() {
     }
 }
