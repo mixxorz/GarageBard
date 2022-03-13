@@ -6,9 +6,53 @@
 //
 
 import SwiftUI
+import CoreMIDI
+import UniformTypeIdentifiers
+
+struct MIDIDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
+    var vm: ViewModel
+    
+    @Binding var isDropping: Bool
+    
+    func dropEntered(info: DropInfo) {
+        withAnimation(.spring()) {
+            isDropping = true
+        }
+    }
+    
+    func dropExited(info: DropInfo) {
+        withAnimation(.spring()) {
+            isDropping = false
+        }
+    }
+    
+    func performDrop(info: DropInfo) -> Bool {
+        let providers = info.itemProviders(for: [.fileURL]).filter({ provider in
+            provider.canLoadObject(ofClass: URL.self)
+        })
+        
+        for provider in providers {
+            let _ = provider.loadObject(ofClass: URL.self) { object, error in
+                if let url = object {
+                    DispatchQueue.main.async {
+                        if let uttype = UTType(filenameExtension: url.pathExtension) {
+                            if uttype.conforms(to: .midi) {
+                                vm.loadSong(fromURL: url)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return providers.count > 0
+     }
+}
 
 struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
+    
+    @State var isDropping: Bool = false
     
     var body: some View {
         ZStack {
@@ -22,23 +66,47 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                 .padding(space(4))
             }
         }
+        .overlay {
+            if isDropping {
+                VStack {
+                    VStack {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.system(size: 60))
+                            .offset(x: 0, y: -5)
+                    }
+                    .frame(width: space(28), height: space(28))
+                    .background(
+                        Color("grey400")
+                            .opacity(0.15)
+                            .cornerRadius(8)
+                    )
+                    .foregroundColor(.white)
+                    .offset(x: 0, y: space(20))
+                    Spacer()
+                }
+            }
+        }
+        .onDrop(of: [.fileURL], delegate: MIDIDropDelegate<ViewModel>(vm: vm, isDropping: $isDropping))
     }
 }
 
 struct SongLibrary_Previews: PreviewProvider {
-    static let vm = FakePlayerViewModel(song: nil, track: nil)
+    static let vm = FakePlayerViewModel(
+        song: nil,
+        track: nil,
+        songs: [
+            createSong(name: "Song 1"),
+            createSong(name: "Song 2"),
+            createSong(name: "Song 3"),
+            createSong(name: "Song 4"),
+            createSong(name: "Song 5"),
+            createSong(name: "Song 6"),
+        ]
+    )
     
     static var previews: some View {
         SongLibrary<FakePlayerViewModel>()
             .frame(maxWidth: space(100))
             .environmentObject(vm)
-            .onAppear {
-                vm.makeSong(name: "Song 1")
-                vm.makeSong(name: "Song 2")
-                vm.makeSong(name: "Song 3")
-                vm.makeSong(name: "Song 4")
-                vm.makeSong(name: "Song 5")
-                vm.makeSong(name: "Song 6")
-            }
     }
 }

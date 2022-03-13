@@ -41,12 +41,14 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
         track: Track? = nil,
         isPlaying: Bool = false,
         currentProgress: Double = 0.3,
+        songs: [Song] = [],
         hasAccessibilityPermissions: Bool = true,
         foundXIVprocess: Bool = true
     ) {
         self.song = song
         self.track = track
         self.isPlaying = isPlaying
+        self.songs = songs
         
         let duration = 123.0
         self.currentPosition = duration * currentProgress
