@@ -21,6 +21,8 @@ class BardEngine {
     private let engine = AudioEngine()
     private let bardController = BardController()
     
+    private var controlTrack: MusicTrackManager?
+    
     private var timer: Timer?
     var playMode: PlayMode = .perform {
         didSet {
@@ -86,7 +88,7 @@ class BardEngine {
         // Otherwise, use hook it up with the callback instruments
         loadTrack(track: song.tracks[0])
         
-        let controlTrack = sequencer.newTrack()
+        controlTrack = sequencer.newTrack("control")
         controlTrack?.add(
             midiNoteData: MIDINoteData(
                 noteNumber: 60,
@@ -115,6 +117,8 @@ class BardEngine {
         } else {
             NSLog("BardEngine: Couldn't find track.")
         }
+        
+        controlTrack?.setMIDIOutput(controlInstrument.midiIn)
         
         if wasPlaying {
             sequencer.play()
