@@ -11,7 +11,7 @@ import AppKit
 
 class ProcessManager {
     
-    private var pid: pid_t?
+    private var xivApp: NSRunningApplication?
     
     static let instance = ProcessManager()
     
@@ -32,14 +32,14 @@ class ProcessManager {
         
         // If there's only one, then assume it's the game
         if wineApps.count == 1 {
-            pid =  wineApps.first?.processIdentifier
+            xivApp =  wineApps.first
         } else {
             // If there's more than one, then we can't reliably find the game process
-            pid = nil
+            xivApp = nil
         }
     }
     
     func getXIVProcessId() -> pid_t? {
-        return pid
+        return xivApp?.processIdentifier
     }
 }
