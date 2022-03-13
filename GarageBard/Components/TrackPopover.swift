@@ -17,7 +17,11 @@ struct TrackPopover<ViewModel: PlayerViewModelProtocol>: View {
             if tracks.isNotEmpty {
                 PopoverMenu {
                     ForEach(tracks) { track in
-                        PopoverMenuItem(action: { vm.track = track }) {
+                        PopoverMenuItem(action: {
+                            withAnimation(.spring()) {
+                                vm.track = track
+                            }
+                        }) {
                             Text(track.name.capitalized)
                             Spacer()
                             if vm.track == track {

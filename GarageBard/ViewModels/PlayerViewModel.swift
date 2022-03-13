@@ -67,7 +67,9 @@ class PlayerViewModel: PlayerViewModelProtocol {
             
             if let newSong = $0 {
                 self.stop()
-                self.track = newSong.tracks.first
+                withAnimation(.spring()) {
+                    self.track = newSong.tracks.first
+                }
                 self.bardEngine.loadSong(song: newSong)
             }
         }).store(in: &cancellables)

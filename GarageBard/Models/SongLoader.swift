@@ -14,6 +14,7 @@ import AppKit
 struct Track: Hashable, Identifiable {
     var id: Int
     var name: String
+    var hasOutOfRangeNotes: Bool = false
 }
 
 struct Song: Identifiable, Equatable {
@@ -41,10 +42,25 @@ class SongLoader {
         
         // Load track options
         let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
-            if (track.name != "") {
-                return Track(id: index, name: track.name)
+            var hasOutOfRangeNotes = false
+            
+            if sequencer.tracks.indices.contains(index) {
+                let sTrack = sequencer.tracks[index]
+                
+                let outOfRangeNotes = sTrack.getMIDINoteData().filter { note in
+                    return note.noteNumber < 48 || note.noteNumber > 84
+                }
+                
+                if outOfRangeNotes.count > 0 {
+                    hasOutOfRangeNotes = true
+                }
             }
-            return Track(id: index, name: "Track " + String(index))
+            
+            if (track.name != "") {
+                return Track(id: index, name: track.name, hasOutOfRangeNotes: hasOutOfRangeNotes)
+            }
+            
+            return Track(id: index, name: "Track " + String(index), hasOutOfRangeNotes: hasOutOfRangeNotes)
         }
         
         return Song(

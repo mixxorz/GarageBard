@@ -15,6 +15,17 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
         VStack {
             Spacer()
             
+            if let track = vm.track {
+                if track.hasOutOfRangeNotes {
+                    Toast(image: Image(systemName: "music.quarternote.3")) {
+                        Text("Some notes are out of range.")
+                        Text("The selected track includes notes that go beyond the range of what can be played in the game.")
+                            .font(.system(size: 12.0))
+                            .foregroundColor(Color("grey400"))
+                    }
+                }
+            }
+            
             if !vm.foundXIVprocess {
                 Toast(image: Image(systemName: "gamecontroller")) {
                     Text("Can't find game instance. Is the game running?")
