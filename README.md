@@ -1,4 +1,4 @@
-![GarageBard](./GarageBard/Assets.xcassets/AppIcon.appiconset/icon_128x128.png)
+![GarageBard](./GarageBard/Assets.xcassets/AppIcon.appiconset/icon_256x256.png)
 
 # GarageBard
 
@@ -17,6 +17,10 @@ on a MacBook... so I made this instead.
 
 You load up some MIDI files, and GarageBard "plays" them by sending keystrokes
 to the game.
+
+## Screenshots
+
+![Screenshots](https://user-images.githubusercontent.com/3102758/158063994-fe2b0857-8a58-426b-ab85-68f0c9fa44fb.png)
 
 ## Instructions
 
