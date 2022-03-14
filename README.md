@@ -1,8 +1,12 @@
-![GarageBard](./GarageBard/Assets.xcassets/AppIcon.appiconset/icon_256x256.png)
+<img width="180" src="./GarageBard/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" alt="GarageBard icon">
 
 # GarageBard
 
-An app for macOS that let's you play MIDI files as a bard on Final Fantasy XIV.
+An app for macOS that lets you play MIDI files as a bard on Final Fantasy XIV.
+
+<a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard.dmg">
+   <img width="150" src="https://user-images.githubusercontent.com/3102758/158105072-519b1bbe-2d58-4aa0-a534-f1858add2e9b.png" alt="Download button">
+</a>
 
 ## Why
 
@@ -15,8 +19,7 @@ on a MacBook... so I made this instead.
 
 ## How does it work?
 
-You load up some MIDI files, and GarageBard "plays" them by sending keystrokes
-to the game.
+You load up MIDI files and GarageBard "plays" them by sending keystrokes to the game.
 
 ## Screenshots
 
@@ -24,7 +27,7 @@ to the game.
 
 ## Instructions
 
-1. Download the [latest release](https://github.com/mixxorz/GarageBard/releases/latest) from GitHub.
+1. Download the [latest release](https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard.dmg) from GitHub.
 1. Copy GarageBard to your Applications folder
 1. Launch GarageBard and grant it Accessibility access
 1. Load up some songs by dragging in MIDI files into GarageBard
@@ -80,7 +83,7 @@ This message means that GarageBard was unable to find the game process. When
 this happens, the app falls back to sending keystrokes to _any_ app that is in
 the foreground.
 
-If the game _is_ running but you still this message, you can still make it work
+If the game _is_ running but you still see this message, it can still work
 as long as you have the game focused.
 
 If you have time, please [open an issue](https://github.com/mixxorz/GarageBard/issues/new)
