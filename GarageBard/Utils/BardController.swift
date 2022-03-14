@@ -201,13 +201,7 @@ class BardController {
                                 usleep(tickRate)
                             }
                             self.keyDown(note.keyCode)
-                            
-                            // If the next note is already queued, preemptively stop the current note right away
-                            if self.noteBuffer.first != nil {
-                                self.keyUp(note.keyCode)
-                            } else {
-                                self.keyBuffer = note.keyCode
-                            }
+                            self.keyBuffer = note.keyCode
                         } else {
                             self.keyUp(note.keyCode)
                             self.keyBuffer = nil
