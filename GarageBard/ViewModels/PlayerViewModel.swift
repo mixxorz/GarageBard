@@ -128,6 +128,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
         if let currentSong = song {
             isSeeking = true
             currentProgress = progress
+            currentPosition = progress * currentSong.durationInSeconds
+            timeLeft = currentPosition - currentSong.durationInSeconds
             // Make sure to debounce the seek calls
             seekTimer?.invalidate()
             seekTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
