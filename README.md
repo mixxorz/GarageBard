@@ -35,8 +35,6 @@ You load up MIDI files and GarageBard "plays" them by sending keystrokes to the 
 1. Click the tracks icon to choose which track to play
 1. Go to Performance mode in the game with your choice of instrument
 1. Set up your keybindings according to the chart below
-1. On GarageBard, open the settings menu and select "Cmd+Tab on play" to
-   automatically switch to the game when you hit play
 1. Click Play (spacebar)
 1. Rock out 🤘
 
@@ -52,15 +50,6 @@ You can swap between Perform and Listen modes depending on what you want to do:
 
 - **Perform**: Send keystrokes to play the song
 - **Listen**: Listen to the song using GarageBard's synthesizer
-
-### Cmd+Tab on play
-
-This tells GarageBard to automatically hit Cmd+Tab as soon as you hit Play,
-allowing you to automatically switch focus back to the game.
-
-Note that GarageBard isn't doing anything smart to switch to the game. It is
-literally just hitting Cmd+Tab, so make sure that the game was the last focused
-app.
 
 ## Troubleshooting
 

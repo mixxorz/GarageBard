@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5E06FCB227D4DCD000214BE3 /* PlaylistItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E06FCB127D4DCD000214BE3 /* PlaylistItemRow.swift */; };
+		5E2E804E27E2177200F1B060 /* AXSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5E2E804D27E2177200F1B060 /* AXSwift */; };
 		5E431BC227D50954005016D3 /* TrackPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BC127D50954005016D3 /* TrackPopover.swift */; };
 		5E431BC427D51EC9005016D3 /* PlayerViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BC327D51EC9005016D3 /* PlayerViewModelProtocol.swift */; };
 		5E431BC827D521AA005016D3 /* FakePlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E431BC727D521AA005016D3 /* FakePlayerViewModel.swift */; };
@@ -102,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E2E804E27E2177200F1B060 /* AXSwift in Frameworks */,
 				5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */,
 				5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */,
 			);
@@ -283,6 +285,7 @@
 			packageProductDependencies = (
 				5EE9E07727D3778F006F70BD /* AudioKit */,
 				5EF408F127DD7FB1004AD546 /* MidiParser */,
+				5E2E804D27E2177200F1B060 /* AXSwift */,
 			);
 			productName = GarageBard;
 			productReference = 5EA3895527D2663500C4C2D3 /* GarageBard.app */;
@@ -359,6 +362,7 @@
 			packageReferences = (
 				5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */,
 				5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */,
+				5E2E804C27E2177200F1B060 /* XCRemoteSwiftPackageReference "AXSwift" */,
 			);
 			productRefGroup = 5EA3895627D2663500C4C2D3 /* Products */;
 			projectDirPath = "";
@@ -740,6 +744,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5E2E804C27E2177200F1B060 /* XCRemoteSwiftPackageReference "AXSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tmandry/AXSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.2;
+			};
+		};
 		5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
@@ -759,6 +771,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5E2E804D27E2177200F1B060 /* AXSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E2E804C27E2177200F1B060 /* XCRemoteSwiftPackageReference "AXSwift" */;
+			productName = AXSwift;
+		};
 		5EE9E07727D3778F006F70BD /* AudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */;
