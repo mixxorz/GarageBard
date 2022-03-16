@@ -123,7 +123,7 @@ class BardEngine {
         if sequencer.tracks.indices.contains(track.id) {
             let mTrack = sequencer.tracks[track.id]
             mTrack.transposeOutOfBoundNotes()
-            mTrack.appregiateChords()
+            mTrack.arpeggiateChords()
             mTrack.setMIDIOutput(instrument.midiIn)
         } else {
             NSLog("BardEngine: Couldn't find track.")
@@ -206,7 +206,7 @@ extension MusicTrackManager {
         self.replaceMIDINoteData(with: noteData)
     }
     
-    func appregiateChords() {
+    func arpeggiateChords() {
         // Group notes into chords according to beat
         /// [beat position: [...notes]]
         var chords : [Double: [MIDINoteData]] = [:]
