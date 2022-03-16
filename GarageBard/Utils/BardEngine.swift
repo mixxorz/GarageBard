@@ -41,11 +41,9 @@ class BardEngine {
             }
         }
     }
-    var autoCmdTab: Bool
     
-    init(playMode: PlayMode, autoCmdTab: Bool) {
+    init(playMode: PlayMode) {
         self.playMode = playMode
-        self.autoCmdTab = autoCmdTab
         
         instrument.callback = instrumentCallback
         controlInstrument.callback = controlCallback
@@ -139,8 +137,8 @@ class BardEngine {
     func play() {
         // Only play if a song is loaded
         if sequencer.length.beats > 0 {
-            if playMode == .perform && autoCmdTab {
-                bardController.cmdTab()
+            if playMode == .perform {
+                ProcessManager.instance.switchToXIV()
             }
             
             sequencer.play()
