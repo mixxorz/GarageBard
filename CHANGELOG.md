@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Add more reliable way to switch to XIV on play
+
 ### Fixed
 
 - Fixed an issue where the timestamps were not updating when seeking
