@@ -20,11 +20,11 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                     Toast(image: Image(systemName: "music.quarternote.3")) {
                         Text("Some notes are out of range.")
                         if vm.notesTransposed {
-                            Text("The selected track includes notes that go beyond the range of what can be played in the game. These notes will be automatically transposed to fithin within the available range.")
+                            Text("The current track has notes that fall beyond playable range. These notes will be automatically transposed to fit within the playable range.")
                                 .font(.system(size: 12.0))
                                 .foregroundColor(Color("grey400"))
                         } else {
-                            Text("The selected track includes notes that go beyond the range of what can be played in the game. These notes will be skipped.")
+                            Text("The current track has notes that fall beyond playable range. These notes will be skipped.")
                                 .font(.system(size: 12.0))
                                 .foregroundColor(Color("grey400"))
                         }

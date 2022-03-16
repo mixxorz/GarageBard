@@ -50,7 +50,7 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
                         PopoverMenuItem(action: {
                             song.autoTranposeNotes.toggle()
                         }) {
-                            Text("Tranpose out of bound notes")
+                            Text("Tranpose out of range notes")
                             Spacer()
                             if song.autoTranposeNotes {
                                 Image(systemName: "checkmark")
