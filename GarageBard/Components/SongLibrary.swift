@@ -64,7 +64,9 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                     }
                 }
                 .padding(space(4))
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity)
         }
         .overlay {
             if isDropping {

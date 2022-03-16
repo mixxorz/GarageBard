@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-    
-    var song: Song
+    @ObservedObject var song: Song
+    @State var isSongPopoverOpen: Bool = false
     
     let formatter = TimeFormatter.instance
     
@@ -18,7 +18,9 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
         VStack(alignment: .leading) {
             HStack(spacing: 0) {
                 Button(action: {
-                    vm.song = song
+                    withAnimation(.spring()) {
+                        vm.song = song
+                    }
                 }) {
                     Image(systemName: "forward.end.fill")
                         .font(.system(size: 10.0))
@@ -33,12 +35,46 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
                 Text(formatter.format(song.durationInSeconds))
                     .font(.system(size: 10.0))
                     .foregroundColor(Color("grey400"))
+                Button(action: {
+                    isSongPopoverOpen = true
+                }) {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 10.0))
+                        .foregroundColor(Color("grey400"))
+                        .frame(width: space(8), height: space(8))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .popover(isPresented: $isSongPopoverOpen, arrowEdge: .bottom) {
+                    PopoverMenu {
+                        PopoverMenuItem(action: {
+                            song.autoTranposeNotes.toggle()
+                        }) {
+                            Text("Tranpose out of bound notes")
+                            Spacer()
+                            if song.autoTranposeNotes {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                        PopoverMenuItem(action: {
+                            song.arpeggiateChords.toggle()
+                        }) {
+                            Text("Arpeggiate chords")
+                            Spacer()
+                            if song.arpeggiateChords {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
             }
             Divider()
         }
         .contentShape(Rectangle())
         .onTapGesture(count: 2, perform: {
-            vm.song = song
+            withAnimation(.spring()) {
+                vm.song = song
+            }
         })
     }
 }

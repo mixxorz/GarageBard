@@ -17,12 +17,25 @@ struct Track: Hashable, Identifiable {
     var hasOutOfRangeNotes: Bool = false
 }
 
-struct Song: Identifiable, Equatable {
-    var id: String { self.name }
-    var name: String
-    var url: URL
-    var durationInSeconds: Double
-    var tracks: [Track]
+class Song: ObservableObject, Identifiable {
+    let id: String
+    let name: String
+    let url: URL
+    let durationInSeconds: Double
+    let tracks: [Track]
+    
+    @Published var autoTranposeNotes: Bool
+    @Published var arpeggiateChords: Bool
+    
+    init(name: String, url: URL, durationInSeconds: Double, tracks: [Track], autoTranposeNotes: Bool = true, arpeggiateChords: Bool = true) {
+        self.id = name
+        self.name = name
+        self.url = url
+        self.durationInSeconds = durationInSeconds
+        self.tracks = tracks
+        self.autoTranposeNotes = autoTranposeNotes
+        self.arpeggiateChords = arpeggiateChords
+    }
 }
 
 class SongLoader {

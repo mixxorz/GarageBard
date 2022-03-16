@@ -19,9 +19,15 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                 if track.hasOutOfRangeNotes {
                     Toast(image: Image(systemName: "music.quarternote.3")) {
                         Text("Some notes are out of range.")
-                        Text("The selected track includes notes that go beyond the range of what can be played in the game.")
-                            .font(.system(size: 12.0))
-                            .foregroundColor(Color("grey400"))
+                        if vm.notesTransposed {
+                            Text("The selected track includes notes that go beyond the range of what can be played in the game. These notes will be automatically transposed to fithin within the available range.")
+                                .font(.system(size: 12.0))
+                                .foregroundColor(Color("grey400"))
+                        } else {
+                            Text("The selected track includes notes that go beyond the range of what can be played in the game. These notes will be skipped.")
+                                .font(.system(size: 12.0))
+                                .foregroundColor(Color("grey400"))
+                        }
                     }
                 }
             }
@@ -29,7 +35,7 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
             if !vm.foundXIVprocess {
                 Toast(image: Image(systemName: "gamecontroller")) {
                     Text("Can't find game instance. Is the game running?")
-                    Text("When you play a song, keystrokes will be sent to the focused window instead.")
+                    Text("When you play a song, keystrokes will be sent to the frontmost window instead.")
                         .font(.system(size: 12.0))
                         .foregroundColor(Color("grey400"))
                 }

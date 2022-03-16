@@ -18,7 +18,7 @@ enum PlayMode {
 }
 
 class BardEngine {
-    private let sequencer: AppleSequencer = AppleSequencer()
+    private let sequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
     private let controlInstrument = MIDICallbackInstrument()
     private let nullInstrument = MIDICallbackInstrument()
@@ -30,6 +30,9 @@ class BardEngine {
     
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentPosition: Double = 0
+    @Published private(set) var notesTransposed: Bool = false
+    
+    private var currentSong: Song?
     
     var playMode: PlayMode = .perform {
         didSet {
@@ -79,6 +82,8 @@ class BardEngine {
     }
     
     func loadSong(song: Song) {
+        currentSong = song
+        
         // Load song into sequencer
         let data: Data
         
@@ -120,8 +125,18 @@ class BardEngine {
         sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
         if sequencer.tracks.indices.contains(track.id) {
             let mTrack = sequencer.tracks[track.id]
-            mTrack.transposeOutOfBoundNotes()
-            mTrack.arpeggiateChords()
+            
+            if currentSong?.autoTranposeNotes == true {
+                mTrack.transposeOutOfBoundNotes()
+                notesTransposed = true
+            } else {
+                notesTransposed = false
+            }
+            
+            if currentSong?.arpeggiateChords == true {
+                mTrack.arpeggiateChords()
+            }
+            
             mTrack.setMIDIOutput(instrument.midiIn)
         } else {
             NSLog("BardEngine: Couldn't find track.")
