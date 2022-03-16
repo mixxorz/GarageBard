@@ -9,15 +9,15 @@ import SwiftUI
 
 struct PopoverMenuItem<Content: View>: View {
     @State var isHovering: Bool = false
-    
+
     var action: () -> Void
     var content: () -> Content
-    
+
     init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
         self.action = action
         self.content = content
     }
-    
+
     var body: some View {
         Button(action: action) {
             HStack(content: content)
@@ -39,16 +39,16 @@ struct PopoverMenuItem<Content: View>: View {
 
 struct PopoverMenu<Content: View>: View {
     var content: () -> Content
-    
+
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
-    
+
     var body: some View {
         VStack(spacing: 0, content: content)
-        .foregroundColor(Color.primary)
-        .frame(minWidth: space(38))
-        .padding(6)
+            .foregroundColor(Color.primary)
+            .frame(minWidth: space(38))
+            .padding(6)
     }
 }
 
@@ -70,7 +70,7 @@ struct PopoverMenu_Previews: PreviewProvider {
         }
         .frame(width: space(38))
         .preferredColorScheme(.light)
-        
+
         PopoverMenu {
             PopoverMenuItem(action: {}) {
                 Text("Menu item 1")

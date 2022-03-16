@@ -11,7 +11,7 @@ import SwiftUI
 struct OnSeek: ViewModifier {
     let seekAction: (_ percentage: Double) -> Void
     let seekEndAction: ((_ percentage: Double) -> Void)?
-    
+
     func body(content: Content) -> some View {
         content.overlay {
             GeometryReader { geometry in
@@ -41,7 +41,7 @@ extension View {
     ) -> some View {
         modifier(OnSeek(seekAction: seekAction, seekEndAction: nil))
     }
-    
+
     func onSeek(
         seekAction: @escaping (_ percentage: Double) -> Void,
         seekEndAction: @escaping (_ percentage: Double) -> Void
@@ -52,7 +52,7 @@ extension View {
 
 struct ProgressBar: View {
     var value: Double
-    
+
     var body: some View {
         Rectangle()
             .foregroundColor(Color("grey500"))

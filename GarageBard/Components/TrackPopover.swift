@@ -9,9 +9,9 @@ import SwiftUI
 
 struct TrackPopover<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-    
+
     var tracks: [Track]
-    
+
     var body: some View {
         VStack {
             if tracks.isNotEmpty {
@@ -41,7 +41,7 @@ struct TrackPopover<ViewModel: PlayerViewModelProtocol>: View {
 
 struct TrackPopover_Previews: PreviewProvider {
     static let song = createSong()
-    
+
     static var previews: some View {
         TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
             .frame(width: 200)
@@ -52,7 +52,7 @@ struct TrackPopover_Previews: PreviewProvider {
                     track: song.tracks[1]
                 )
             )
-        
+
         TrackPopover<FakePlayerViewModel>(tracks: song.tracks)
             .frame(width: 200)
             .preferredColorScheme(.dark)

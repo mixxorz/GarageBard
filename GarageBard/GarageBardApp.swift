@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct GarageBardApp: App {
     @ObservedObject var playerViewModel = PlayerViewModel()
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView<PlayerViewModel>()

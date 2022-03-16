@@ -5,11 +5,11 @@
 //  Created by Mitchel Cabuloy on 3/12/22.
 //
 
-import Foundation
-import AudioKit
-import MidiParser
-import Combine
 import AppKit
+import AudioKit
+import Combine
+import Foundation
+import MidiParser
 
 struct Track: Hashable, Identifiable {
     var id: Int
@@ -23,12 +23,12 @@ class Song: ObservableObject, Identifiable {
     let url: URL
     let durationInSeconds: Double
     let tracks: [Track]
-    
+
     @Published var autoTranposeNotes: Bool
     @Published var arpeggiateChords: Bool
-    
+
     init(name: String, url: URL, durationInSeconds: Double, tracks: [Track], autoTranposeNotes: Bool = true, arpeggiateChords: Bool = true) {
-        self.id = name
+        id = name
         self.name = name
         self.url = url
         self.durationInSeconds = durationInSeconds
@@ -39,12 +39,11 @@ class Song: ObservableObject, Identifiable {
 }
 
 class SongLoader {
-   
     /// Loads a MIDI song from a URL
     func openSong(fromURL url: URL) -> Song {
         let midi = MidiData()
         let sequencer = AppleSequencer()
-        
+
         do {
             let data = try Data(contentsOf: url)
             midi.load(data: data)
@@ -52,30 +51,30 @@ class SongLoader {
         } catch {
             fatalError("Error opening file: \(error)")
         }
-        
+
         // Load track options
-        let tracks: [Track] = midi.noteTracks.enumerated().map { (index, track) in
+        let tracks: [Track] = midi.noteTracks.enumerated().map { index, track in
             var hasOutOfRangeNotes = false
-            
+
             if sequencer.tracks.indices.contains(index) {
                 let sTrack = sequencer.tracks[index]
-                
+
                 let outOfRangeNotes = sTrack.getMIDINoteData().filter { note in
-                    return note.noteNumber < 48 || note.noteNumber > 84
+                    note.noteNumber < 48 || note.noteNumber > 84
                 }
-                
+
                 if outOfRangeNotes.count > 0 {
                     hasOutOfRangeNotes = true
                 }
             }
-            
-            if (track.name != "") {
+
+            if track.name != "" {
                 return Track(id: index, name: track.name, hasOutOfRangeNotes: hasOutOfRangeNotes)
             }
-            
+
             return Track(id: index, name: "Track " + String(index), hasOutOfRangeNotes: hasOutOfRangeNotes)
         }
-        
+
         return Song(
             name: url.lastPathComponent,
             url: url,
@@ -83,20 +82,20 @@ class SongLoader {
             tracks: tracks
         )
     }
-    
+
     /// Opens a dialog to select a song
     func openLoadSongDialog() -> Song? {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         panel.allowedContentTypes = [.midi]
-        
+
         if panel.runModal() == .OK {
             if let url = panel.url {
                 return openSong(fromURL: url)
             }
         }
-        
+
         return nil
     }
 }

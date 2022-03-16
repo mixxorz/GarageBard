@@ -8,7 +8,7 @@
 import Foundation
 
 func createSong(name: String = "GarageBard", durationInSeconds: Double = 150.0) -> Song {
-     return Song(
+    Song(
         name: name,
         url: URL(fileURLWithPath: "some.mid"),
         durationInSeconds: durationInSeconds,
@@ -18,7 +18,7 @@ func createSong(name: String = "GarageBard", durationInSeconds: Double = 150.0) 
             Track(id: 2, name: "Lute"),
             Track(id: 3, name: "Drum Kit"),
             Track(id: 4, name: "Electric Guitar"),
-            Track(id: 5, name: "Violin")
+            Track(id: 5, name: "Violin"),
         ]
     )
 }
@@ -35,7 +35,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var notesTransposed: Bool = false
     var hasAccessibilityPermissions: Bool = true
     var foundXIVprocess: Bool = true
-    
+
     init(
         song: Song? = nil,
         track: Track? = nil,
@@ -49,25 +49,22 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
         self.track = track
         self.isPlaying = isPlaying
         self.songs = songs
-        
+
         let duration = 123.0
-        self.currentPosition = duration * currentProgress
+        currentPosition = duration * currentProgress
         self.currentProgress = currentProgress
-        self.timeLeft = currentPosition - duration
-        
+        timeLeft = currentPosition - duration
+
         self.hasAccessibilityPermissions = hasAccessibilityPermissions
         self.foundXIVprocess = foundXIVprocess
     }
-    
-    func playOrPause() {
-    }
-    
-    func stop() {
-    }
-    
-    func openLoadSongDialog() {
-    }
-    
+
+    func playOrPause() {}
+
+    func stop() {}
+
+    func openLoadSongDialog() {}
+
     func makeSong(name: String) {
         songs.append(
             Song(
@@ -78,16 +75,12 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
             )
         )
     }
-    
-    func loadSong(fromURL url: URL) {
-    }
-    
-    func seek(progress: Double, end: Bool) {
-    }
-    
-    func checkAccessibilityPermissions(prompt: Bool) {
-    }
-    
-    func findXIVProcess() {
-    }
+
+    func loadSong(fromURL _: URL) {}
+
+    func seek(progress _: Double, end _: Bool) {}
+
+    func checkAccessibilityPermissions(prompt _: Bool) {}
+
+    func findXIVProcess() {}
 }

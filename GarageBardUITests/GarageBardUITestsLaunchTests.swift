@@ -8,7 +8,6 @@
 import XCTest
 
 class GarageBardUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

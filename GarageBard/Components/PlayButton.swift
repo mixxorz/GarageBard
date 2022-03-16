@@ -11,7 +11,7 @@ import SwiftUI
 struct PlayButton: View {
     var isPlaying: Bool
     var action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")

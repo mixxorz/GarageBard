@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 protocol PlayerViewModelProtocol: ObservableObject {
     var song: Song? { get set }
     var track: Track? { get set }
@@ -20,7 +19,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var notesTransposed: Bool { get }
     var hasAccessibilityPermissions: Bool { get }
     var foundXIVprocess: Bool { get }
-    
+
     func playOrPause()
     func stop()
     func openLoadSongDialog()

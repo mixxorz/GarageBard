@@ -5,34 +5,34 @@
 //  Created by Mitchel Cabuloy on 3/7/22.
 //
 
-import SwiftUI
 import CoreMIDI
+import SwiftUI
 import UniformTypeIdentifiers
 
 struct MIDIDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
     var vm: ViewModel
-    
+
     @Binding var isDropping: Bool
-    
-    func dropEntered(info: DropInfo) {
+
+    func dropEntered(info _: DropInfo) {
         withAnimation(.spring()) {
             isDropping = true
         }
     }
-    
-    func dropExited(info: DropInfo) {
+
+    func dropExited(info _: DropInfo) {
         withAnimation(.spring()) {
             isDropping = false
         }
     }
-    
+
     func performDrop(info: DropInfo) -> Bool {
-        let providers = info.itemProviders(for: [.fileURL]).filter({ provider in
+        let providers = info.itemProviders(for: [.fileURL]).filter { provider in
             provider.canLoadObject(ofClass: URL.self)
-        })
-        
+        }
+
         for provider in providers {
-            let _ = provider.loadObject(ofClass: URL.self) { object, error in
+            _ = provider.loadObject(ofClass: URL.self) { object, _ in
                 if let url = object {
                     DispatchQueue.main.async {
                         if let uttype = UTType(filenameExtension: url.pathExtension) {
@@ -44,16 +44,16 @@ struct MIDIDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
                 }
             }
         }
-        
+
         return providers.count > 0
-     }
+    }
 }
 
 struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-    
+
     @State var isDropping: Bool = false
-    
+
     var body: some View {
         ZStack {
             Color("grey700")
@@ -105,7 +105,7 @@ struct SongLibrary_Previews: PreviewProvider {
             createSong(name: "Song 6"),
         ]
     )
-    
+
     static var previews: some View {
         SongLibrary<FakePlayerViewModel>()
             .frame(maxWidth: space(100))
