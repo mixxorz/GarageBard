@@ -20,7 +20,6 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     // Settings
     @Published var playMode: PlayMode = .perform
-    @Published var autoCmdTab: Bool = false
     
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
@@ -34,7 +33,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     
     init(
-        bardEngine: BardEngine = BardEngine(playMode: .perform, autoCmdTab: false),
+        bardEngine: BardEngine = BardEngine(playMode: .perform),
         songLoader: SongLoader = SongLoader()
     ) {
         self.bardEngine = bardEngine
@@ -85,9 +84,6 @@ class PlayerViewModel: PlayerViewModelProtocol {
         
         // When the playMode changes, update that in bardEngine
         $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
-        
-        // When autoCmdTab changes, update that in bardEngine
-        $autoCmdTab.assign(to: \.autoCmdTab, on: self.bardEngine).store(in: &cancellables)
         
         // Boot up chores
         checkAccessibilityPermissions(prompt: false)
