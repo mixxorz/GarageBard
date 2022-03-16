@@ -22,8 +22,9 @@ class ProcessManager {
     }
     
     func findXIV() {
+        // Reset app to nil in case it was closed
         app = nil
-        window = nil
+        
         // Find apps that have a UI
         let apps = NSWorkspace.shared.runningApplications.filter { app in
             app.activationPolicy == .regular
@@ -39,7 +40,9 @@ class ProcessManager {
             app = Application(xivApp)
             do {
                 if let currentApp = app {
-                    window = try currentApp.windows()?.first(where: {try $0.attribute(.title) == "FINAL FANTASY XIV"})
+                    if let foundWindow = try currentApp.windows()?.first(where: {try $0.attribute(.title) == "FINAL FANTASY XIV"}) {
+                        window = foundWindow
+                    }
                 }
             } catch {
                 return
