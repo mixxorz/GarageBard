@@ -5,19 +5,20 @@
 //  Created by Mitchel Cabuloy on 3/6/22.
 //
 
-import Foundation
-import SwiftUI
 import AudioKit
-import MidiParser
+import AudioToolbox
 import Carbon.HIToolbox
 import Combine
+import Foundation
+import MidiParser
+import SwiftUI
 
 enum PlayMode {
     case perform, listen
 }
 
 class BardEngine {
-    private let sequencer: AppleSequencer = AppleSequencer()
+    private let sequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
     private let controlInstrument = MIDICallbackInstrument()
     private let nullInstrument = MIDICallbackInstrument()
@@ -29,6 +30,9 @@ class BardEngine {
     
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentPosition: Double = 0
+    @Published private(set) var notesTransposed: Bool = false
+    
+    private var currentSong: Song?
     
     var playMode: PlayMode = .perform {
         didSet {
@@ -78,6 +82,8 @@ class BardEngine {
     }
     
     func loadSong(song: Song) {
+        currentSong = song
+        
         // Load song into sequencer
         let data: Data
         
@@ -118,7 +124,20 @@ class BardEngine {
         
         sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
         if sequencer.tracks.indices.contains(track.id) {
-            sequencer.tracks[track.id].setMIDIOutput(instrument.midiIn)
+            let mTrack = sequencer.tracks[track.id]
+            
+            if currentSong?.autoTranposeNotes == true {
+                mTrack.transposeOutOfBoundNotes()
+                notesTransposed = true
+            } else {
+                notesTransposed = false
+            }
+            
+            if currentSong?.arpeggiateChords == true {
+                mTrack.arpeggiateChords()
+            }
+            
+            mTrack.setMIDIOutput(instrument.midiIn)
         } else {
             NSLog("BardEngine: Couldn't find track.")
         }
@@ -168,4 +187,71 @@ class BardEngine {
         sequencer.setTime(sequencer.duration(seconds: timestamp).beats)
     }
     
+}
+
+
+extension MusicTrackManager {
+    
+    private func transposeNote(_ noteNumber: MIDINoteNumber) -> MIDINoteNumber {
+        if noteNumber < 48 {
+            return transposeNote(noteNumber + 12)
+        } else if noteNumber > 84 {
+            return transposeNote(noteNumber - 12)
+        }
+        
+        return noteNumber
+    }
+    
+    func transposeOutOfBoundNotes() {
+        var noteData: [MIDINoteData] = []
+        
+        for midiNote in getMIDINoteData() {
+            let newMidiNote = MIDINoteData(
+                noteNumber: transposeNote(midiNote.noteNumber),
+                velocity: midiNote.velocity,
+                channel: midiNote.channel,
+                duration: midiNote.duration,
+                position: midiNote.position
+            )
+            noteData.append(newMidiNote)
+        }
+        
+        self.replaceMIDINoteData(with: noteData)
+    }
+    
+    func arpeggiateChords() {
+        // Group notes into chords according to beat
+        /// [beat position: [...notes]]
+        var chords : [Double: [MIDINoteData]] = [:]
+        
+        for midiNote in getMIDINoteData() {
+            if chords[midiNote.position.beats] != nil {
+                // It's possible for a chord to have the same note twice if the track was transposed
+                // This if statement filters out those duplicate notes
+                if !chords[midiNote.position.beats]!.contains(where: { $0.noteNumber == midiNote.noteNumber }) {
+                    chords[midiNote.position.beats]?.append(midiNote)
+                }
+            } else {
+                chords[midiNote.position.beats] = [midiNote]
+            }
+        }
+        
+        var noteData: [MIDINoteData] = []
+        
+        for (_, chord) in chords {
+            for (index, midiNote) in chord.sorted(by: { $0.noteNumber < $1.noteNumber }).enumerated() {
+                let newMidiNote = MIDINoteData(
+                    noteNumber: midiNote.noteNumber,
+                    velocity: midiNote.velocity,
+                    channel: midiNote.channel,
+                    duration: midiNote.duration,
+                    position: midiNote.position + Duration(beats: Double(index) * 0.001)
+                )
+                noteData.append(newMidiNote)
+            }
+        }
+        
+        self.replaceMIDINoteData(with: noteData)
+           
+    }
 }

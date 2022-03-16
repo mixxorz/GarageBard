@@ -21,6 +21,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     // Settings
     @Published var playMode: PlayMode = .perform
     
+    /// If the currently loaded track has been transposed
+    @Published var notesTransposed: Bool = false
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
     
@@ -39,10 +41,9 @@ class PlayerViewModel: PlayerViewModelProtocol {
         self.bardEngine = bardEngine
         self.songLoader = songLoader
         
-        // Update isPlaying when bardEngine finishes playing
+        // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
         
-        // Update playing progress values
         self.bardEngine.$currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
             self.currentPosition = position
@@ -59,6 +60,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
                 self.timeLeft = 0
             }
         }).store(in: &cancellables)
+        
+        self.bardEngine.$notesTransposed.assign(to: &$notesTransposed)
         
         // When the song changes, load it into bardEngine
         $song.sink(receiveValue: { [weak self] in
@@ -93,14 +96,18 @@ class PlayerViewModel: PlayerViewModelProtocol {
     /// Open file picker to load a song
     func openLoadSongDialog() {
         if let loadedSong = songLoader.openLoadSongDialog() {
-            songs.append(loadedSong)
+            withAnimation(.spring()) {
+                songs.append(loadedSong)
+            }
         }
     }
     
     /// Load a song given URL
     func loadSong(fromURL url: URL) {
         let song = songLoader.openSong(fromURL: url)
-        songs.append(song)
+        withAnimation(.spring()) {
+            songs.append(song)
+        }
     }
     
     /// Play or pause playback

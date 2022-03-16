@@ -170,15 +170,15 @@
 		5E693B5127D3D0B900EAA678 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5EF408E927DCA5EB004AD546 /* Notifications.swift */,
 				5E693B5427D3D12E00EAA678 /* PlayButton.swift */,
 				5E431BC927D52C2E005016D3 /* PlayerBar.swift */,
 				5E06FCB127D4DCD000214BE3 /* PlaylistItemRow.swift */,
 				5EF408E227DC1C62004AD546 /* PopoverMenu.swift */,
 				5E693B5227D3D10900EAA678 /* ProgressBar.swift */,
 				5E431BCB27D52CE4005016D3 /* SongLibrary.swift */,
-				5E431BC127D50954005016D3 /* TrackPopover.swift */,
 				5EF408E727DCA272004AD546 /* Toast.swift */,
-				5EF408E927DCA5EB004AD546 /* Notifications.swift */,
+				5E431BC127D50954005016D3 /* TrackPopover.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";

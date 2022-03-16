@@ -32,6 +32,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var timeLeft: Double = 0
     var songs: [Song] = []
     var playMode: PlayMode = .perform
+    var notesTransposed: Bool = false
     var hasAccessibilityPermissions: Bool = true
     var foundXIVprocess: Bool = true
     

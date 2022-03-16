@@ -51,6 +51,20 @@ You can swap between Perform and Listen modes depending on what you want to do:
 - **Perform**: Send keystrokes to play the song
 - **Listen**: Listen to the song using GarageBard's synthesizer
 
+### Transpose out of range notes
+
+When this is turned on, notes that fall outside what's playable in the game are
+automatically transposed up or down to fit within the range of what's playable.
+
+You will have to queue the song again once you make this change.
+
+### Arpeggiate chords
+
+When this is turned on, all chords will automatically be arpeggiated, so they
+sound better. Generally, you will want this on.
+
+You will have to queue the song again once you make this change.
+
 ## Troubleshooting
 
 **GarageBard needs Accessibility access in order to send keystrokes to Final Fantasy XIV.**
