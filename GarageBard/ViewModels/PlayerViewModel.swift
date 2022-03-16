@@ -156,7 +156,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     
     /// Find and save the game process
     func findXIVProcess() {
-        ProcessManager.instance.setXIVProcessId()
+        ProcessManager.instance.findXIV()
         
         withAnimation(.spring()) {
             if ProcessManager.instance.getXIVProcessId() != nil {

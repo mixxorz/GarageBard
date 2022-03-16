@@ -7,19 +7,23 @@
 
 import Foundation
 import AppKit
+import AXSwift
 
 
 class ProcessManager {
     
-    private var xivApp: NSRunningApplication?
+    private var app: Application?
+    private var window: UIElement?
     
     static let instance = ProcessManager()
     
     init() {
-        setXIVProcessId()
+        findXIV()
     }
     
-    func setXIVProcessId() {
+    func findXIV() {
+        app = nil
+        window = nil
         // Find apps that have a UI
         let apps = NSWorkspace.shared.runningApplications.filter { app in
             app.activationPolicy == .regular
@@ -31,15 +35,35 @@ class ProcessManager {
         }
         
         // If there's only one, then assume it's the game
-        if wineApps.count == 1 {
-            xivApp =  wineApps.first
+        if wineApps.count == 1, let xivApp = wineApps.first {
+            app = Application(xivApp)
+            do {
+                if let currentApp = app {
+                    window = try currentApp.windows()?.first(where: {try $0.attribute(.title) == "FINAL FANTASY XIV"})
+                }
+            } catch {
+                return
+            }
         } else {
             // If there's more than one, then we can't reliably find the game process
-            xivApp = nil
+            return
         }
     }
     
     func getXIVProcessId() -> pid_t? {
-        return xivApp?.processIdentifier
+        do {
+            return try app?.pid()
+        } catch {
+            return nil
+        }
+    }
+    
+    func switchToXIV() {
+        do {
+            try app?.setAttribute(.frontmost, value: kCFBooleanTrue!)
+            try window?.setAttribute(.main, value: kCFBooleanTrue!)
+        } catch {
+            return
+        }
     }
 }
