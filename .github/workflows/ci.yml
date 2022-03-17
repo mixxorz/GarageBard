@@ -10,6 +10,9 @@ jobs:
   code-checks:
     runs-on: macos-latest
 
+    env:
+      MINT_PATH: ${{ github.workspace }}/mint
+
     steps:
     - uses: actions/checkout@v2
 
