@@ -31,3 +31,6 @@ jobs:
 
     - name: SwiftFormat
       run: mint run swiftformat --lint .
+
+    - name: Build
+      run: xcodebuild -scheme GarageBard build CODE_SIGN_IDENTITY=-|xcpretty
