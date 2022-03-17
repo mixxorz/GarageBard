@@ -26,6 +26,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
 
+    @Published var floatWindow: Bool = false
+
     private var bardEngine: BardEngine
     private var songLoader: SongLoader
 
@@ -87,6 +89,18 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
         // When the playMode changes, update that in bardEngine
         $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
+
+        // Float window on change
+        $floatWindow.sink(receiveValue: {
+            if let mainWindow = NSApplication.shared.mainWindow {
+                if $0 {
+                    mainWindow.level = .init(rawValue: Int(CGWindowLevelForKey(CGWindowLevelKey.overlayWindow)))
+                } else {
+                    mainWindow.level = .normal
+                }
+            }
+
+        }).store(in: &cancellables)
 
         // Boot up chores
         checkAccessibilityPermissions(prompt: false)

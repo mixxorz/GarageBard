@@ -25,6 +25,25 @@ struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
             .overlay {
                 Notifications<ViewModel>()
             }
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: { vm.floatWindow.toggle() }) {
+                        if vm.floatWindow {
+                            Image(systemName: "pip.remove")
+                                .font(.system(size: 14))
+                                .foregroundColor(Color("grey400"))
+                        } else {
+                            Image(systemName: "pip.enter")
+                                .font(.system(size: 14))
+                                .foregroundColor(Color("grey400"))
+                        }
+                    }
+                    .padding(space(2))
+                    .buttonStyle(.plain)
+                }
+                Spacer()
+            }
         }
         .edgesIgnoringSafeArea(.all)
         .frame(width: space(100), height: space(150))

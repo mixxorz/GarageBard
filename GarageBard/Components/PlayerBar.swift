@@ -115,8 +115,9 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             }
             .padding(.vertical, space(2))
         }
-        .padding(space(4))
-        .padding(.top, space(4))
+        .padding(.horizontal, space(4))
+        .padding(.vertical, space(2))
+        .padding(.top, space(6))
         .foregroundColor(Color("grey400"))
     }
 }

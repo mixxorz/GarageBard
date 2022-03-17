@@ -19,6 +19,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var notesTransposed: Bool { get }
     var hasAccessibilityPermissions: Bool { get }
     var foundXIVprocess: Bool { get }
+    var floatWindow: Bool { get set }
 
     func playOrPause()
     func stop()
