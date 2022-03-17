@@ -93,14 +93,24 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                             arrowEdge: .bottom,
                             content: {
                                 PopoverMenu {
-                                    PopoverMenuItem(action: { vm.playMode = .perform }) {
+                                    PopoverMenuItem(action: {
+                                        withAnimation(.spring()) {
+                                            vm.playMode = .perform
+                                        }
+
+                                    }) {
                                         Text("Perform")
                                         Spacer()
                                         if vm.playMode == .perform {
                                             Image(systemName: "checkmark")
                                         }
                                     }
-                                    PopoverMenuItem(action: { vm.playMode = .listen }) {
+                                    PopoverMenuItem(action: {
+                                        withAnimation(.spring()) {
+                                            vm.playMode = .listen
+                                        }
+
+                                    }) {
                                         Text("Listen")
                                         Spacer()
                                         if vm.playMode == .listen {

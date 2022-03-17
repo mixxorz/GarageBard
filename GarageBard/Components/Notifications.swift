@@ -32,7 +32,7 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                 }
             }
 
-            if !vm.foundXIVprocess {
+            if !vm.foundXIVprocess, vm.playMode == .perform {
                 Toast(image: Image(systemName: "gamecontroller")) {
                     Text("Can't find game instance. Is the game running?")
                     Text("When you play a song, keystrokes will be sent to the frontmost window instead.")
