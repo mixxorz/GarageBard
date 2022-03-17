@@ -12,6 +12,45 @@ func space(_ value: Int) -> CGFloat {
     CGFloat(value * 4)
 }
 
+struct FloatWindowButton<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
+    @State var isHovering: Bool = false
+
+    var body: some View {
+        Button(action: { vm.floatWindow.toggle() }) {
+            if vm.floatWindow {
+                if isHovering {
+                    Image(systemName: "pip.remove")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color("grey400"))
+                        .contentShape(Rectangle())
+                } else {
+                    Image(systemName: "pip.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color("grey400"))
+                        .contentShape(Rectangle())
+                }
+            } else {
+                if isHovering {
+                    Image(systemName: "pip.enter")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color("grey400"))
+                        .contentShape(Rectangle())
+                } else {
+                    Image(systemName: "pip")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color("grey400"))
+                        .contentShape(Rectangle())
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(space(2))
+        .help(vm.floatWindow ? "Disable overlay" : "Enable overlay")
+        .onHover { isHovering = $0 }
+    }
+}
+
 struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
 
@@ -28,19 +67,7 @@ struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button(action: { vm.floatWindow.toggle() }) {
-                        if vm.floatWindow {
-                            Image(systemName: "pip.remove")
-                                .font(.system(size: 14))
-                                .foregroundColor(Color("grey400"))
-                        } else {
-                            Image(systemName: "pip.enter")
-                                .font(.system(size: 14))
-                                .foregroundColor(Color("grey400"))
-                        }
-                    }
-                    .padding(space(2))
-                    .buttonStyle(.plain)
+                    FloatWindowButton<ViewModel>()
                 }
                 Spacer()
             }

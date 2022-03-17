@@ -6,6 +6,7 @@
 
 - Add more reliable way to switch to XIV on play. This negates the need for
   Cmd+Tab on play
+- Add overlay mode
 
 ### Fixed
 
