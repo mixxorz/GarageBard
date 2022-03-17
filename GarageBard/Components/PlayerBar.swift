@@ -93,14 +93,24 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                             arrowEdge: .bottom,
                             content: {
                                 PopoverMenu {
-                                    PopoverMenuItem(action: { vm.playMode = .perform }) {
+                                    PopoverMenuItem(action: {
+                                        withAnimation(.spring()) {
+                                            vm.playMode = .perform
+                                        }
+
+                                    }) {
                                         Text("Perform")
                                         Spacer()
                                         if vm.playMode == .perform {
                                             Image(systemName: "checkmark")
                                         }
                                     }
-                                    PopoverMenuItem(action: { vm.playMode = .listen }) {
+                                    PopoverMenuItem(action: {
+                                        withAnimation(.spring()) {
+                                            vm.playMode = .listen
+                                        }
+
+                                    }) {
                                         Text("Listen")
                                         Spacer()
                                         if vm.playMode == .listen {
@@ -115,8 +125,9 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             }
             .padding(.vertical, space(2))
         }
-        .padding(space(4))
-        .padding(.top, space(4))
+        .padding(.horizontal, space(4))
+        .padding(.vertical, space(2))
+        .padding(.top, space(6))
         .foregroundColor(Color("grey400"))
     }
 }

@@ -65,6 +65,11 @@ sound better. Generally, you will want this on.
 
 You will have to queue the song again once you make this change.
 
+### Overlay mode
+
+When enabled, GarageBard will stay on top of the game so that it's always
+visible.
+
 ## Troubleshooting
 
 **GarageBard needs Accessibility access in order to send keystrokes to Final Fantasy XIV.**

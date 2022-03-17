@@ -35,6 +35,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var notesTransposed: Bool = false
     var hasAccessibilityPermissions: Bool = true
     var foundXIVprocess: Bool = true
+    var floatWindow: Bool = false
 
     init(
         song: Song? = nil,
