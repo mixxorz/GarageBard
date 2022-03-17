@@ -10,11 +10,11 @@ import SwiftUI
 struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     @Environment(\.controlActiveState) var controlActiveState
-    
+
     var body: some View {
         VStack {
             Spacer()
-            
+
             if let track = vm.track {
                 if track.hasOutOfRangeNotes {
                     Toast(image: Image(systemName: "music.quarternote.3")) {
@@ -31,7 +31,7 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                     }
                 }
             }
-            
+
             if !vm.foundXIVprocess {
                 Toast(image: Image(systemName: "gamecontroller")) {
                     Text("Can't find game instance. Is the game running?")
@@ -40,7 +40,7 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                         .foregroundColor(Color("grey400"))
                 }
             }
-            
+
             if !vm.hasAccessibilityPermissions {
                 Toast(image: Image(systemName: "gear")) {
                     Text("GarageBard needs Accessibility access in order to send keystrokes to Final Fantasy XIV.")

@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct PlayerButton: View {
-    
     var action: () -> Void
     var iconName: String
-    
+
     @State var isHovering = false
-    
+
     var body: some View {
         Button(action: action) {
             ZStack {
@@ -35,12 +34,12 @@ struct PlayerButton: View {
 
 struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-    
+
     @State var isTrackPopoverOpen = false
     @State var isSettingsPopoverOpen = false
-    
+
     let formatter = TimeFormatter.instance
-    
+
     var body: some View {
         VStack {
             HStack(alignment: .bottom) {
@@ -67,14 +66,14 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             ZStack {
                 HStack {
                     PlayerButton(action: { self.isTrackPopoverOpen = true }, iconName: "pianokeys")
-                    .popover(
-                        isPresented: $isTrackPopoverOpen,
-                        arrowEdge: .bottom,
-                        content: {
-                            TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
-                        }
-                    )
-                    .help("Tracks")
+                        .popover(
+                            isPresented: $isTrackPopoverOpen,
+                            arrowEdge: .bottom,
+                            content: {
+                                TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
+                            }
+                        )
+                        .help("Tracks")
                     Spacer()
                 }
                 HStack(spacing: space(2)) {
@@ -88,7 +87,7 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     Spacer()
                     PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
                         .help("Add song")
-                    PlayerButton(action: { self.isSettingsPopoverOpen  = true }, iconName: "ellipsis")
+                    PlayerButton(action: { self.isSettingsPopoverOpen = true }, iconName: "ellipsis")
                         .popover(
                             isPresented: $isSettingsPopoverOpen,
                             arrowEdge: .bottom,
@@ -128,7 +127,7 @@ struct PlayerBar_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
             .environmentObject(FakePlayerViewModel(song: nil, track: nil, isPlaying: true, currentProgress: 0.8))
             .frame(maxWidth: space(100))
-        
+
         PlayerBar<FakePlayerViewModel>()
             .preferredColorScheme(.dark)
             .environmentObject(

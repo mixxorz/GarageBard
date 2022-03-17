@@ -9,12 +9,12 @@ import Combine
 import SwiftUI
 
 func space(_ value: Int) -> CGFloat {
-    return CGFloat(value * 4)
+    CGFloat(value * 4)
 }
 
 struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-    
+
     var body: some View {
         ZStack {
             Color("grey600")
@@ -32,8 +32,8 @@ struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-     static let song = createSong(name: "My Song")
-    
+    static let song = createSong(name: "My Song")
+
     static var previews: some View {
         Group {
             ContentView<FakePlayerViewModel>()

@@ -5,10 +5,9 @@
 //  Created by Mitchel Cabuloy on 3/6/22.
 //
 
-import Foundation
-import Carbon.HIToolbox
 import AudioKit
-
+import Carbon.HIToolbox
+import Foundation
 
 struct Note {
     let keyCode: CGKeyCode
@@ -72,36 +71,36 @@ class BardController {
     private var keyBuffer: CGKeyCode?
     private let queue = DispatchQueue(label: "bardcontroller.queue", qos: .userInteractive)
     private var noteBuffer: [Note] = []
-    
+
     private var running = false
-    
+
     var tickRateMs: UInt32
-    
+
     init(tickRateMs: UInt32 = 25) {
         self.tickRateMs = tickRateMs
-        
-        self.hasAccessibilityPermissions = AXIsProcessTrusted()
-        
+
+        hasAccessibilityPermissions = AXIsProcessTrusted()
+
         if sourceRef == nil {
             NSLog("BardController: No event source")
         }
-        
+
         if !hasAccessibilityPermissions {
             NSLog("Do not have accessbility permissions")
         }
     }
-    
+
     private func getKeyCode(note: MIDINoteNumber) -> CGKeyCode? {
         let keyNumber = noteKeyMap[Int(note)] ?? -1
-        
+
         if keyNumber == -1 {
             NSLog("Note '\(note)' is out of bounds")
             return nil
         }
-        
+
         return CGKeyCode(keyNumber)
     }
-    
+
     private func keyDown(_ keyCode: CGKeyCode) {
         let keyDownEvent = CGEvent(
             keyboardEventSource: sourceRef,
@@ -115,45 +114,45 @@ class BardController {
             keyDownEvent?.post(tap: .cghidEventTap)
         }
     }
-    
+
     private func keyUp(_ keyCode: CGKeyCode) {
         let keyUpEvent = CGEvent(
             keyboardEventSource: sourceRef,
             virtualKey: keyCode,
             keyDown: false
         )
-        
+
         if let pid = ProcessManager.instance.getXIVProcessId() {
             keyUpEvent?.postToPid(pid)
         } else {
             keyUpEvent?.post(tap: .cghidEventTap)
         }
     }
-    
+
     func noteOn(_ note: MIDINoteNumber) {
         if let keyCode = getKeyCode(note: note) {
             noteBuffer.append(Note(keyCode: keyCode, desiredState: true))
         }
     }
-    
+
     func noteOff(_ note: MIDINoteNumber) {
         if let keyCode = getKeyCode(note: note) {
             noteBuffer.append(Note(keyCode: keyCode, desiredState: false))
         }
     }
-    
+
     func allNotesOff() {
         for (_, key) in noteKeyMap {
-            self.keyUp(CGKeyCode(key))
+            keyUp(CGKeyCode(key))
         }
     }
-    
+
     func start() {
-        let tickRate = self.tickRateMs * 1000
-        
+        let tickRate = tickRateMs * 1000
+
         if !running {
             running = true
-            
+
             queue.async {
                 while self.running {
                     // Sleeping here effectively sets a limit for how fast two consecutive key-presses can happen
@@ -161,7 +160,7 @@ class BardController {
                     usleep(tickRate)
                     if let note = self.noteBuffer.first {
                         self.noteBuffer.removeFirst()
-                        
+
                         if note.desiredState {
                             if let prevKeyCode = self.keyBuffer {
                                 self.keyUp(prevKeyCode)
@@ -175,13 +174,13 @@ class BardController {
                         }
                     }
                 }
-                
+
                 // Lift all keys when stopping
                 self.allNotesOff()
             }
         }
     }
-    
+
     func stop() {
         running = false
     }

@@ -11,9 +11,9 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     @ObservedObject var song: Song
     @State var isSongPopoverOpen: Bool = false
-    
+
     let formatter = TimeFormatter.instance
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 0) {

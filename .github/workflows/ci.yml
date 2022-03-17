@@ -1,0 +1,39 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  code-checks:
+    runs-on: macos-latest
+
+    env:
+      MINT_PATH: ${{ github.workspace }}/mint
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache/Restore Mint packages
+      id: mint-cache
+      uses: actions/cache@v2
+      with:
+          path: ${{ github.workspace }}/mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('**/Mintfile') }}
+          restore-keys: ${{ runner.os }}-mint-
+
+    - name: Install "Mint"
+      run: |
+          brew upgrade mint || brew install mint || true
+
+    - name: Install CLI tools
+      if: steps.mint-cache.outputs.cache-hit != 'true'
+      run: mint bootstrap
+
+    - name: SwiftFormat
+      run: mint run swiftformat --lint .
+
+    - name: Build
+      run: xcodebuild -scheme GarageBard build CODE_SIGN_IDENTITY=-|xcpretty
