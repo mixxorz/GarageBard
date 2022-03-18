@@ -32,7 +32,6 @@
 		5EF408E827DCA272004AD546 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E727DCA272004AD546 /* Toast.swift */; };
 		5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E927DCA5EB004AD546 /* Notifications.swift */; };
 		5EF408EC27DCB976004AD546 /* SongLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408EB27DCB975004AD546 /* SongLoader.swift */; };
-		5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF408F127DD7FB1004AD546 /* MidiParser */; };
 		5EF408F427DD8316004AD546 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408F327DD8316004AD546 /* ProcessManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -104,7 +103,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E2E804E27E2177200F1B060 /* AXSwift in Frameworks */,
-				5EF408F227DD7FB1004AD546 /* MidiParser in Frameworks */,
 				5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,7 +282,6 @@
 			name = GarageBard;
 			packageProductDependencies = (
 				5EE9E07727D3778F006F70BD /* AudioKit */,
-				5EF408F127DD7FB1004AD546 /* MidiParser */,
 				5E2E804D27E2177200F1B060 /* AXSwift */,
 			);
 			productName = GarageBard;
@@ -361,7 +358,6 @@
 			mainGroup = 5EA3894C27D2663500C4C2D3;
 			packageReferences = (
 				5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */,
-				5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */,
 				5E2E804C27E2177200F1B060 /* XCRemoteSwiftPackageReference "AXSwift" */,
 			);
 			productRefGroup = 5EA3895627D2663500C4C2D3 /* Products */;
@@ -760,14 +756,6 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/matsune/MidiParser";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -780,11 +768,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5EE9E07627D3778F006F70BD /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
-		};
-		5EF408F127DD7FB1004AD546 /* MidiParser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5EF408F027DD7FB1004AD546 /* XCRemoteSwiftPackageReference "MidiParser" */;
-			productName = MidiParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

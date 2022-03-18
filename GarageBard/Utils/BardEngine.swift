@@ -10,7 +10,6 @@ import AudioToolbox
 import Carbon.HIToolbox
 import Combine
 import Foundation
-import MidiParser
 import SwiftUI
 
 enum PlayMode {

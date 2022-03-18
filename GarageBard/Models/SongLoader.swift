@@ -10,7 +10,6 @@ import AudioKit
 import AudioToolbox
 import Combine
 import Foundation
-import MidiParser
 
 struct Track: Hashable, Identifiable {
     var id: Int
