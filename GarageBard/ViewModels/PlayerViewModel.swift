@@ -159,6 +159,13 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }
     }
 
+    /// Updates the transpose amount of the current track
+    func setTransposeAmount(fromString value: String) {
+        guard let track = track else { return }
+        track.setTranposeAmount(fromString: value)
+        bardEngine.loadTrack(track: track)
+    }
+
     /// Check if the app currently has accessibility access
     func checkAccessibilityPermissions(prompt: Bool) {
         withAnimation(.spring()) {

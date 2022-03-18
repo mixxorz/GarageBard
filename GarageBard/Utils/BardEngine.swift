@@ -10,7 +10,6 @@ import AudioToolbox
 import Carbon.HIToolbox
 import Combine
 import Foundation
-import MidiParser
 import SwiftUI
 
 enum PlayMode {
@@ -26,6 +25,7 @@ class BardEngine {
     private let engine = AudioEngine()
     private let bardController = BardController()
     private var controlTrack: MusicTrackManager?
+    private var musicTrack: MusicTrackManager?
     private var currentPositionTimer: Timer?
 
     @Published private(set) var isPlaying: Bool = false
@@ -96,7 +96,13 @@ class BardEngine {
         sequencer.stop()
         sequencer.loadMIDIFile(fromData: data)
 
-        // Otherwise, use hook it up with the callback instruments
+        // Mute all tracks that came with the MIDI file
+        sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
+
+        // Add our own music track which we will copy midi notes into
+        musicTrack = sequencer.newTrack("music")
+        musicTrack?.setMIDIOutput(instrument.midiIn)
+
         loadTrack(track: song.tracks[0])
 
         controlTrack = sequencer.newTrack("control")
@@ -116,33 +122,30 @@ class BardEngine {
     }
 
     func loadTrack(track: Track) {
+        guard let musicTrack = musicTrack else { return }
+        guard let currentSong = currentSong else { return }
+
         let wasPlaying = sequencer.isPlaying
 
         if wasPlaying {
             sequencer.stop()
         }
 
-        sequencer.setGlobalMIDIOutput(nullInstrument.midiIn)
-        if sequencer.tracks.indices.contains(track.id) {
-            let mTrack = sequencer.tracks[track.id]
+        // Load track into music track
+        musicTrack.replaceMIDINoteData(with: track.midiNoteData)
 
-            if currentSong?.autoTranposeNotes == true {
-                mTrack.transposeOutOfBoundNotes()
-                notesTransposed = true
-            } else {
-                notesTransposed = false
-            }
-
-            if currentSong?.arpeggiateChords == true {
-                mTrack.arpeggiateChords()
-            }
-
-            mTrack.setMIDIOutput(instrument.midiIn)
-        } else {
-            NSLog("BardEngine: Couldn't find track.")
+        if track.transposeAmount != 0 {
+            musicTrack.tranposeNotes(semitones: track.transposeAmount)
         }
 
-        controlTrack?.setMIDIOutput(controlInstrument.midiIn)
+        notesTransposed = currentSong.autoTranposeNotes
+        if currentSong.autoTranposeNotes {
+            musicTrack.transposeOutOfBoundNotes()
+        }
+
+        if currentSong.arpeggiateChords {
+            musicTrack.arpeggiateChords()
+        }
 
         if wasPlaying {
             sequencer.play()
@@ -205,6 +208,23 @@ extension MusicTrackManager {
         for midiNote in getMIDINoteData() {
             let newMidiNote = MIDINoteData(
                 noteNumber: transposeNote(midiNote.noteNumber),
+                velocity: midiNote.velocity,
+                channel: midiNote.channel,
+                duration: midiNote.duration,
+                position: midiNote.position
+            )
+            noteData.append(newMidiNote)
+        }
+
+        replaceMIDINoteData(with: noteData)
+    }
+
+    func tranposeNotes(semitones: Int) {
+        var noteData: [MIDINoteData] = []
+
+        for midiNote in getMIDINoteData() {
+            let newMidiNote = MIDINoteData(
+                noteNumber: UInt8(Int(midiNote.noteNumber) + semitones),
                 velocity: midiNote.velocity,
                 channel: midiNote.channel,
                 duration: midiNote.duration,

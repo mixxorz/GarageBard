@@ -12,6 +12,8 @@ func space(_ value: Int) -> CGFloat {
     CGFloat(value * 4)
 }
 
+let fadeAnimation = AnyTransition.opacity.animation(.spring())
+
 struct FloatWindowButton<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     @State var isHovering: Bool = false
@@ -74,6 +76,18 @@ struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
         }
         .edgesIgnoringSafeArea(.all)
         .frame(width: space(100), height: space(150))
+        .onAppear {
+            // Don't auto-focus on anything on appear
+            DispatchQueue.main.async {
+                NSApp.keyWindow?.makeFirstResponder(nil)
+            }
+        }
+        .onTapGesture {
+            // Clicking away from textfields should make them lose focus
+            DispatchQueue.main.async {
+                NSApp.keyWindow?.makeFirstResponder(nil)
+            }
+        }
     }
 }
 

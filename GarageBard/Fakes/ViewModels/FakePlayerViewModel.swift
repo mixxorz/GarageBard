@@ -51,10 +51,12 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
         self.isPlaying = isPlaying
         self.songs = songs
 
-        let duration = 123.0
-        currentPosition = duration * currentProgress
-        self.currentProgress = currentProgress
-        timeLeft = currentPosition - duration
+        if let song = song {
+            let duration = song.durationInSeconds
+            currentPosition = duration * currentProgress
+            self.currentProgress = currentProgress
+            timeLeft = currentPosition - duration
+        }
 
         self.hasAccessibilityPermissions = hasAccessibilityPermissions
         self.foundXIVprocess = foundXIVprocess
@@ -80,6 +82,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     func loadSong(fromURL _: URL) {}
 
     func seek(progress _: Double, end _: Bool) {}
+
+    func setTransposeAmount(fromString _: String) {}
 
     func checkAccessibilityPermissions(prompt _: Bool) {}
 

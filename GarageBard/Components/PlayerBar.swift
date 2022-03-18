@@ -7,36 +7,9 @@
 
 import SwiftUI
 
-struct PlayerButton: View {
-    var action: () -> Void
-    var iconName: String
-
-    @State var isHovering = false
-
-    var body: some View {
-        Button(action: action) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .frame(width: space(8), height: space(6))
-                    .foregroundColor(.white)
-                    .opacity(isHovering ? 0.1 : 0)
-                Image(systemName: iconName)
-                    .font(.system(size: 20.0))
-                    .foregroundColor(Color("grey400"))
-            }
-        }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-            isHovering = hovering
-        }
-    }
-}
-
 struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
-
-    @State var isTrackPopoverOpen = false
-    @State var isSettingsPopoverOpen = false
+    @State var isSubtoolbarOpen = false
 
     let formatter = TimeFormatter.instance
 
@@ -45,16 +18,17 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             HStack(alignment: .bottom) {
                 Text(vm.currentProgress > 0 ? formatter.format(vm.currentPosition) : "")
                     .font(.system(size: 10.0))
-                    .frame(width: space(16), alignment: .leading)
+                    .frame(width: space(10), alignment: .leading)
                 Spacer()
                 Text(vm.song?.name ?? "No song selected")
                     .font(.system(size: 14.0))
+                    .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
                     .lineLimit(1)
                 Spacer()
                 Text(vm.currentProgress > 0 ? formatter.format(vm.timeLeft) : "")
                     .font(.system(size: 10.0))
-                    .frame(width: space(16), alignment: .trailing)
+                    .frame(width: space(10), alignment: .trailing)
             }
             ProgressBar(value: vm.currentProgress)
                 .frame(height: space(1))
@@ -63,67 +37,10 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                 }, seekEndAction: { percentage in
                     vm.seek(progress: percentage, end: true)
                 })
-            ZStack {
-                HStack {
-                    PlayerButton(action: { self.isTrackPopoverOpen = true }, iconName: "pianokeys")
-                        .popover(
-                            isPresented: $isTrackPopoverOpen,
-                            arrowEdge: .bottom,
-                            content: {
-                                TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
-                            }
-                        )
-                        .help("Tracks")
-                    Spacer()
-                }
-                HStack(spacing: space(2)) {
-                    PlayerButton(action: vm.playOrPause, iconName: vm.isPlaying ? "pause.fill" : "play.fill")
-                        .help(vm.isPlaying ? "Pause" : "Play")
-                        .keyboardShortcut(.space, modifiers: [])
-                    PlayerButton(action: vm.stop, iconName: "stop.fill")
-                        .help("Stop")
-                }
-                HStack {
-                    Spacer()
-                    PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
-                        .help("Add song")
-                    PlayerButton(action: { self.isSettingsPopoverOpen = true }, iconName: "ellipsis")
-                        .popover(
-                            isPresented: $isSettingsPopoverOpen,
-                            arrowEdge: .bottom,
-                            content: {
-                                PopoverMenu {
-                                    PopoverMenuItem(action: {
-                                        withAnimation(.spring()) {
-                                            vm.playMode = .perform
-                                        }
-
-                                    }) {
-                                        Text("Perform")
-                                        Spacer()
-                                        if vm.playMode == .perform {
-                                            Image(systemName: "checkmark")
-                                        }
-                                    }
-                                    PopoverMenuItem(action: {
-                                        withAnimation(.spring()) {
-                                            vm.playMode = .listen
-                                        }
-
-                                    }) {
-                                        Text("Listen")
-                                        Spacer()
-                                        if vm.playMode == .listen {
-                                            Image(systemName: "checkmark")
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                        .help("Settings")
-                }
+            MainToolbar<ViewModel>(isSubToolbarOpen: $isSubtoolbarOpen)
+            if isSubtoolbarOpen {
+                SubToolbar<ViewModel>()
             }
-            .padding(.vertical, space(2))
         }
         .padding(.horizontal, space(4))
         .padding(.vertical, space(2))
@@ -138,17 +55,19 @@ struct PlayerBar_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
             .environmentObject(FakePlayerViewModel(song: nil, track: nil, isPlaying: true, currentProgress: 0.8))
             .frame(maxWidth: space(100))
+            .background(Color("grey600"))
 
         PlayerBar<FakePlayerViewModel>()
             .preferredColorScheme(.dark)
             .environmentObject(
                 FakePlayerViewModel(
-                    song: createSong(name: "This is a really long song title that breaks into multiple lines"),
+                    song: createSong(name: "This is a really long song title that breaks into multiple lines", durationInSeconds: 5700),
                     track: nil,
                     isPlaying: true,
-                    currentProgress: 0.8
+                    currentProgress: 0.42
                 )
             )
             .frame(maxWidth: space(100))
+            .background(Color("grey600"))
     }
 }
