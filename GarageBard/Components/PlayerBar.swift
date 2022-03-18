@@ -7,199 +7,9 @@
 
 import SwiftUI
 
-struct PlayerButton: View {
-    var action: () -> Void
-    var iconName: String
-
-    @State var isHovering = false
-
-    var body: some View {
-        Button(action: action) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .frame(width: space(8), height: space(6))
-                    .foregroundColor(.white)
-                    .opacity(isHovering ? 0.1 : 0)
-                Image(systemName: iconName)
-                    .font(.system(size: 20.0))
-                    .foregroundColor(Color("grey400"))
-            }
-        }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-            isHovering = hovering
-        }
-    }
-}
-
-struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var vm: ViewModel
-
-    @State var isTrackPopoverOpen = false
-    @State var isSettingsPopoverOpen = false
-
-    var body: some View {
-        ZStack {
-            HStack {
-                PlayerButton(action: { self.isTrackPopoverOpen = true }, iconName: "pianokeys")
-                    .popover(
-                        isPresented: $isTrackPopoverOpen,
-                        arrowEdge: .bottom,
-                        content: {
-                            TrackPopover<ViewModel>(tracks: vm.song?.tracks ?? [])
-                        }
-                    )
-                    .help("Tracks")
-                Spacer()
-            }
-            HStack(spacing: space(2)) {
-                PlayerButton(action: vm.playOrPause, iconName: vm.isPlaying ? "pause.fill" : "play.fill")
-                    .help(vm.isPlaying ? "Pause" : "Play")
-                    .keyboardShortcut(.space, modifiers: [])
-                PlayerButton(action: vm.stop, iconName: "stop.fill")
-                    .help("Stop")
-            }
-            HStack {
-                Spacer()
-                PlayerButton(action: vm.openLoadSongDialog, iconName: "folder.badge.plus")
-                    .help("Add song")
-                PlayerButton(action: { self.isSettingsPopoverOpen = true }, iconName: "ellipsis")
-                    .popover(
-                        isPresented: $isSettingsPopoverOpen,
-                        arrowEdge: .bottom,
-                        content: {
-                            PopoverMenu {
-                                PopoverMenuItem(action: {
-                                    withAnimation(.spring()) {
-                                        vm.playMode = .perform
-                                    }
-
-                                }) {
-                                    Text("Perform")
-                                    Spacer()
-                                    if vm.playMode == .perform {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                                PopoverMenuItem(action: {
-                                    withAnimation(.spring()) {
-                                        vm.playMode = .listen
-                                    }
-
-                                }) {
-                                    Text("Listen")
-                                    Spacer()
-                                    if vm.playMode == .listen {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        }
-                    )
-                    .help("Settings")
-            }
-        }
-        .padding(.vertical, space(2))
-    }
-}
-
-struct InputField: View {
-    var name: String
-    var value: String
-    var onSetValue: (_ value: String) -> Void
-
-    @FocusState var isFocused: Bool
-    @State var bufferValue: String = ""
-
-    init(
-        name: String,
-        value: String,
-        onSetValue: @escaping (String) -> Void
-    ) {
-        self.name = name
-        self.value = value
-        self.onSetValue = onSetValue
-    }
-
-    private func setValue() {
-        if bufferValue != "" {
-            onSetValue(bufferValue)
-        }
-        bufferValue = ""
-        isFocused = false
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: space(1)) {
-            Text(name)
-                .font(.system(size: 12.0))
-            ZStack {
-                Rectangle()
-                    .foregroundColor(Color("grey700"))
-                    .frame(width: space(20), height: space(5))
-                    .border(isFocused ? Color.accentColor : Color("grey500"), width: 1)
-                    .onTapGesture {
-                        isFocused = true
-                    }
-
-                TextField("", text: $bufferValue)
-                    .textFieldStyle(.plain)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: 10.0))
-                    .foregroundColor(Color("grey400"))
-                    .opacity(bufferValue != "" ? 1 : 0)
-                    .frame(width: space(20), height: space(5))
-                    .onSubmit(setValue)
-                    .focused($isFocused)
-                    .onChange(of: isFocused, perform: { focused in
-                        if !focused {
-                            setValue()
-                        }
-                    })
-
-                if bufferValue == "" {
-                    Text(value)
-                        .font(.system(size: 10.0))
-                        .allowsHitTesting(false)
-                }
-            }
-        }
-    }
-}
-
-struct TransposeField<ViewModel: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var vm: ViewModel
-    @ObservedObject var track: Track
-
-    var body: some View {
-        InputField(name: "Transpose", value: track.getTranposedDisplay(), onSetValue: { value in
-            vm.setTransposeAmount(fromString: value)
-        })
-    }
-}
-
-struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
-    @EnvironmentObject var vm: ViewModel
-
-    var body: some View {
-        HStack {
-            InputField(name: "Tempo", value: "120-216 BPM") { value in
-                print("Tempo set to: \(value)")
-            }
-
-            if let track = vm.track {
-                TransposeField<ViewModel>(track: track)
-            } else {
-                InputField(name: "Tranpose", value: "-", onSetValue: { _ in })
-            }
-
-            Spacer()
-        }
-    }
-}
-
 struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
+    @State var isSubtoolbarOpen = false
 
     let formatter = TimeFormatter.instance
 
@@ -208,16 +18,17 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
             HStack(alignment: .bottom) {
                 Text(vm.currentProgress > 0 ? formatter.format(vm.currentPosition) : "")
                     .font(.system(size: 10.0))
-                    .frame(width: space(16), alignment: .leading)
+                    .frame(width: space(10), alignment: .leading)
                 Spacer()
                 Text(vm.song?.name ?? "No song selected")
                     .font(.system(size: 14.0))
+                    .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
                     .lineLimit(1)
                 Spacer()
                 Text(vm.currentProgress > 0 ? formatter.format(vm.timeLeft) : "")
                     .font(.system(size: 10.0))
-                    .frame(width: space(16), alignment: .trailing)
+                    .frame(width: space(10), alignment: .trailing)
             }
             ProgressBar(value: vm.currentProgress)
                 .frame(height: space(1))
@@ -226,8 +37,10 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                 }, seekEndAction: { percentage in
                     vm.seek(progress: percentage, end: true)
                 })
-            MainToolbar<ViewModel>()
-            SubToolbar<ViewModel>()
+            MainToolbar<ViewModel>(isSubToolbarOpen: $isSubtoolbarOpen)
+            if isSubtoolbarOpen {
+                SubToolbar<ViewModel>()
+            }
         }
         .padding(.horizontal, space(4))
         .padding(.vertical, space(2))
@@ -248,10 +61,10 @@ struct PlayerBar_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
             .environmentObject(
                 FakePlayerViewModel(
-                    song: createSong(name: "This is a really long song title that breaks into multiple lines"),
+                    song: createSong(name: "This is a really long song title that breaks into multiple lines", durationInSeconds: 5700),
                     track: nil,
                     isPlaying: true,
-                    currentProgress: 0.8
+                    currentProgress: 0.42
                 )
             )
             .frame(maxWidth: space(100))
