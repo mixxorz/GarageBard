@@ -48,10 +48,21 @@ class Track: ObservableObject, Hashable, Identifiable {
     }
 
     private func getNoteName(note: MIDINoteNumber) -> String {
-        let noteNumber = Int(note - 21)
+        // Middle C is 60 (C3)
+        // Our range goes from 0 == C-2 to 127 == G8
+        let octave = (Int(note) + 24) / 12 - 4
+        let noteNumber = Int(note) - 21
         let notes: [String] = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
-        let octave = noteNumber / 12 + 1
-        let name = notes[noteNumber % 12]
+
+        let noteIndex = noteNumber % 12
+
+        let name: String
+        if noteIndex >= 0 {
+            name = notes[noteNumber % 12]
+        } else {
+            name = notes.suffix(abs(noteNumber % 12)).first!
+        }
+
         return "\(name)\(octave)"
     }
 

@@ -137,7 +137,7 @@ struct InputField: View {
                 Rectangle()
                     .foregroundColor(Color("grey700"))
                     .frame(width: space(20), height: space(5))
-                    .border(isFocused ? Color.orange : Color("grey500"), width: 1)
+                    .border(isFocused ? Color.accentColor : Color("grey500"), width: 1)
                     .onTapGesture {
                         isFocused = true
                     }

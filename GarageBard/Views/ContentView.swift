@@ -74,6 +74,12 @@ struct ContentView<ViewModel: PlayerViewModelProtocol>: View {
         }
         .edgesIgnoringSafeArea(.all)
         .frame(width: space(100), height: space(150))
+        .onAppear {
+            // Don't auto-focus on anything on appear
+            DispatchQueue.main.async {
+                NSApp.keyWindow?.makeFirstResponder(nil)
+            }
+        }
         .onTapGesture {
             // Clicking away from textfields should make them lose focus
             DispatchQueue.main.async {
