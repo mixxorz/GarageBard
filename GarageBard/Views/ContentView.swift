@@ -12,6 +12,8 @@ func space(_ value: Int) -> CGFloat {
     CGFloat(value * 4)
 }
 
+let fadeAnimation = AnyTransition.opacity.animation(.spring())
+
 struct FloatWindowButton<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     @State var isHovering: Bool = false

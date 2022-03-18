@@ -29,6 +29,8 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                                 .foregroundColor(Color("grey400"))
                         }
                     }
+                    .transition(fadeAnimation)
+                    .animation(.default, value: vm.track?.hasOutOfRangeNotes)
                 }
             }
 

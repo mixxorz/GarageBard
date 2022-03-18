@@ -24,7 +24,7 @@ class Track: ObservableObject, Hashable, Identifiable {
 
     var hasOutOfRangeNotes: Bool {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return false }
-        return noteLowerBound < 48 || noteUpperBound > 84
+        return Int(noteLowerBound) + transposeAmount < 48 || Int(noteUpperBound) + transposeAmount > 84
     }
 
     init(id: Int, name: String, midiNoteData: [MIDINoteData] = []) {
