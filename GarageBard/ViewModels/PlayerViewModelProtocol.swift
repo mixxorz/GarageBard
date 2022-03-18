@@ -26,6 +26,9 @@ protocol PlayerViewModelProtocol: ObservableObject {
     func openLoadSongDialog()
     func loadSong(fromURL url: URL)
     func seek(progress: Double, end: Bool)
+
+    func setTransposeAmount(semitones: Int)
+
     func checkAccessibilityPermissions(prompt: Bool)
     func findXIVProcess()
 }

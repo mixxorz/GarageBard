@@ -106,14 +106,24 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
 struct InputField: View {
     var name: String
     var value: String
+    var onSetValue: (_ value: String) -> Void
 
     @FocusState var isFocused: Bool
-    @State var tempValue: String = "TEST"
     @State var bufferValue: String = ""
+
+    init(
+        name: String,
+        value: String,
+        onSetValue: @escaping (String) -> Void
+    ) {
+        self.name = name
+        self.value = value
+        self.onSetValue = onSetValue
+    }
 
     private func setValue() {
         if bufferValue != "" {
-            tempValue = bufferValue
+            onSetValue(bufferValue)
         }
         bufferValue = ""
         isFocused = false
@@ -148,7 +158,7 @@ struct InputField: View {
                     })
 
                 if bufferValue == "" {
-                    Text(tempValue)
+                    Text(value)
                         .font(.system(size: 10.0))
                         .allowsHitTesting(false)
                 }
@@ -157,13 +167,33 @@ struct InputField: View {
     }
 }
 
-struct SubToolbar: View {
-    @State var text: String = "1.0"
+struct TransposeField<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
+    @ObservedObject var track: Track
+
+    var body: some View {
+        InputField(name: "Transpose", value: track.getTranposedDisplay(), onSetValue: { value in
+            guard let value = Int(value) else { return }
+            vm.setTransposeAmount(semitones: value)
+        })
+    }
+}
+
+struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
 
     var body: some View {
         HStack {
-            InputField(name: "Tempo", value: "120-216 BPM")
-            InputField(name: "Tranpose", value: "C2-D#2 +99")
+            InputField(name: "Tempo", value: "120-216 BPM") { value in
+                print("Tempo set to: \(value)")
+            }
+
+            if let track = vm.track {
+                TransposeField<ViewModel>(track: track)
+            } else {
+                InputField(name: "Tranpose", value: "-", onSetValue: { _ in })
+            }
+
             Spacer()
         }
     }
@@ -198,7 +228,7 @@ struct PlayerBar<ViewModel: PlayerViewModelProtocol>: View {
                     vm.seek(progress: percentage, end: true)
                 })
             MainToolbar<ViewModel>()
-            SubToolbar()
+            SubToolbar<ViewModel>()
         }
         .padding(.horizontal, space(4))
         .padding(.vertical, space(2))

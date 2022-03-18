@@ -81,6 +81,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
 
     func seek(progress _: Double, end _: Bool) {}
 
+    func setTransposeAmount(semitones _: Int) {}
+
     func checkAccessibilityPermissions(prompt _: Bool) {}
 
     func findXIVProcess() {}

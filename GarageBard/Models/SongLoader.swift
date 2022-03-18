@@ -11,10 +11,12 @@ import AudioToolbox
 import Combine
 import Foundation
 
-struct Track: Hashable, Identifiable {
+class Track: ObservableObject, Hashable, Identifiable {
     var id: Int
     var name: String
     var midiNoteData: [MIDINoteData] = []
+
+    @Published private(set) var transposeAmount: Int = 0
 
     // Optional because some tracks may be empty
     var noteLowerBound: MIDINoteNumber?
@@ -25,9 +27,60 @@ struct Track: Hashable, Identifiable {
         return noteLowerBound < 48 || noteUpperBound > 84
     }
 
+    init(id: Int, name: String, midiNoteData: [MIDINoteData] = []) {
+        self.id = id
+        self.name = name
+        self.midiNoteData = midiNoteData
+
+        let notes = midiNoteData.map(\.noteNumber)
+
+        noteLowerBound = notes.min()
+        noteUpperBound = notes.max()
+    }
+
+    static func == (lhs: Track, rhs: Track) -> Bool {
+        lhs.id == rhs.id && lhs.name == rhs.name
+    }
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(name)
+    }
+
+    private func getNoteName(note: MIDINoteNumber) -> String {
+        let noteNumber = Int(note - 21)
+        let notes: [String] = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
+        let octave = noteNumber / 12 + 1
+        let name = notes[noteNumber % 12]
+        return "\(name)\(octave)"
+    }
+
+    func getTranposedDisplay() -> String {
+        guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return "-" }
+        let lowerNoteName = getNoteName(note: UInt8(Int(noteLowerBound) + transposeAmount))
+        let upperNoteName = getNoteName(note: UInt8(Int(noteUpperBound) + transposeAmount))
+        let notesText = "\(lowerNoteName)-\(upperNoteName)"
+
+        if transposeAmount > 0 {
+            return String("\(notesText) +\(transposeAmount)")
+        } else if transposeAmount < 0 {
+            return String("\(notesText) \(transposeAmount)")
+        }
+        return notesText
+    }
+
+    func setTranposeAmount(semitones: Int) {
+        guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return }
+
+        // Ensure that the new value doesn't cause notes to become invalid
+        let newNoteLowerBound = Int(noteLowerBound) + semitones
+        let newNoteUpperBound = Int(noteUpperBound) + semitones
+
+        if newNoteLowerBound < 0 || newNoteUpperBound > 127 {
+            return
+        }
+
+        transposeAmount = semitones
     }
 }
 
@@ -38,17 +91,15 @@ class Song: ObservableObject, Identifiable {
     let durationInSeconds: Double
     let tracks: [Track]
 
-    @Published var autoTranposeNotes: Bool
-    @Published var arpeggiateChords: Bool
+    @Published var autoTranposeNotes: Bool = true
+    @Published var arpeggiateChords: Bool = true
 
-    init(name: String, url: URL, durationInSeconds: Double, tracks: [Track], autoTranposeNotes: Bool = true, arpeggiateChords: Bool = true) {
+    init(name: String, url: URL, durationInSeconds: Double, tracks: [Track]) {
         id = name
         self.name = name
         self.url = url
         self.durationInSeconds = durationInSeconds
         self.tracks = tracks
-        self.autoTranposeNotes = autoTranposeNotes
-        self.arpeggiateChords = arpeggiateChords
     }
 }
 
@@ -66,17 +117,10 @@ class SongLoader {
 
         // Load tracks
         var tracks: [Track] = sequencer.tracks.enumerated().map { index, track in
-            let trackName = track.getTrackName() ?? "Track \(index + 1)"
-            let notes = track.getMIDINoteData().map(\.noteNumber)
-            let noteLowerBound = notes.min()
-            let noteUpperBound = notes.max()
-
-            return Track(
+            Track(
                 id: index, // It's important that this is the index according to the sequencer
-                name: trackName,
-                midiNoteData: track.getMIDINoteData(),
-                noteLowerBound: noteLowerBound,
-                noteUpperBound: noteUpperBound
+                name: track.getTrackName() ?? "Track \(index + 1)",
+                midiNoteData: track.getMIDINoteData()
             )
         }
 
@@ -141,16 +185,16 @@ struct UnsafeMIDIMetaEventPointer {
 
 extension MusicTrackManager {
     func getTrackName() -> String? {
-        if let eventData = eventData {
-            for event in eventData {
-                if event.type == kMusicEventType_Meta {
-                    let metaEventPointer = UnsafeMIDIMetaEventPointer(event.data)!
-                    let metaEvent = metaEventPointer.event.pointee
-                    if metaEvent.metaEventType == MIDICustomMetaEventType.trackName.rawValue {
-                        let data = Data(buffer: metaEventPointer.payload)
-                        if let str = String(data: data, encoding: String.Encoding.utf8) {
-                            return str
-                        }
+        guard let eventData = eventData else { return nil }
+
+        for event in eventData {
+            if event.type == kMusicEventType_Meta {
+                let metaEventPointer = UnsafeMIDIMetaEventPointer(event.data)!
+                let metaEvent = metaEventPointer.event.pointee
+                if metaEvent.metaEventType == MIDICustomMetaEventType.trackName.rawValue {
+                    let data = Data(buffer: metaEventPointer.payload)
+                    if let str = String(data: data, encoding: String.Encoding.utf8) {
+                        return str
                     }
                 }
             }
