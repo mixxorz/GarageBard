@@ -160,9 +160,9 @@ class PlayerViewModel: PlayerViewModelProtocol {
     }
 
     /// Updates the transpose amount of the current track
-    func setTransposeAmount(semitones: Int) {
+    func setTransposeAmount(fromString value: String) {
         guard let track = track else { return }
-        track.setTranposeAmount(semitones: semitones)
+        track.setTranposeAmount(fromString: value)
         bardEngine.loadTrack(track: track)
     }
 

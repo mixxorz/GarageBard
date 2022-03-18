@@ -66,6 +66,15 @@ class Track: ObservableObject, Hashable, Identifiable {
         return "\(name)\(octave)"
     }
 
+    private func getNoteNumber(value: String) -> MIDINoteNumber? {
+        let alphabet: [String] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+        let allNotes = (0 ... 127).reduce(into: [String: MIDINoteNumber]()) { acc, num in
+            let octave = (num + 24) / 12 - 4
+            acc["\(alphabet[num % 12])\(octave)"] = MIDINoteNumber(num)
+        }
+        return allNotes[value.uppercased()]
+    }
+
     func getTranposedDisplay() -> String {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return "-" }
         let lowerNoteName = getNoteName(note: UInt8(Int(noteLowerBound) + transposeAmount))
@@ -92,6 +101,25 @@ class Track: ObservableObject, Hashable, Identifiable {
         }
 
         transposeAmount = semitones
+    }
+
+    func setTranposeAmount(fromString value: String) {
+        guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return }
+
+        let cleanedValue = value.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+
+        if let semitones = Int(value) {
+            setTranposeAmount(semitones: semitones)
+        } else if let targetNote = getNoteNumber(value: cleanedValue) {
+            var semitoneDifference = 0
+
+            if !value.starts(with: "-") {
+                semitoneDifference = Int(targetNote) - Int(noteLowerBound)
+            } else {
+                semitoneDifference = Int(targetNote) - Int(noteUpperBound)
+            }
+            setTranposeAmount(semitones: semitoneDifference)
+        }
     }
 }
 

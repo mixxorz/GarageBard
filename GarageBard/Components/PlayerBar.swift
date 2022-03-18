@@ -173,8 +173,7 @@ struct TransposeField<ViewModel: PlayerViewModelProtocol>: View {
 
     var body: some View {
         InputField(name: "Transpose", value: track.getTranposedDisplay(), onSetValue: { value in
-            guard let value = Int(value) else { return }
-            vm.setTransposeAmount(semitones: value)
+            vm.setTransposeAmount(fromString: value)
         })
     }
 }
