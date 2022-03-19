@@ -13,12 +13,12 @@ func createSong(name: String = "GarageBard", durationInSeconds: Double = 150.0) 
         url: URL(fileURLWithPath: "some.mid"),
         durationInSeconds: durationInSeconds,
         tracks: [
-            Track(id: 0, name: "Saxophone"),
-            Track(id: 1, name: "Guitar"),
-            Track(id: 2, name: "Lute"),
-            Track(id: 3, name: "Drum Kit"),
-            Track(id: 4, name: "Electric Guitar"),
-            Track(id: 5, name: "Violin"),
+            Track(name: "Saxophone"),
+            Track(name: "Guitar"),
+            Track(name: "Lute"),
+            Track(name: "Drum Kit"),
+            Track(name: "Electric Guitar"),
+            Track(name: "Violin"),
         ]
     )
 }
@@ -80,12 +80,11 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
 
     func loadSong(fromURL _: URL) {}
-
+    func reloadTrack() {}
     func seek(progress _: Double, end _: Bool) {}
 
     func setTransposeAmount(fromString _: String) {}
 
     func checkAccessibilityPermissions(prompt _: Bool) {}
-
     func findXIVProcess() {}
 }

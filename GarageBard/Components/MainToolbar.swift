@@ -31,7 +31,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                         self.isSubToolbarOpen.toggle()
                     }
                 }, iconName: "dial.max")
-                    .help("Properties")
+                    .help("Effects")
                 Spacer()
             }
             HStack(spacing: space(2)) {

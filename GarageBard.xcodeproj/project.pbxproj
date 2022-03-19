@@ -22,6 +22,7 @@
 		5EA1DD8B27E4C8CE004608C7 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA1DD8A27E4C8CE004608C7 /* InputField.swift */; };
 		5EA1DD8D27E4C960004608C7 /* PlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA1DD8C27E4C960004608C7 /* PlayerButton.swift */; };
 		5EA1DD8F27E4CA29004608C7 /* SubToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA1DD8E27E4CA29004608C7 /* SubToolbar.swift */; };
+		5EA1DD9127E5600D004608C7 /* ToggleField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA1DD9027E5600D004608C7 /* ToggleField.swift */; };
 		5EA3895927D2663500C4C2D3 /* GarageBardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3895827D2663500C4C2D3 /* GarageBardApp.swift */; };
 		5EA3895B27D2663500C4C2D3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3895A27D2663500C4C2D3 /* ContentView.swift */; };
 		5EA3895D27D2663600C4C2D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EA3895C27D2663600C4C2D3 /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 		5EA1DD8A27E4C8CE004608C7 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
 		5EA1DD8C27E4C960004608C7 /* PlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButton.swift; sourceTree = "<group>"; };
 		5EA1DD8E27E4CA29004608C7 /* SubToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubToolbar.swift; sourceTree = "<group>"; };
+		5EA1DD9027E5600D004608C7 /* ToggleField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleField.swift; sourceTree = "<group>"; };
 		5EA3895527D2663500C4C2D3 /* GarageBard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GarageBard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EA3895827D2663500C4C2D3 /* GarageBardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardApp.swift; sourceTree = "<group>"; };
 		5EA3895A27D2663500C4C2D3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				5EA1DD8E27E4CA29004608C7 /* SubToolbar.swift */,
 				5EF408E727DCA272004AD546 /* Toast.swift */,
 				5E431BC127D50954005016D3 /* TrackPopover.swift */,
+				5EA1DD9027E5600D004608C7 /* ToggleField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				5E693B4F27D3CDC000EAA678 /* PlayerViewModel.swift in Sources */,
 				5E431BC827D521AA005016D3 /* FakePlayerViewModel.swift in Sources */,
 				5E693B5A27D3F18900EAA678 /* BardEngine.swift in Sources */,
+				5EA1DD9127E5600D004608C7 /* ToggleField.swift in Sources */,
 				5E431BCA27D52C2E005016D3 /* PlayerBar.swift in Sources */,
 				5E693B5E27D3F95000EAA678 /* BardController.swift in Sources */,
 				5E431BC227D50954005016D3 /* TrackPopover.swift in Sources */,

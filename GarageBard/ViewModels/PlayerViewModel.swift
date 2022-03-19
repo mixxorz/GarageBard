@@ -124,6 +124,12 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }
     }
 
+    /// Reloads the current track
+    func reloadTrack() {
+        guard let track = track else { return }
+        bardEngine.loadTrack(track: track)
+    }
+
     /// Play or pause playback
     func playOrPause() {
         if isPlaying {
@@ -159,11 +165,11 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }
     }
 
-    /// Updates the transpose amount of the current track
+    /// Updates the transpose amount of the current track and reloads it
     func setTransposeAmount(fromString value: String) {
         guard let track = track else { return }
-        track.setTranposeAmount(fromString: value)
-        bardEngine.loadTrack(track: track)
+        track.setTransposeAmount(fromString: value)
+        reloadTrack()
     }
 
     /// Check if the app currently has accessibility access
