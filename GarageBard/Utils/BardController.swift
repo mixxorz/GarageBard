@@ -153,6 +153,9 @@ class BardController {
         if !running {
             running = true
 
+            // Clear buffer when starting
+            noteBuffer = []
+
             queue.async {
                 while self.running {
                     // Sleeping here effectively sets a limit for how fast two consecutive key-presses can happen
