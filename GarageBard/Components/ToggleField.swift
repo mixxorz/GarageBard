@@ -13,10 +13,14 @@ struct ToggleField: View {
     @FocusState var isFocused: Bool
     @Binding var value: Bool
 
+    var onText: String = "ON"
+    var offText: String = "OFF"
+
     var body: some View {
         VStack(alignment: .leading, spacing: space(1)) {
             Text(name)
-                .font(.system(size: 12.0))
+                .font(.system(size: 10.0))
+                .frame(maxWidth: space(20), alignment: .leading)
             ZStack {
                 Rectangle()
                     .foregroundColor(Color("grey700"))
@@ -31,7 +35,7 @@ struct ToggleField: View {
                     .frame(width: space(19), height: space(4))
                     .allowsHitTesting(false)
 
-                Text(value ? "ON" : "OFF")
+                Text(value ? onText : offText)
                     .frame(maxWidth: space(19))
                     .font(.system(size: 10.0))
                     .foregroundColor(value ? Color.white : Color("grey400"))
@@ -53,6 +57,11 @@ struct ArpeggiateChordsField<ViewModel: PlayerViewModelProtocol>: View {
             .onChange(of: track.arpeggiateChords) { _ in
                 vm.reloadTrack()
             }
+            .help("""
+            Ensures that a chord's notes are played in ascending order.
+
+            Notes played concurrently are played in ascending order (e.g. If G, C, and E are played at the same time, C is played first, then E, then G).
+            """)
     }
 }
 
@@ -61,16 +70,26 @@ struct AutoTransposeNotesField<ViewModel: PlayerViewModelProtocol>: View {
     @ObservedObject var track: Track
 
     var body: some View {
-        ToggleField(name: "Auto-transpose", value: $track.autoTransposeNotes)
+        ToggleField(name: "Octave remap", value: $track.autoTransposeNotes)
             .onChange(of: track.autoTransposeNotes) { _ in
                 vm.reloadTrack()
             }
+            .help("""
+            Adjusts all notes to fit within the game's playable range (C2-C5).
+
+            Notes outside the range are transposed N octaves up or down until they're within the range (e.g. D1->D2, A#7->A#4).
+            """)
     }
 }
 
 struct ToggleField_Previews: PreviewProvider {
     static var previews: some View {
-        ToggleField(name: "Arpeggiate", value: .constant(false))
+        ToggleField(name: "Octave remap", value: .constant(true), onText: "AUTO", offText: "SKIP")
+            .foregroundColor(Color("grey400"))
+            .padding(space(2))
+            .background(Color("grey600"))
+
+        ToggleField(name: "Auto-transpose", value: .constant(false))
             .foregroundColor(Color("grey400"))
             .padding(space(2))
             .background(Color("grey600"))

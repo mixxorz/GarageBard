@@ -18,22 +18,35 @@ struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
                 TransposeField<ViewModel>(track: track)
                 AutoTransposeNotesField<ViewModel>(track: track)
                 ArpeggiateChordsField<ViewModel>(track: track)
-            } else {
-                InputField(name: "Transpose", value: "-", onSetValue: { _ in })
-                InputField(name: "Auto-transpose", value: "-", onSetValue: { _ in })
-                InputField(name: "Arpeggiate", value: "-", onSetValue: { _ in })
-            }
 
-            Spacer()
+                Spacer()
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .foregroundColor(Color("grey500"))
+                        .frame(width: space(30), height: space(6))
+
+                    Text("No track loaded")
+                }
+            }
         }
     }
 }
 
 struct SubToolbar_Previews: PreviewProvider {
+    static var song = createSong()
+
     static var previews: some View {
         SubToolbar<FakePlayerViewModel>()
             .foregroundColor(Color("grey400"))
             .environmentObject(FakePlayerViewModel())
+            .frame(width: space(100))
+            .padding(space(4))
+            .background(Color("grey600"))
+
+        SubToolbar<FakePlayerViewModel>()
+            .foregroundColor(Color("grey400"))
+            .environmentObject(FakePlayerViewModel(song: song, track: song.tracks.first))
             .frame(width: space(100))
             .padding(space(4))
             .background(Color("grey600"))

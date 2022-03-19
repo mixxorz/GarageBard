@@ -36,7 +36,7 @@ struct InputField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: space(1)) {
             Text(name)
-                .font(.system(size: 12.0))
+                .font(.system(size: 10.0))
             ZStack {
                 Rectangle()
                     .foregroundColor(Color("grey700"))
@@ -79,12 +79,20 @@ struct TransposeField<ViewModel: PlayerViewModelProtocol>: View {
         InputField(name: "Transpose", value: track.getTransposedDisplay(), onSetValue: { value in
             vm.setTransposeAmount(fromString: value)
         })
+        .help("""
+        Shows the range of notes on this track.
+
+        Type a number to transpose by semitones (e.g. +7, -5). Type a note name to set the lowest note (e.g. C2, G#3). Prefix the note name with a "-" to set the highest note (e.g. -C5, -F#4).
+
+        (The game can play notes from C2 to C5.)
+        """)
     }
 }
 
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         InputField(name: "Tempo", value: "120-160 BPM") { _ in }
+            .foregroundColor(Color("grey400"))
             .padding(space(4))
             .background(Color("grey600"))
     }
