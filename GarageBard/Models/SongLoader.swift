@@ -12,7 +12,7 @@ import Combine
 import Foundation
 
 class Track: ObservableObject, Hashable, Identifiable {
-    var id: Int
+    var id: UUID
     var name: String
     var midiNoteData: [MIDINoteData] = []
 
@@ -29,7 +29,7 @@ class Track: ObservableObject, Hashable, Identifiable {
         return Int(noteLowerBound) + transposeAmount < 48 || Int(noteUpperBound) + transposeAmount > 84
     }
 
-    init(id: Int, name: String, midiNoteData: [MIDINoteData] = []) {
+    init(id: UUID = UUID(), name: String, midiNoteData: [MIDINoteData] = []) {
         self.id = id
         self.name = name
         self.midiNoteData = midiNoteData
@@ -126,17 +126,14 @@ class Track: ObservableObject, Hashable, Identifiable {
 }
 
 class Song: ObservableObject, Identifiable {
-    let id: String
+    let id: UUID
     let name: String
     let url: URL
     let durationInSeconds: Double
     let tracks: [Track]
 
-    @Published var autoTransposeNotes: Bool = true
-    @Published var arpeggiateChords: Bool = true
-
     init(name: String, url: URL, durationInSeconds: Double, tracks: [Track]) {
-        id = name
+        id = UUID()
         self.name = name
         self.url = url
         self.durationInSeconds = durationInSeconds
@@ -159,7 +156,7 @@ class SongLoader {
         // Load tracks
         var tracks: [Track] = sequencer.tracks.enumerated().map { index, track in
             Track(
-                id: index, // It's important that this is the index according to the sequencer
+                id: UUID(),
                 name: track.getTrackName() ?? "Track \(index + 1)",
                 midiNoteData: track.getMIDINoteData()
             )
