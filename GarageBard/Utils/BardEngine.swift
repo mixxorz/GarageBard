@@ -143,7 +143,7 @@ class BardEngine {
             musicTrack.transposeOutOfBoundNotes()
         }
 
-        if currentSong.arpeggiateChords {
+        if track.arpeggiateChords {
             musicTrack.arpeggiateChords()
         }
 

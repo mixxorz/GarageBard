@@ -16,7 +16,7 @@ struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
         HStack {
             if let track = vm.track {
                 TransposeField<ViewModel>(track: track)
-                ToggleField(name: "Arpeggiate", value: $arpeggiateChords)
+                ArpeggiateChordsField<ViewModel>(track: track)
             } else {
                 InputField(name: "Tranpose", value: "-", onSetValue: { _ in })
                 InputField(name: "Arpeggiate", value: "-", onSetValue: { _ in })

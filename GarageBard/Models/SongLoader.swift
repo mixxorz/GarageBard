@@ -17,6 +17,7 @@ class Track: ObservableObject, Hashable, Identifiable {
     var midiNoteData: [MIDINoteData] = []
 
     @Published private(set) var transposeAmount: Int = 0
+    @Published var arpeggiateChords: Bool = true
 
     // Optional because some tracks may be empty
     var noteLowerBound: MIDINoteNumber?

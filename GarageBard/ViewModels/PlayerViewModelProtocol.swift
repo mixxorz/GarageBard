@@ -28,6 +28,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     func seek(progress: Double, end: Bool)
 
     func setTransposeAmount(fromString value: String)
+    func setArpeggiateChords(value: Bool)
 
     func checkAccessibilityPermissions(prompt: Bool)
     func findXIVProcess()

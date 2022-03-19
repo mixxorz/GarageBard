@@ -39,7 +39,20 @@ struct ToggleField: View {
             }
             .focusable()
             .focused($isFocused)
+            .animation(nil, value: UUID())
         }
+    }
+}
+
+struct ArpeggiateChordsField<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
+    @ObservedObject var track: Track
+
+    var body: some View {
+        ToggleField(name: "Arpeggiate", value: $track.arpeggiateChords)
+            .onChange(of: track.arpeggiateChords) {
+                vm.setArpeggiateChords(value: $0)
+            }
     }
 }
 
