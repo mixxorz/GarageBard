@@ -10,8 +10,6 @@ import SwiftUI
 struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
 
-    @State var arpeggiateChords: Bool = false
-
     var body: some View {
         HStack {
             if let track = vm.track {
