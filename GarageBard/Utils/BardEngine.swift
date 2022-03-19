@@ -32,8 +32,6 @@ class BardEngine {
     @Published private(set) var currentPosition: Double = 0
     @Published private(set) var notesTransposed: Bool = false
 
-    private var currentSong: Song?
-
     var playMode: PlayMode = .perform {
         didSet {
             if playMode == .perform {
@@ -82,8 +80,6 @@ class BardEngine {
     }
 
     func loadSong(song: Song) {
-        currentSong = song
-
         // Load song into sequencer
         let data: Data
 
@@ -123,7 +119,6 @@ class BardEngine {
 
     func loadTrack(track: Track) {
         guard let musicTrack = musicTrack else { return }
-        guard let currentSong = currentSong else { return }
 
         let wasPlaying = sequencer.isPlaying
 
@@ -135,11 +130,11 @@ class BardEngine {
         musicTrack.replaceMIDINoteData(with: track.midiNoteData)
 
         if track.transposeAmount != 0 {
-            musicTrack.tranposeNotes(semitones: track.transposeAmount)
+            musicTrack.transposeNotes(semitones: track.transposeAmount)
         }
 
-        notesTransposed = currentSong.autoTranposeNotes
-        if currentSong.autoTranposeNotes {
+        notesTransposed = track.autoTransposeNotes
+        if track.autoTransposeNotes {
             musicTrack.transposeOutOfBoundNotes()
         }
 
@@ -219,7 +214,7 @@ extension MusicTrackManager {
         replaceMIDINoteData(with: noteData)
     }
 
-    func tranposeNotes(semitones: Int) {
+    func transposeNotes(semitones: Int) {
         var noteData: [MIDINoteData] = []
 
         for midiNote in getMIDINoteData() {

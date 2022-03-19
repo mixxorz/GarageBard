@@ -80,13 +80,11 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
 
     func loadSong(fromURL _: URL) {}
-
+    func reloadTrack() {}
     func seek(progress _: Double, end _: Bool) {}
 
     func setTransposeAmount(fromString _: String) {}
-    func setArpeggiateChords(value _: Bool) {}
 
     func checkAccessibilityPermissions(prompt _: Bool) {}
-
     func findXIVProcess() {}
 }

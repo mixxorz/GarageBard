@@ -50,8 +50,20 @@ struct ArpeggiateChordsField<ViewModel: PlayerViewModelProtocol>: View {
 
     var body: some View {
         ToggleField(name: "Arpeggiate", value: $track.arpeggiateChords)
-            .onChange(of: track.arpeggiateChords) {
-                vm.setArpeggiateChords(value: $0)
+            .onChange(of: track.arpeggiateChords) { _ in
+                vm.reloadTrack()
+            }
+    }
+}
+
+struct AutoTransposeNotesField<ViewModel: PlayerViewModelProtocol>: View {
+    @EnvironmentObject var vm: ViewModel
+    @ObservedObject var track: Track
+
+    var body: some View {
+        ToggleField(name: "Auto-transpose", value: $track.autoTransposeNotes)
+            .onChange(of: track.autoTransposeNotes) { _ in
+                vm.reloadTrack()
             }
     }
 }

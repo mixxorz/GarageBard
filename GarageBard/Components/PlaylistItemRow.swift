@@ -48,11 +48,11 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
                 .popover(isPresented: $isSongPopoverOpen, arrowEdge: .bottom) {
                     PopoverMenu {
                         PopoverMenuItem(action: {
-                            song.autoTranposeNotes.toggle()
+                            song.autoTransposeNotes.toggle()
                         }) {
-                            Text("Tranpose out of range notes")
+                            Text("Transpose out of range notes")
                             Spacer()
-                            if song.autoTranposeNotes {
+                            if song.autoTransposeNotes {
                                 Image(systemName: "checkmark")
                             }
                         }

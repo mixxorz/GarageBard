@@ -76,7 +76,7 @@ struct TransposeField<ViewModel: PlayerViewModelProtocol>: View {
     @ObservedObject var track: Track
 
     var body: some View {
-        InputField(name: "Transpose", value: track.getTranposedDisplay(), onSetValue: { value in
+        InputField(name: "Transpose", value: track.getTransposedDisplay(), onSetValue: { value in
             vm.setTransposeAmount(fromString: value)
         })
     }

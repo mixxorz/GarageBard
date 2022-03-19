@@ -16,9 +16,11 @@ struct SubToolbar<ViewModel: PlayerViewModelProtocol>: View {
         HStack {
             if let track = vm.track {
                 TransposeField<ViewModel>(track: track)
+                AutoTransposeNotesField<ViewModel>(track: track)
                 ArpeggiateChordsField<ViewModel>(track: track)
             } else {
-                InputField(name: "Tranpose", value: "-", onSetValue: { _ in })
+                InputField(name: "Transpose", value: "-", onSetValue: { _ in })
+                InputField(name: "Auto-transpose", value: "-", onSetValue: { _ in })
                 InputField(name: "Arpeggiate", value: "-", onSetValue: { _ in })
             }
 

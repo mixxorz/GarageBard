@@ -17,6 +17,7 @@ class Track: ObservableObject, Hashable, Identifiable {
     var midiNoteData: [MIDINoteData] = []
 
     @Published private(set) var transposeAmount: Int = 0
+    @Published var autoTransposeNotes: Bool = true
     @Published var arpeggiateChords: Bool = true
 
     // Optional because some tracks may be empty
@@ -76,7 +77,7 @@ class Track: ObservableObject, Hashable, Identifiable {
         return allNotes[value.uppercased()]
     }
 
-    func getTranposedDisplay() -> String {
+    func getTransposedDisplay() -> String {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return "-" }
         let lowerNoteName = getNoteName(note: UInt8(Int(noteLowerBound) + transposeAmount))
         let upperNoteName = getNoteName(note: UInt8(Int(noteUpperBound) + transposeAmount))
@@ -90,7 +91,7 @@ class Track: ObservableObject, Hashable, Identifiable {
         return notesText
     }
 
-    func setTranposeAmount(semitones: Int) {
+    func setTransposeAmount(semitones: Int) {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return }
 
         // Ensure that the new value doesn't cause notes to become invalid
@@ -104,13 +105,13 @@ class Track: ObservableObject, Hashable, Identifiable {
         transposeAmount = semitones
     }
 
-    func setTranposeAmount(fromString value: String) {
+    func setTransposeAmount(fromString value: String) {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return }
 
         let cleanedValue = value.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
 
         if let semitones = Int(value) {
-            setTranposeAmount(semitones: semitones)
+            setTransposeAmount(semitones: semitones)
         } else if let targetNote = getNoteNumber(value: cleanedValue) {
             var semitoneDifference = 0
 
@@ -119,7 +120,7 @@ class Track: ObservableObject, Hashable, Identifiable {
             } else {
                 semitoneDifference = Int(targetNote) - Int(noteUpperBound)
             }
-            setTranposeAmount(semitones: semitoneDifference)
+            setTransposeAmount(semitones: semitoneDifference)
         }
     }
 }
@@ -131,7 +132,7 @@ class Song: ObservableObject, Identifiable {
     let durationInSeconds: Double
     let tracks: [Track]
 
-    @Published var autoTranposeNotes: Bool = true
+    @Published var autoTransposeNotes: Bool = true
     @Published var arpeggiateChords: Bool = true
 
     init(name: String, url: URL, durationInSeconds: Double, tracks: [Track]) {
