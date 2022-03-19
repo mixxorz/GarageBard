@@ -79,7 +79,7 @@ class Track: ObservableObject, Hashable, Identifiable {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return "-" }
         let lowerNoteName = getNoteName(note: UInt8(Int(noteLowerBound) + transposeAmount))
         let upperNoteName = getNoteName(note: UInt8(Int(noteUpperBound) + transposeAmount))
-        let notesText = "\(lowerNoteName)-\(upperNoteName)"
+        let notesText = "\(lowerNoteName)–\(upperNoteName)"
 
         if transposeAmount > 0 {
             return String("\(notesText) +\(transposeAmount)")
