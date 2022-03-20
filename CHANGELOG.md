@@ -2,11 +2,22 @@
 
 ## Unreleased
 
+## 1.1.0
+
 ### Added
 
-- Add more reliable way to switch to XIV on play. This negates the need for
-  Cmd+Tab on play
 - Add overlay mode
+- Add new Effects panel
+- Add Transpose effect
+- Add Octave remap effect
+- Add Arpeggiate effect
+- Add auto-updater
+
+### Changed
+
+- Improve the way GarageBard switches to the game on play.
+- With the above change, Cmd+Tab on Play is no longer necessary so it has been
+  removed.
 
 ### Fixed
 
