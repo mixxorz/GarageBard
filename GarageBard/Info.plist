@@ -4,5 +4,9 @@
 <dict>
 	<key>Dark</key>
 	<string></string>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/mixxorz/GarageBard/main/Installer/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>JHMTjnBMAI8/0d2EJ58APYYEP+taEmhLAui+aptETQ0=</string>
 </dict>
 </plist>
