@@ -4,7 +4,7 @@
 
 An app for macOS that lets you play MIDI files as a bard on Final Fantasy XIV.
 
-<a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard.dmg">
+<a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.1.0.dmg">
    <img width="150" src="https://user-images.githubusercontent.com/3102758/158105072-519b1bbe-2d58-4aa0-a534-f1858add2e9b.png" alt="Download button">
 </a>
 
@@ -23,11 +23,11 @@ You load up MIDI files and GarageBard "plays" them by sending keystrokes to the 
 
 ## Screenshots
 
-![Screenshots](https://user-images.githubusercontent.com/3102758/158063994-fe2b0857-8a58-426b-ab85-68f0c9fa44fb.png)
+![Screenshots](https://user-images.githubusercontent.com/3102758/159173959-b97f8fb1-eb0d-4f30-aa24-fb4e34f6536e.png)
 
 ## Instructions
 
-1. Download the [latest release](https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard.dmg) from GitHub.
+1. Download the [latest release](https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.1.0.dmg) from GitHub.
 1. Copy GarageBard to your Applications folder
 1. Launch GarageBard and grant it Accessibility access
 1. Load up some songs by dragging in MIDI files into GarageBard
@@ -42,7 +42,14 @@ You load up MIDI files and GarageBard "plays" them by sending keystrokes to the 
 
 ![Performance mode keybindings](https://user-images.githubusercontent.com/3102758/158063314-6fcbc177-d41f-4fb5-bd04-8c24ea7040ee.png)
 
+_(This is needed because the default keybinds do not have keybinds for all the notes.)_
+
 ## Usage
+
+### Overlay mode
+
+When enabled, GarageBard will stay on top of the game so that it's always
+visible.
 
 ### Perform/Listen modes
 
@@ -51,24 +58,31 @@ You can swap between Perform and Listen modes depending on what you want to do:
 - **Perform**: Send keystrokes to play the song
 - **Listen**: Listen to the song using GarageBard's synthesizer
 
-### Transpose out of range notes
+### Transpose
 
-When this is turned on, notes that fall outside what's playable in the game are
-automatically transposed up or down to fit within the range of what's playable.
+Shows the range of notes on this track.
 
-You will have to queue the song again once you make this change.
+Type a number to transpose by semitones (e.g. +7, -5). Type a note name to set
+the lowest note (e.g. C2, G#3). Prefix the note name with a "-" to set the
+highest note (e.g. -C5, -F#4).
 
-### Arpeggiate chords
+(The game can play notes from C2 to C5.)
 
-When this is turned on, all chords will automatically be arpeggiated, so they
-sound better. Generally, you will want this on.
+### Octave remap
 
-You will have to queue the song again once you make this change.
+Adjusts all notes to fit within the game's playable range (C2-C5).
 
-### Overlay mode
+Notes outside the range are transposed N octaves up or down until they're within
+the range (e.g. D1->D2, A#7->A#4).
 
-When enabled, GarageBard will stay on top of the game so that it's always
-visible.
+### Arpeggiate
+
+Ensures that a chord's notes are played in ascending order.
+
+Notes played concurrently are played in ascending order (e.g. If G, C, and E are
+played at the same time, C is played first, then E, then G).
+
+This will generally make chords sound better so it's a good option to have on.
 
 ## Troubleshooting
 
@@ -100,11 +114,16 @@ so I can make the process detection better.
 **Some notes are out of range**
 
 This message means that there are some notes on the selected track of the
-current song that fall beyond the range of what can be played in the game. When
-GarageBard encounters these notes, it simply ignores them.
+current song that fall beyond the range of what can be played in the game.
 
-The only way to fix this issue is to manually tweak the song using a MIDI editor
-so that none of the notes fall below C2 and above C5.
+GarageBard provides a couple of tools to mitigate this; the transposer and the
+octave remapper. You can try to transpose the track so that all the notes fall
+within C2-C5. Otherwise, you can turn on the octave remapper (on by default)
+which will automatically transpose out of range notes to fit within playable
+range.
+
+The best but hardest way to address this issue is to manually edit the song
+using a MIDI editor so that all notes fall above C2 and below C5.
 
 # License
 
