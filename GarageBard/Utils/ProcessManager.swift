@@ -24,17 +24,18 @@ class ProcessManager {
         app = nil
 
         // Find apps that have a UI
-        let apps = NSWorkspace.shared.runningApplications.filter { app in
+        let appsWithUI = NSWorkspace.shared.runningApplications.filter { app in
             app.activationPolicy == .regular
         }
 
-        // Find all wine apps
-        let wineApps = apps.filter { app in
-            app.localizedName?.contains("wine") == true
+        // Find all apps that could be the game
+        let appsMayBeXIV = appsWithUI.filter { app in
+            app.localizedName?.contains("wine") == true ||
+                app.localizedName?.contains("FINAL FANTASY XIV ONLINE") == true
         }
 
         // If there's only one, then assume it's the game
-        if wineApps.count == 1, let xivApp = wineApps.first {
+        if appsMayBeXIV.count == 1, let xivApp = appsMayBeXIV.first {
             app = Application(xivApp)
             do {
                 if let currentApp = app {
