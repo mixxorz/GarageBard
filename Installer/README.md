@@ -17,7 +17,8 @@ Then run:
 ```
 cd Installer
 poetry install
-poetry run build_release.py <human-readable-version> <build-number>
+poetry shell
+python build_release.py <human-readable-version> <build-number>
 ```
 
 The script will:
@@ -37,7 +38,8 @@ git push
 ```
 
 Make a new release on GitHub with the new tag. Attach the DMG file (e.g.
-`GarageBard-1.2.0.dmg`) to the release.
+`GarageBard-1.2.0.dmg`) to the release. Update the README download links to
+point to the latest release DMG.
 
 Test the new update by opening an older version of GarageBard and going to
 GarageBard -> Check for updates.

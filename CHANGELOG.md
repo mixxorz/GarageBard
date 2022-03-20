@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.1.1
+
 ### Fixed
 
 - Improve game detection for stock launcher
