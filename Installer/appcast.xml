@@ -4,6 +4,14 @@
 		<title>GarageBard</title>
 		<item>
 			<title>1.1.0</title>
+			<pubDate>Sun, 20 Mar 2022 22:23:06 +0800</pubDate>
+			<ns0:version>2</ns0:version>
+			<ns0:shortVersionString>1.1.0</ns0:shortVersionString>
+			<ns0:minimumSystemVersion>12.1</ns0:minimumSystemVersion>
+			<enclosure url="https://github.com/mixxorz/GarageBard/releases/download/1.1.0/GarageBard-1.1.0.dmg" type="application/octet-stream" length="2830691" ns0:edSignature="Y4LklzEyKDaNb7Jz8zBpnuFPQAMiqiOgHYBz1MqbFAYrgF9peq2saSw7dXYyrtBwytX/KO3B2JAIy7KThjC4Ag=="></enclosure>
+		</item>
+		<item>
+			<title>1.1.0</title>
 			<pubDate>Sun, 20 Mar 2022 22:06:14 +0800</pubDate>
 			<ns0:version>2</ns0:version>
 			<ns0:shortVersionString>1.1.0</ns0:shortVersionString>
