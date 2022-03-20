@@ -34,7 +34,7 @@ Commit the changes and tag the commit with the human readable version.
 ```
 git commit -m "Prepare release 1.2.0"
 git tag -a 1.2.0 -m "Release 1.2.0 2022-03-20"
-git push
+git push && git push --tags
 ```
 
 Make a new release on GitHub with the new tag. Attach the DMG file (e.g.
