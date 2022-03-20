@@ -15,6 +15,7 @@ Copy the resulting GarageBard.app file into Installer/source_folder.
 Then run:
 
 ```
+cd Installer
 poetry install
 poetry run build_release.py <human-readable-version> <build-number>
 ```
@@ -22,9 +23,8 @@ poetry run build_release.py <human-readable-version> <build-number>
 The script will:
 
 1. Create the DMG
-2. Codesign and notarize the DMG
-3. Sign the DMG with Sparkle EdDSA
-4. Update the `appcast.xml` file
+2. Sign the DMG with Sparkle EdDSA
+3. Update the `appcast.xml` file
 
 Check that the `appcast.xml` file is valid.
 

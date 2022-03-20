@@ -23,7 +23,7 @@ except OSError:
     pass
 
 # Create the DMG
-print("[1/4] Creating DMG...")
+print("[1/3] Creating DMG...")
 out = subprocess.run([
     "create-dmg",
     "--volname", "GarageBard",
@@ -44,7 +44,7 @@ if out.returncode != 0:
     exit(1)
 
 # Sign the DMG with Sparkle
-print("[3/4] Signing DMG...")
+print("[2/3] Signing DMG with Sparkle EdDSA...")
 out = subprocess.run(['sparkle_sign_update', dmg_filename], capture_output=True)
 
 if out.returncode != 0:
@@ -60,7 +60,7 @@ print("      ---> Signature: " + signature)
 print("      ---> Length: " + length)
 
 # Update appcast.xml
-print("[4/4] Updating appcast.xml...")
+print("[3/3] Updating appcast.xml...")
 
 now = datetime.now(ZoneInfo('Asia/Manila'))
 
