@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct GarageBardApp: App {
     @ObservedObject var playerViewModel = PlayerViewModel()
+    @StateObject var updaterViewModel = UpdaterViewModel()
 
     var body: some Scene {
         WindowGroup {
@@ -18,5 +19,10 @@ struct GarageBardApp: App {
                 .environmentObject(playerViewModel)
         }
         .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updaterViewModel: updaterViewModel)
+            }
+        }
     }
 }
