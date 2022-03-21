@@ -75,6 +75,20 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
+                                Divider()
+                                PopoverMenuItem(action: {
+                                    if vm.loopMode == .off {
+                                        vm.loopMode = .song
+                                    } else {
+                                        vm.loopMode = .off
+                                    }
+                                }) {
+                                    Text("Loop song")
+                                    Spacer()
+                                    if vm.loopMode == .song {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
                             }
                         }
                     )

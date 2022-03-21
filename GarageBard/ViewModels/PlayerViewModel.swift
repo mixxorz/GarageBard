@@ -20,6 +20,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     // Settings
     @Published var playMode: PlayMode = .perform
+    @Published var loopMode: LoopMode = .off
 
     /// If the currently loaded track has been transposed
     @Published var notesTransposed: Bool = false
@@ -48,13 +49,15 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
         self.bardEngine.$currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
-            self.currentPosition = position
 
             if let song = self.song {
+                // Have to modulo here because `position` will be greater than the length of the song when if it's looping.
+                self.currentPosition = position.truncatingRemainder(dividingBy: song.durationInSeconds)
+
                 if !self.isSeeking {
-                    self.currentProgress = position / song.durationInSeconds
+                    self.currentProgress = self.currentPosition / song.durationInSeconds
                 }
-                self.timeLeft = position - song.durationInSeconds
+                self.timeLeft = self.currentPosition - song.durationInSeconds
             } else {
                 if !self.isSeeking {
                     self.currentProgress = 0
@@ -89,6 +92,9 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
         // When the playMode changes, update that in bardEngine
         $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
+
+        // When the loopMode changes, update that in bardEngine
+        $loopMode.assign(to: \.loopMode, on: self.bardEngine).store(in: &cancellables)
 
         // Float window on change
         $floatWindow.sink(receiveValue: {

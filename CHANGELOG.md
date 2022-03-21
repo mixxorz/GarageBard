@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Ability to loop songs
+
 ## 1.1.1
 
 ### Fixed
