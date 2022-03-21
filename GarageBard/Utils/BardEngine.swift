@@ -16,6 +16,10 @@ enum PlayMode {
     case perform, listen
 }
 
+enum LoopMode {
+    case off, song, session
+}
+
 class BardEngine {
     private let sequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
@@ -39,6 +43,18 @@ class BardEngine {
             } else if playMode == .listen {
                 try? engine.start()
                 bardController.allNotesOff()
+            }
+        }
+    }
+
+    var loopMode: LoopMode = .off {
+        didSet {
+            if loopMode == .off {
+                sequencer.disableLooping()
+            } else if loopMode == .song {
+                // Loop duration is 1 beat earlier to account for the "stop note" on the control track
+                let loopDuration = Duration(beats: ceil(sequencer.length).beats - 1)
+                sequencer.enableLooping(loopDuration)
             }
         }
     }
@@ -75,7 +91,9 @@ class BardEngine {
     private func controlCallback(_ status: UInt8, _: MIDINoteNumber, _: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
-            stop()
+            if loopMode == .off {
+                stop()
+            }
         }
     }
 
@@ -101,6 +119,7 @@ class BardEngine {
 
         loadTrack(track: song.tracks[0])
 
+        // Trigger a note to signify the end of the song
         controlTrack = sequencer.newTrack("control")
         controlTrack?.add(
             midiNoteData: MIDINoteData(
@@ -108,13 +127,18 @@ class BardEngine {
                 velocity: 60,
                 channel: MIDIChannel(1),
                 duration: Duration(beats: 1),
-                position: sequencer.length
+                position: ceil(sequencer.length) // ceil so that it ends on a downbeat
             )
         )
         controlTrack?.setMIDIOutput(controlInstrument.midiIn)
 
         sequencer.rewind()
         sequencer.preroll()
+
+        // Reinitialize looping
+        let prevLoopMode = loopMode
+        loopMode = .off
+        loopMode = prevLoopMode
     }
 
     func loadTrack(track: Track) {
@@ -173,12 +197,12 @@ class BardEngine {
     }
 
     func stop() {
-        sequencer.rewind()
         sequencer.stop()
         bardController.stop()
         currentPositionTimer?.invalidate()
         currentPosition = 0
         isPlaying = false
+        sequencer.rewind()
     }
 
     func setTime(_ timestamp: Double) {

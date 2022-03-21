@@ -168,7 +168,7 @@ class SongLoader {
         return Song(
             name: url.lastPathComponent,
             url: url,
-            durationInSeconds: sequencer.seconds(duration: sequencer.length),
+            durationInSeconds: sequencer.seconds(duration: ceil(sequencer.length)),
             tracks: tracks
         )
     }
