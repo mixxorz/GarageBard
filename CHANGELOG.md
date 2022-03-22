@@ -4,7 +4,8 @@
 
 ### Added
 
-- Ability to loop songs
+- Add ability to loop the currently playing song
+- Add ability to play all the songs in the session continuously
 
 ## 1.1.1
 
