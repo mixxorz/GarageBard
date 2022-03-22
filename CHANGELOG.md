@@ -7,6 +7,12 @@
 - Add ability to loop the currently playing song
 - Add ability to play all the songs in the session continuously
 
+### Changed
+
+- Improve tack name handling
+- Tweak popover menu style
+- Tweak overlay button style
+
 ## 1.1.1
 
 ### Fixed
