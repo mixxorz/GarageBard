@@ -162,16 +162,13 @@ class SongLoader {
         }
 
         // Load tracks
-        var tracks: [Track] = sequencer.tracks.enumerated().map { index, track in
+        let tracks: [Track] = sequencer.tracks.filter { $0.getMIDINoteData().count > 0 }.enumerated().map { index, track in
             Track(
                 id: UUID(),
                 name: track.getTrackName() ?? "Track \(index + 1)",
                 midiNoteData: track.getMIDINoteData()
             )
         }
-
-        // Filter out empty tracks
-        tracks = tracks.filter { $0.midiNoteData.count > 0 }
 
         return Song(
             name: url.lastPathComponent,
@@ -233,6 +230,8 @@ extension MusicTrackManager {
     func getTrackName() -> String? {
         guard let eventData = eventData else { return nil }
 
+        var potentialNames: [String] = []
+
         for event in eventData {
             if event.type == kMusicEventType_Meta {
                 let metaEventPointer = UnsafeMIDIMetaEventPointer(event.data)!
@@ -240,9 +239,15 @@ extension MusicTrackManager {
                 if metaEvent.metaEventType == MIDICustomMetaEventType.trackName.rawValue {
                     let data = Data(buffer: metaEventPointer.payload)
                     if let str = String(data: data, encoding: String.Encoding.utf8) {
-                        return str
+                        potentialNames.append(str.trimmingCharacters(in: .whitespaces))
                     }
                 }
+            }
+        }
+
+        for name in potentialNames {
+            if name != "", name != "InitializedTrack" {
+                return name
             }
         }
 
