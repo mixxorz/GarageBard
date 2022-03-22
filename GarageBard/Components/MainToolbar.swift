@@ -83,7 +83,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                 Divider()
                                     .padding(.vertical, space(1))
                                 PopoverMenuItem(action: {
-                                    if vm.loopMode == .off {
+                                    if vm.loopMode != .song {
                                         vm.loopMode = .song
                                     } else {
                                         vm.loopMode = .off
@@ -95,7 +95,22 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
-                                .help("Plays the current song in a loop")
+                                .help("Loop the current song")
+
+                                PopoverMenuItem(action: {
+                                    if vm.loopMode != .session {
+                                        vm.loopMode = .session
+                                    } else {
+                                        vm.loopMode = .off
+                                    }
+                                }) {
+                                    Text("Loop session")
+                                    Spacer()
+                                    if vm.loopMode == .session {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                                .help("Loop the entire session")
 
                                 // Continuous playback
                                 Divider()
@@ -109,7 +124,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
-                                .help("Plays the next song after the current one finishes")
+                                .help("Play the next song after the current one ends")
                             }
                         }
                     )

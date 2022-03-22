@@ -51,12 +51,12 @@ class BardEngine {
 
     var loopMode: LoopMode = .off {
         didSet {
-            if loopMode == .off {
-                sequencer.disableLooping()
-            } else if loopMode == .song {
+            if loopMode == .song {
                 // Loop duration is 1 beat earlier to account for the "stop note" on the control track
                 let loopDuration = Duration(beats: ceil(sequencer.length).beats - 1)
                 sequencer.enableLooping(loopDuration)
+            } else {
+                sequencer.disableLooping()
             }
         }
     }
@@ -93,7 +93,9 @@ class BardEngine {
     private func controlCallback(_ status: UInt8, _: MIDINoteNumber, _: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
-            if loopMode == .off {
+            // Call stop at the end of the track
+            // But do not call it if we're looping the current song
+            if loopMode != .song {
                 stop(finished: true)
             }
         }

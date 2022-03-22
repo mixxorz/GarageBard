@@ -53,10 +53,15 @@ class PlayerViewModel: PlayerViewModelProtocol {
             guard let self = self else { return }
             guard let song = self.song else { return }
 
-            if self.continuousPlayback, finished, let songIndex = self.songs.firstIndex(of: song), songIndex + 1 < self.songs.count {
-                let nextSong = self.songs[songIndex + 1]
-                self.song = nextSong
-                self.bardEngine.play()
+            if self.continuousPlayback, finished, let songIndex = self.songs.firstIndex(of: song) {
+                if songIndex + 1 < self.songs.count {
+                    self.song = self.songs[songIndex + 1]
+                    self.bardEngine.play()
+                } else if self.loopMode == .session, let nextSong = self.songs.first {
+                    // If there is no next song, and loop mode is "session", play the first song again
+                    self.song = nextSong
+                    self.bardEngine.play()
+                }
             }
         }
 
