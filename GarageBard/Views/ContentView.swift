@@ -20,36 +20,20 @@ struct FloatWindowButton<ViewModel: PlayerViewModelProtocol>: View {
 
     var body: some View {
         Button(action: { vm.floatWindow.toggle() }) {
-            if vm.floatWindow {
-                if isHovering {
-                    Image(systemName: "pip.remove")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color("grey400"))
-                        .contentShape(Rectangle())
-                } else {
-                    Image(systemName: "pip.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color("grey400"))
-                        .contentShape(Rectangle())
-                }
-            } else {
-                if isHovering {
-                    Image(systemName: "pip.enter")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color("grey400"))
-                        .contentShape(Rectangle())
-                } else {
-                    Image(systemName: "pip")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color("grey400"))
-                        .contentShape(Rectangle())
-                }
+            ZStack {
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .frame(width: space(6), height: space(6))
+                    .foregroundColor(.white)
+                    .opacity(isHovering ? 0.1 : 0)
+                Image(systemName: vm.floatWindow ? "pip.fill" : "pip")
+                    .font(.system(size: 14.0))
+                    .foregroundColor(Color("grey400"))
             }
         }
         .buttonStyle(.plain)
-        .padding(space(2))
         .help(vm.floatWindow ? "Disable overlay" : "Enable overlay")
         .onHover { isHovering = $0 }
+        .padding(6)
     }
 }
 

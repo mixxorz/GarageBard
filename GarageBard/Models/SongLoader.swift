@@ -11,7 +11,7 @@ import AudioToolbox
 import Combine
 import Foundation
 
-class Track: ObservableObject, Hashable, Identifiable {
+class Track: ObservableObject, Hashable, Identifiable, CustomStringConvertible {
     var id: UUID
     var name: String
     var midiNoteData: [MIDINoteData] = []
@@ -28,6 +28,8 @@ class Track: ObservableObject, Hashable, Identifiable {
         guard let noteLowerBound = noteLowerBound, let noteUpperBound = noteUpperBound else { return false }
         return Int(noteLowerBound) + transposeAmount < 48 || Int(noteUpperBound) + transposeAmount > 84
     }
+
+    var description: String { "Track: \(name) - \(id)" }
 
     init(id: UUID = UUID(), name: String, midiNoteData: [MIDINoteData] = []) {
         self.id = id
@@ -125,12 +127,14 @@ class Track: ObservableObject, Hashable, Identifiable {
     }
 }
 
-class Song: ObservableObject, Identifiable {
+class Song: ObservableObject, Identifiable, Equatable, CustomStringConvertible {
     let id: UUID
     let name: String
     let url: URL
     let durationInSeconds: Double
     let tracks: [Track]
+
+    var description: String { "Song: \(name) - \(id)" }
 
     init(name: String, url: URL, durationInSeconds: Double, tracks: [Track]) {
         id = UUID()
@@ -138,6 +142,10 @@ class Song: ObservableObject, Identifiable {
         self.url = url
         self.durationInSeconds = durationInSeconds
         self.tracks = tracks
+    }
+
+    static func == (lhs: Song, rhs: Song) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
@@ -154,16 +162,13 @@ class SongLoader {
         }
 
         // Load tracks
-        var tracks: [Track] = sequencer.tracks.enumerated().map { index, track in
+        let tracks: [Track] = sequencer.tracks.filter { $0.getMIDINoteData().count > 0 }.enumerated().map { index, track in
             Track(
                 id: UUID(),
                 name: track.getTrackName() ?? "Track \(index + 1)",
                 midiNoteData: track.getMIDINoteData()
             )
         }
-
-        // Filter out empty tracks
-        tracks = tracks.filter { $0.midiNoteData.count > 0 }
 
         return Song(
             name: url.lastPathComponent,
@@ -225,6 +230,8 @@ extension MusicTrackManager {
     func getTrackName() -> String? {
         guard let eventData = eventData else { return nil }
 
+        var potentialNames: [String] = []
+
         for event in eventData {
             if event.type == kMusicEventType_Meta {
                 let metaEventPointer = UnsafeMIDIMetaEventPointer(event.data)!
@@ -232,9 +239,15 @@ extension MusicTrackManager {
                 if metaEvent.metaEventType == MIDICustomMetaEventType.trackName.rawValue {
                     let data = Data(buffer: metaEventPointer.payload)
                     if let str = String(data: data, encoding: String.Encoding.utf8) {
-                        return str
+                        potentialNames.append(str.trimmingCharacters(in: .whitespaces))
                     }
                 }
+            }
+        }
+
+        for name in potentialNames {
+            if name != "", name != "InitializedTrack" {
+                return name
             }
         }
 

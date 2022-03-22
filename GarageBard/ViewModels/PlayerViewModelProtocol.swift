@@ -17,6 +17,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var songs: [Song] { get }
     var playMode: PlayMode { get set }
     var loopMode: LoopMode { get set }
+    var continuousPlayback: Bool { get set }
     var notesTransposed: Bool { get }
     var hasAccessibilityPermissions: Bool { get }
     var foundXIVprocess: Bool { get }

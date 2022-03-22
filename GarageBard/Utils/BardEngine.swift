@@ -36,6 +36,8 @@ class BardEngine {
     @Published private(set) var currentPosition: Double = 0
     @Published private(set) var notesTransposed: Bool = false
 
+    private var onStopSubscriber: ((Bool) -> Void)?
+
     var playMode: PlayMode = .perform {
         didSet {
             if playMode == .perform {
@@ -49,12 +51,12 @@ class BardEngine {
 
     var loopMode: LoopMode = .off {
         didSet {
-            if loopMode == .off {
-                sequencer.disableLooping()
-            } else if loopMode == .song {
+            if loopMode == .song {
                 // Loop duration is 1 beat earlier to account for the "stop note" on the control track
                 let loopDuration = Duration(beats: ceil(sequencer.length).beats - 1)
                 sequencer.enableLooping(loopDuration)
+            } else {
+                sequencer.disableLooping()
             }
         }
     }
@@ -91,8 +93,10 @@ class BardEngine {
     private func controlCallback(_ status: UInt8, _: MIDINoteNumber, _: MIDIVelocity) {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
-            if loopMode == .off {
-                stop()
+            // Call stop at the end of the track
+            // But do not call it if we're looping the current song
+            if loopMode != .song {
+                stop(finished: true)
             }
         }
     }
@@ -196,17 +200,25 @@ class BardEngine {
         isPlaying = false
     }
 
-    func stop() {
+    func stop(finished: Bool) {
         sequencer.stop()
         bardController.stop()
         currentPositionTimer?.invalidate()
         currentPosition = 0
         isPlaying = false
         sequencer.rewind()
+
+        if let onStop = onStopSubscriber {
+            onStop(finished)
+        }
     }
 
     func setTime(_ timestamp: Double) {
         sequencer.setTime(sequencer.duration(seconds: timestamp).beats)
+    }
+
+    func onStop(_ callback: @escaping (Bool) -> Void) {
+        onStopSubscriber = callback
     }
 }
 

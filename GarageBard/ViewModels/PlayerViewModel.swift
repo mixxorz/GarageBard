@@ -21,6 +21,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     // Settings
     @Published var playMode: PlayMode = .perform
     @Published var loopMode: LoopMode = .off
+    @Published var continuousPlayback: Bool = false
 
     /// If the currently loaded track has been transposed
     @Published var notesTransposed: Bool = false
@@ -46,6 +47,23 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
         // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
+
+        // Play next song after the current one finishes
+        self.bardEngine.onStop { [weak self] finished in
+            guard let self = self else { return }
+            guard let song = self.song else { return }
+
+            if self.continuousPlayback, finished, let songIndex = self.songs.firstIndex(of: song) {
+                if songIndex + 1 < self.songs.count {
+                    self.song = self.songs[songIndex + 1]
+                    self.bardEngine.play()
+                } else if self.loopMode == .session, let nextSong = self.songs.first {
+                    // If there is no next song, and loop mode is "session", play the first song again
+                    self.song = nextSong
+                    self.bardEngine.play()
+                }
+            }
+        }
 
         self.bardEngine.$currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
@@ -131,6 +149,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     }
 
     /// Reloads the current track
+    ///
+    /// This will reapply track effects
     func reloadTrack() {
         guard let track = track else { return }
         bardEngine.loadTrack(track: track)
@@ -147,7 +167,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     /// Stop playback
     func stop() {
-        bardEngine.stop()
+        bardEngine.stop(finished: false)
     }
 
     /// Seek playback
