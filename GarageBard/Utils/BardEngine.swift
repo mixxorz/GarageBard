@@ -36,6 +36,8 @@ class BardEngine {
     @Published private(set) var currentPosition: Double = 0
     @Published private(set) var notesTransposed: Bool = false
 
+    private var onStopSubscriber: ((Bool) -> Void)?
+
     var playMode: PlayMode = .perform {
         didSet {
             if playMode == .perform {
@@ -92,7 +94,7 @@ class BardEngine {
         let mstat = MIDIStatusType.from(byte: status)
         if mstat == .noteOn {
             if loopMode == .off {
-                stop()
+                stop(finished: true)
             }
         }
     }
@@ -196,17 +198,25 @@ class BardEngine {
         isPlaying = false
     }
 
-    func stop() {
+    func stop(finished: Bool) {
         sequencer.stop()
         bardController.stop()
         currentPositionTimer?.invalidate()
         currentPosition = 0
         isPlaying = false
         sequencer.rewind()
+
+        if let onStop = onStopSubscriber {
+            onStop(finished)
+        }
     }
 
     func setTime(_ timestamp: Double) {
         sequencer.setTime(sequencer.duration(seconds: timestamp).beats)
+    }
+
+    func onStop(_ callback: @escaping (Bool) -> Void) {
+        onStopSubscriber = callback
     }
 }
 

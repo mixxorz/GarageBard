@@ -47,6 +47,17 @@ class PlayerViewModel: PlayerViewModelProtocol {
         // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
 
+        self.bardEngine.onStop { [weak self] finished in
+            guard let self = self else { return }
+            guard let song = self.song else { return }
+
+            if finished, let songIndex = self.songs.firstIndex(of: song), songIndex + 1 < self.songs.count {
+                let nextSong = self.songs[songIndex + 1]
+                self.song = nextSong
+                self.bardEngine.play()
+            }
+        }
+
         self.bardEngine.$currentPosition.sink(receiveValue: { [weak self] position in
             guard let self = self else { return }
 
@@ -131,6 +142,8 @@ class PlayerViewModel: PlayerViewModelProtocol {
     }
 
     /// Reloads the current track
+    ///
+    /// This will reapply track effects
     func reloadTrack() {
         guard let track = track else { return }
         bardEngine.loadTrack(track: track)
@@ -147,7 +160,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     /// Stop playback
     func stop() {
-        bardEngine.stop()
+        bardEngine.stop(finished: false)
     }
 
     /// Seek playback
