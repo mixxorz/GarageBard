@@ -81,6 +81,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
 
                                 // Loop
                                 Divider()
+                                    .padding(.vertical, space(1))
                                 PopoverMenuItem(action: {
                                     if vm.loopMode == .off {
                                         vm.loopMode = .song
@@ -98,6 +99,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
 
                                 // Continuous playback
                                 Divider()
+                                    .padding(.vertical, space(1))
                                 PopoverMenuItem(action: {
                                     vm.continuousPlayback.toggle()
                                 }) {

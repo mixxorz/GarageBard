@@ -34,6 +34,7 @@ struct PopoverMenuItem<Content: View>: View {
         .onHover { hovering in
             isHovering = hovering
         }
+        .padding(.horizontal, -space(1))
     }
 }
 
@@ -49,6 +50,7 @@ struct PopoverMenu<Content: View>: View {
             .foregroundColor(Color.primary)
             .frame(minWidth: space(38))
             .padding(6)
+            .padding(.horizontal, space(1))
     }
 }
 
