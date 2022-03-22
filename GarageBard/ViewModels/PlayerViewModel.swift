@@ -21,6 +21,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     // Settings
     @Published var playMode: PlayMode = .perform
     @Published var loopMode: LoopMode = .off
+    @Published var continuousPlayback: Bool = false
 
     /// If the currently loaded track has been transposed
     @Published var notesTransposed: Bool = false
@@ -47,11 +48,12 @@ class PlayerViewModel: PlayerViewModelProtocol {
         // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
 
+        // Play next song after the current one finishes
         self.bardEngine.onStop { [weak self] finished in
             guard let self = self else { return }
             guard let song = self.song else { return }
 
-            if finished, let songIndex = self.songs.firstIndex(of: song), songIndex + 1 < self.songs.count {
+            if self.continuousPlayback, finished, let songIndex = self.songs.firstIndex(of: song), songIndex + 1 < self.songs.count {
                 let nextSong = self.songs[songIndex + 1]
                 self.song = nextSong
                 self.bardEngine.play()

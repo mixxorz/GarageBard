@@ -51,6 +51,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                         arrowEdge: .bottom,
                         content: {
                             PopoverMenu {
+                                // Play mode
                                 PopoverMenuItem(action: {
                                     withAnimation(.spring()) {
                                         vm.playMode = .perform
@@ -63,6 +64,7 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
+                                .help("Send keystrokes to the game")
                                 PopoverMenuItem(action: {
                                     withAnimation(.spring()) {
                                         vm.playMode = .listen
@@ -75,6 +77,9 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
+                                .help("Listen to the song with GarageBard's synthesizer")
+
+                                // Loop
                                 Divider()
                                 PopoverMenuItem(action: {
                                     if vm.loopMode == .off {
@@ -89,6 +94,20 @@ struct MainToolbar<ViewModel: PlayerViewModelProtocol>: View {
                                         Image(systemName: "checkmark")
                                     }
                                 }
+                                .help("Plays the current song in a loop")
+
+                                // Continuous playback
+                                Divider()
+                                PopoverMenuItem(action: {
+                                    vm.continuousPlayback.toggle()
+                                }) {
+                                    Text("Continuous playback")
+                                    Spacer()
+                                    if vm.continuousPlayback {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                                .help("Plays the next song after the current one finishes")
                             }
                         }
                     )
