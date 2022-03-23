@@ -7,27 +7,89 @@
 
 import SwiftUI
 
+struct PlayingBars: View {
+    @State var modifier: Double = 1.0
+
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 4) {
+            RoundedRectangle(cornerRadius: 4)
+                .frame(height: space(10) * modifier)
+                .animation(Animation.easeInOut(duration: 0.6).repeatForever(), value: modifier)
+            RoundedRectangle(cornerRadius: 4)
+                .frame(height: space(10) * modifier, alignment: .bottom)
+                .animation(Animation.easeInOut(duration: 0.37).repeatForever(), value: modifier)
+            RoundedRectangle(cornerRadius: 4)
+                .frame(height: space(10) * modifier, alignment: .bottom)
+                .animation(Animation.easeInOut(duration: 0.45).repeatForever(), value: modifier)
+            RoundedRectangle(cornerRadius: 4)
+                .frame(height: space(10) * modifier, alignment: .bottom)
+                .animation(Animation.easeInOut(duration: 0.54).repeatForever(), value: modifier)
+        }
+        .frame(width: space(12), height: space(10), alignment: .bottom)
+        .scaledToFit()
+        .onAppear {
+            modifier = 0.40
+        }
+    }
+}
+
 struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
     @ObservedObject var song: Song
+
+    @State var isHovering = false
 
     let formatter = TimeFormatter.instance
 
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 0) {
-                Button(action: {
-                    withAnimation(.spring()) {
-                        vm.song = song
+                if vm.song == song {
+                    if vm.isPlaying {
+                        if isHovering {
+                            Button(action: {
+                                vm.playOrPause()
+                            }) {
+                                Image(systemName: "pause.fill")
+                                    .font(.system(size: 12.0))
+                                    .foregroundColor(Color.accentColor)
+                                    .frame(width: space(8), height: space(8))
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            PlayingBars()
+                                .scaleEffect(3 / 10)
+                                .frame(width: space(8), height: space(8))
+                                .foregroundColor(Color.accentColor)
+                        }
+                    } else {
+                        Button(action: {
+                            vm.playOrPause()
+                        }) {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 12.0))
+                                .foregroundColor(Color.accentColor)
+                                .frame(width: space(8), height: space(8))
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
                     }
-                }) {
-                    Image(systemName: "forward.end.fill")
-                        .font(.system(size: 10.0))
-                        .foregroundColor(Color("grey400"))
-                        .frame(width: space(8), height: space(8))
-                        .contentShape(Rectangle())
+
+                } else {
+                    Button(action: {
+                        withAnimation(.spring()) {
+                            vm.song = song
+                        }
+                    }) {
+                        Image(systemName: "forward.end.fill")
+                            .font(.system(size: 12.0))
+                            .foregroundColor(Color("grey400"))
+                            .frame(width: space(8), height: space(8))
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 Text(song.name)
                     .foregroundColor(Color.white)
                 Spacer()
@@ -36,6 +98,11 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
                     .foregroundColor(Color("grey400"))
             }
             Divider()
+        }
+        .onHover { hovering in
+            withAnimation(Animation.linear(duration: 0.2)) {
+                isHovering = hovering
+            }
         }
         .contentShape(Rectangle())
         .onTapGesture(count: 2, perform: {
