@@ -9,6 +9,8 @@ import CoreMIDI
 import SwiftUI
 import UniformTypeIdentifiers
 
+let playlistItemUTI = "me.mitchel.GarageBard.playlist-item"
+
 struct MIDIDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
     var vm: ViewModel
 
@@ -54,11 +56,9 @@ struct SongDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
 
     let song: Song
     @Binding var dragItem: Song?
-    @Binding var hasChangedLocation: Bool
 
     func performDrop(info _: DropInfo) -> Bool {
         dragItem = nil
-        hasChangedLocation = false
         return true
     }
 
@@ -71,27 +71,10 @@ struct SongDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
         guard let from = vm.songs.firstIndex(of: dragItem), let to = vm.songs.firstIndex(of: song) else { return }
 
         if dragItem != song {
-            hasChangedLocation = true
-
             withAnimation(.spring()) {
                 vm.songs.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
             }
         }
-    }
-}
-
-struct SongDropOutsideDelegate: DropDelegate {
-    @Binding var dragItem: Song?
-    @Binding var hasChangedLocation: Bool
-
-    func dropEntered(info _: DropInfo) {
-        hasChangedLocation = true
-    }
-
-    func performDrop(info _: DropInfo) -> Bool {
-        hasChangedLocation = false
-        dragItem = nil
-        return true
     }
 }
 
@@ -102,9 +85,7 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
     @State var isFileDropping: Bool = false
 
     // Song drag and drop
-    @State var isSongDropping: Bool = false
     @State var dragItem: Song? = nil
-    @State var hasChangedLocation: Bool = false
 
     var body: some View {
         ZStack {
@@ -113,11 +94,9 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                 VStack {
                     ForEach(vm.songs) { song in
                         PlaylistItemRow<ViewModel>(song: song)
-                            .opacity(dragItem == song && hasChangedLocation ? 0 : 1)
                             .onDrag({
                                 dragItem = song
-                                return NSItemProvider(object: song.description as NSString)
-
+                                return NSItemProvider(item: song.description as NSString, typeIdentifier: playlistItemUTI)
                             }, preview: {
                                 Text(song.name)
                                     .lineLimit(1)
@@ -125,13 +104,14 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                                     .padding(space(1))
                                     .background(RoundedRectangle(cornerRadius: space(1), style: .continuous).foregroundColor(Color.accentColor))
                             })
-                            .onDrop(of: [.text], delegate: SongDropDelegate<ViewModel>(vm: vm, song: song, dragItem: $dragItem, hasChangedLocation: $hasChangedLocation))
+                            .onDrop(of: [playlistItemUTI], delegate: SongDropDelegate<ViewModel>(vm: vm, song: song, dragItem: $dragItem))
                     }
                 }
                 .padding(space(4))
                 .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
+            // When songs are being dragged, hide the MIDI file drop zone so that the songs can be dropped onto the PlaylistItemRows
             if dragItem == nil {
                 Rectangle()
                     .foregroundColor(Color.clear)
@@ -158,7 +138,6 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                 }
             }
         }
-        .onDrop(of: [.text], delegate: SongDropOutsideDelegate(dragItem: $dragItem, hasChangedLocation: $hasChangedLocation))
     }
 }
 

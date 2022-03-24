@@ -8,6 +8,7 @@
 - Add ability to loop the currently playing song
 - Add ability to loop entire session
 - Add now playing indicator in song library
+- Add song reordering with drag and drop
 
 ### Changed
 

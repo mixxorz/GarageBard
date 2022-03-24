@@ -8,5 +8,22 @@
 	<string>https://raw.githubusercontent.com/mixxorz/GarageBard/main/Installer/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>JHMTjnBMAI8/0d2EJ58APYYEP+taEmhLAui+aptETQ0=</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>A playlist item inside of GarageBard</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>me.mitchel.GarageBard.playlist-item</string>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
+		</dict>
+	</array>
 </dict>
 </plist>
