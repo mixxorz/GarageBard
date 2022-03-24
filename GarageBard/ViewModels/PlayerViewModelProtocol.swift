@@ -14,7 +14,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var currentPosition: Double { get }
     var currentProgress: Double { get }
     var timeLeft: Double { get }
-    var songs: [Song] { get }
+    var songs: [Song] { get set }
     var playMode: PlayMode { get set }
     var loopMode: LoopMode { get set }
     var continuousPlayback: Bool { get set }
