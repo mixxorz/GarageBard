@@ -49,10 +49,62 @@ struct MIDIDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
     }
 }
 
+struct SongDropDelegate<ViewModel: PlayerViewModelProtocol>: DropDelegate {
+    var vm: ViewModel
+
+    let song: Song
+    @Binding var dragItem: Song?
+    @Binding var hasChangedLocation: Bool
+
+    func performDrop(info _: DropInfo) -> Bool {
+        dragItem = nil
+        hasChangedLocation = false
+        return true
+    }
+
+    func dropUpdated(info _: DropInfo) -> DropProposal? {
+        DropProposal(operation: .move)
+    }
+
+    func dropEntered(info _: DropInfo) {
+        guard let dragItem = dragItem else { return }
+        guard let from = vm.songs.firstIndex(of: dragItem), let to = vm.songs.firstIndex(of: song) else { return }
+
+        if dragItem != song {
+            hasChangedLocation = true
+
+            withAnimation(.spring()) {
+                vm.songs.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
+            }
+        }
+    }
+}
+
+struct SongDropOutsideDelegate: DropDelegate {
+    @Binding var dragItem: Song?
+    @Binding var hasChangedLocation: Bool
+
+    func dropEntered(info _: DropInfo) {
+        hasChangedLocation = true
+    }
+
+    func performDrop(info _: DropInfo) -> Bool {
+        hasChangedLocation = false
+        dragItem = nil
+        return true
+    }
+}
+
 struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
     @EnvironmentObject var vm: ViewModel
 
-    @State var isDropping: Bool = false
+    // MIDI file drop
+    @State var isFileDropping: Bool = false
+
+    // Song drag and drop
+    @State var isSongDropping: Bool = false
+    @State var dragItem: Song? = nil
+    @State var hasChangedLocation: Bool = false
 
     var body: some View {
         ZStack {
@@ -61,18 +113,36 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                 VStack {
                     ForEach(vm.songs) { song in
                         PlaylistItemRow<ViewModel>(song: song)
+                            .opacity(dragItem == song && hasChangedLocation ? 0 : 1)
+                            .onDrag({
+                                dragItem = song
+                                return NSItemProvider(object: song.description as NSString)
+
+                            }, preview: {
+                                Text(song.name)
+                                    .lineLimit(1)
+                                    .foregroundColor(Color.primary)
+                                    .padding(space(1))
+                                    .background(RoundedRectangle(cornerRadius: space(1), style: .continuous).foregroundColor(Color.accentColor))
+                            })
+                            .onDrop(of: [.text], delegate: SongDropDelegate<ViewModel>(vm: vm, song: song, dragItem: $dragItem, hasChangedLocation: $hasChangedLocation))
                     }
                 }
                 .padding(space(4))
                 .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
+            if dragItem == nil {
+                Rectangle()
+                    .foregroundColor(Color.clear)
+                    .onDrop(of: [.fileURL], delegate: MIDIDropDelegate<ViewModel>(vm: vm, isDropping: $isFileDropping))
+            }
         }
         .overlay {
-            if isDropping {
+            if isFileDropping {
                 VStack {
                     VStack {
-                        Image(systemName: "square.and.arrow.down")
+                        Image(systemName: "text.append")
                             .font(.system(size: 60))
                             .offset(x: 0, y: -5)
                     }
@@ -88,7 +158,7 @@ struct SongLibrary<ViewModel: PlayerViewModelProtocol>: View {
                 }
             }
         }
-        .onDrop(of: [.fileURL], delegate: MIDIDropDelegate<ViewModel>(vm: vm, isDropping: $isDropping))
+        .onDrop(of: [.text], delegate: SongDropOutsideDelegate(dragItem: $dragItem, hasChangedLocation: $hasChangedLocation))
     }
 }
 

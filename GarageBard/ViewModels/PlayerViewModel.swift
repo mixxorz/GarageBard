@@ -12,11 +12,11 @@ import SwiftUI
 class PlayerViewModel: PlayerViewModelProtocol {
     @Published var song: Song? = nil
     @Published var track: Track? = nil
+    @Published var songs: [Song] = []
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentPosition: Double = 0
     @Published private(set) var currentProgress: Double = 0
     @Published private(set) var timeLeft: Double = 0
-    @Published private(set) var songs: [Song] = []
 
     // Settings
     @Published var playMode: PlayMode = .perform
