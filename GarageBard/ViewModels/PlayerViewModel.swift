@@ -148,6 +148,19 @@ class PlayerViewModel: PlayerViewModelProtocol {
         }
     }
 
+    /// Remove's song from library
+    func removeSong(song: Song) {
+        withAnimation(.spring()) {
+            songs.removeAll { $0 == song }
+
+            if self.song == song {
+                stop()
+                self.song = nil
+                self.track = nil
+            }
+        }
+    }
+
     /// Reloads the current track
     ///
     /// This will reapply track effects

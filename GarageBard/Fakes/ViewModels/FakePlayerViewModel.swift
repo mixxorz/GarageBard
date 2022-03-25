@@ -82,6 +82,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     }
 
     func loadSong(fromURL _: URL) {}
+    func removeSong(song _: Song) {}
     func reloadTrack() {}
     func seek(progress _: Double, end _: Bool) {}
 
