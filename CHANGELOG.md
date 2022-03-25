@@ -9,6 +9,7 @@
 - Add ability to loop entire session
 - Add now playing indicator in song library
 - Add song reordering with drag and drop
+- Add ability to remove songs from the session
 
 ### Changed
 

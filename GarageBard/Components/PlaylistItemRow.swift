@@ -38,6 +38,7 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
     @ObservedObject var song: Song
 
     @State var isHovering = false
+    @State var isPopoverOpen = false
 
     let formatter = TimeFormatter.instance
 
@@ -96,6 +97,30 @@ struct PlaylistItemRow<ViewModel: PlayerViewModelProtocol>: View {
                 Text(formatter.format(song.durationInSeconds))
                     .font(.system(size: 10.0))
                     .foregroundColor(Color("grey400"))
+                Button(action: {
+                    isPopoverOpen.toggle()
+                }) {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 12.0))
+                        .foregroundColor(Color("grey400"))
+                        .frame(width: space(8), height: space(8))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .popover(
+                    isPresented: $isPopoverOpen,
+                    arrowEdge: .bottom,
+                    content: {
+                        PopoverMenu {
+                            PopoverMenuItem(action: {
+                                vm.removeSong(song: song)
+                            }) {
+                                Text("Remove")
+                                Spacer()
+                            }
+                        }
+                    }
+                )
             }
             Divider()
         }
