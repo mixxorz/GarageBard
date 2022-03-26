@@ -30,7 +30,7 @@ You load up MIDI files and GarageBard "plays" them by sending keystrokes to the 
 1. Download the [latest release](https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.1.1.dmg) from GitHub.
 1. Copy GarageBard to your Applications folder
 1. Launch GarageBard and grant it Accessibility access
-1. Load up some songs by dragging in MIDI files into GarageBard
+1. Load songs by dragging MIDI files into GarageBard
 1. Double click a song to queue it up
 1. Click the tracks icon to choose which track to play
 1. Go to Performance mode in the game with your choice of instrument
@@ -46,19 +46,67 @@ _(This is needed because the default keybinds do not have keybinds for all the n
 
 ## Usage
 
-### Overlay mode
+GarageBard works like a typical music player. You can queue, play, pause, stop,
+seek, add, remove, and reorder songs.
+
+### Player
+
+**Tracks**
+
+Let's you choose which track to play.
+
+MIDI files can contain one or more tracks for different instruments. The track
+selector lets you select which track GarageBard should play.
+
+It's possible to see strange behaviour with the track selector as some MIDI
+files are better formatted than others. If you're having issues, one thing you
+can try is to import the MIDI file into [MuseScore](https://musescore.org/en)
+and reexport it as MIDI.
+
+**Overlay mode**
 
 When enabled, GarageBard will stay on top of the game so that it's always
-visible.
+visible. This can be activated by clicking the icon on the top right of the
+window.
 
-### Perform/Listen modes
+This is handy as it's useful to see GarageBard while the game is running.
 
-You can swap between Perform and Listen modes depending on what you want to do:
+### Settings
 
-- **Perform**: Send keystrokes to play the song
-- **Listen**: Listen to the song using GarageBard's synthesizer
+**Perform**
 
-### Transpose
+Send keystrokes to the game to play the song.
+
+Normally, GarageBard sends these keystrokes directly to the game instance, but
+if it's unable to find the game instance, the keystrokes are sent to the
+frontmost window.
+
+**Listen**
+
+Listen to the song using GarageBard's synthesizer.
+
+Useful for auditioning songs before performing them in game.
+
+**Loop song**
+
+Repeat the current song after it ends.
+
+Song looping is in time with the beat. That means if you have a 4 beat MIDI
+file, those 4 beats will loop with the correct tempo/cadence.
+
+**Loop session**
+
+Play the first song in the session after the last song ends.
+
+This only works if continuous playback is also turned on.
+
+**Continuous playback**
+
+Play the songs in the session one after another.
+
+### Effects
+
+**Transpose**
 
 Shows the range of notes on this track.
 
@@ -68,14 +116,14 @@ highest note (e.g. -C5, -F#4).
 
 (The game can play notes from C2 to C5.)
 
-### Octave remap
+**Octave remap**
 
 Adjusts all notes to fit within the game's playable range (C2-C5).
 
 Notes outside the range are transposed N octaves up or down until they're within
 the range (e.g. D1->D2, A#7->A#4).
 
-### Arpeggiate
+**Arpeggiate**
 
 Ensures that a chord's notes are played in ascending order.
 
@@ -113,8 +161,8 @@ so I can make the process detection better.
 
 **Some notes are out of range**
 
-This message means that there are some notes on the selected track of the
-current song that fall beyond the range of what can be played in the game.
+This message means that there are some notes on the current track that fall
+beyond the range of what can be played in the game.
 
 GarageBard provides a couple of tools to mitigate this; the transposer and the
 octave remapper. You can try to transpose the track so that all the notes fall
