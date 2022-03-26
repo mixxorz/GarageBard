@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.2.0
+
 ### Added
 
 - Add ability to play all the songs in the session continuously
