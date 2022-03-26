@@ -23,7 +23,7 @@ You load up MIDI files and GarageBard "plays" them by sending keystrokes to the 
 
 ## Screenshots
 
-![Screenshots](https://user-images.githubusercontent.com/3102758/159173959-b97f8fb1-eb0d-4f30-aa24-fb4e34f6536e.png)
+![Screenshots](https://user-images.githubusercontent.com/3102758/160221757-da0d9eaf-0226-4a8f-92d8-ca3021902ecc.png)
 
 ## Instructions
 
