@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.3.0
+
 ### Added
 
 - Add MIDI controller support
