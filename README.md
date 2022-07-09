@@ -2,7 +2,7 @@
 
 # GarageBard
 
-An app for macOS that lets you play MIDI files as a bard on Final Fantasy XIV.
+A macOS app that lets you play songs as a bard on Final Fantasy XIV.
 
 <a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.2.0.dmg">
    <img width="150" src="https://user-images.githubusercontent.com/3102758/158105072-519b1bbe-2d58-4aa0-a534-f1858add2e9b.png" alt="Download button">
@@ -20,6 +20,8 @@ on a MacBook... so I made this instead.
 ## How does it work?
 
 You load up MIDI files and GarageBard "plays" them by sending keystrokes to the game.
+
+You can also plug in a MIDI controller and play songs yourself.
 
 ## Screenshots
 
@@ -49,11 +51,14 @@ _(This is needed because the default keybinds do not have keybinds for all the n
 GarageBard works like a typical music player. You can queue, play, pause, stop,
 seek, add, remove, and reorder songs.
 
+If you plug in an external MIDI controller, GarageBard will automatically
+connect it to the game, no extra configuration necessary.
+
 ### Player
 
 **Tracks**
 
-Let's you choose which track to play.
+Lets you choose which track to play.
 
 MIDI files can contain one or more tracks for different instruments. The track
 selector lets you select which track GarageBard should play.
@@ -77,15 +82,20 @@ This is handy as it's useful to see GarageBard while the game is running.
 
 Send keystrokes to the game to play the song.
 
-Normally, GarageBard sends these keystrokes directly to the game instance, but
-if it's unable to find the game instance, the keystrokes are sent to the
-frontmost window.
+Normally, GarageBard sends keystrokes directly to the game instance, but if it's
+unable to find the game instance, keystrokes are sent to the frontmost window.
+
+If a MIDI controller is connected, inputs will be sent as keystrokes to the
+game.
 
 **Listen**
 
 Listen to the song using GarageBard's synthesizer.
 
 Useful for auditioning songs before performing them in game.
+
+If a MIDI controller is connected, inputs will be played using GarageBard's
+synthesizer.
 
 **Loop song**
 
