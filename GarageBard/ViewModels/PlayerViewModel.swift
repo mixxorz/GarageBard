@@ -111,8 +111,9 @@ class PlayerViewModel: PlayerViewModelProtocol {
             }
         }).store(in: &cancellables)
 
-        // When the playMode changes, update that in bardEngine
+        // When the playMode changes, update that in bardEngine and midiController
         $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
+        $playMode.assign(to: \.playMode, on: self.midiController).store(in: &cancellables)
 
         // When the loopMode changes, update that in bardEngine
         $loopMode.assign(to: \.loopMode, on: self.bardEngine).store(in: &cancellables)

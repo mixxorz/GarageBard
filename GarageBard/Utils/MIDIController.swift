@@ -11,12 +11,22 @@ import Foundation
 
 class MIDIController: MIDIListener {
     private var sampler = ToneSampler()
+    private var keyboard = KeyboardController()
+
+    var playMode: PlayMode = .perform {
+        didSet {
+            if playMode == .perform {
+                sampler.stop()
+            } else if playMode == .listen {
+                sampler.start()
+            }
+        }
+    }
 
     init() {
         let midi = MIDI.sharedInstance
         midi.openInput()
         midi.addListener(self)
-        sampler.start()
     }
 
     deinit {
@@ -24,11 +34,23 @@ class MIDIController: MIDIListener {
     }
 
     func receivedMIDINoteOn(noteNumber: MIDINoteNumber, velocity: MIDIVelocity, channel: MIDIChannel, portID _: MIDIUniqueID?, timeStamp _: MIDITimeStamp?) {
-        sampler.play(noteNumber: noteNumber, velocity: velocity, channel: channel)
+        if playMode == .perform {
+            if let keyCode = keyboard.getKeyCode(note: noteNumber) {
+                keyboard.keyDown(keyCode)
+            }
+        } else {
+            sampler.play(noteNumber: noteNumber, velocity: velocity, channel: channel)
+        }
     }
 
     func receivedMIDINoteOff(noteNumber: MIDINoteNumber, velocity _: MIDIVelocity, channel: MIDIChannel, portID _: MIDIUniqueID?, timeStamp _: MIDITimeStamp?) {
-        sampler.stop(noteNumber: noteNumber, channel: channel)
+        if playMode == .perform {
+            if let keyCode = keyboard.getKeyCode(note: noteNumber) {
+                keyboard.keyUp(keyCode)
+            }
+        } else {
+            sampler.stop(noteNumber: noteNumber, channel: channel)
+        }
     }
 
     func receivedMIDIController(_: MIDIByte, value _: MIDIByte, channel _: MIDIChannel, portID _: MIDIUniqueID?, timeStamp _: MIDITimeStamp?) {}
