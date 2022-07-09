@@ -37,6 +37,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
     var notesTransposed: Bool = false
     var hasAccessibilityPermissions: Bool = true
     var foundXIVprocess: Bool = true
+    var midiDeviceNames: [String] = []
     var floatWindow: Bool = false
 
     init(
@@ -46,7 +47,8 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
         currentProgress: Double = 0.3,
         songs: [Song] = [],
         hasAccessibilityPermissions: Bool = true,
-        foundXIVprocess: Bool = true
+        foundXIVprocess: Bool = true,
+        midiDeviceNames: [String] = []
     ) {
         self.song = song
         self.track = track
@@ -62,6 +64,7 @@ class FakePlayerViewModel: PlayerViewModelProtocol {
 
         self.hasAccessibilityPermissions = hasAccessibilityPermissions
         self.foundXIVprocess = foundXIVprocess
+        self.midiDeviceNames = midiDeviceNames
     }
 
     func playOrPause() {}

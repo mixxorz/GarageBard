@@ -1,34 +1,32 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "AudioKit",
-        "repositoryURL": "https://github.com/AudioKit/AudioKit.git",
-        "state": {
-          "branch": null,
-          "revision": "86c9285d673baa7f7955e8f2c1550e5e9740bada",
-          "version": "5.3.3"
-        }
-      },
-      {
-        "package": "AXSwift",
-        "repositoryURL": "https://github.com/tmandry/AXSwift",
-        "state": {
-          "branch": null,
-          "revision": "81dcc36aced905d6464cc25e35f8d13184bbf21c",
-          "version": "0.3.2"
-        }
-      },
-      {
-        "package": "Sparkle",
-        "repositoryURL": "https://github.com/sparkle-project/Sparkle",
-        "state": {
-          "branch": null,
-          "revision": "286edd1fa22505a9e54d170e9fd07d775ea233f2",
-          "version": "2.1.0"
-        }
+  "pins" : [
+    {
+      "identity" : "audiokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AudioKit/AudioKit.git",
+      "state" : {
+        "revision" : "86c9285d673baa7f7955e8f2c1550e5e9740bada",
+        "version" : "5.3.3"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "axswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tmandry/AXSwift",
+      "state" : {
+        "revision" : "81dcc36aced905d6464cc25e35f8d13184bbf21c",
+        "version" : "0.3.2"
+      }
+    },
+    {
+      "identity" : "sparkle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparkle-project/Sparkle",
+      "state" : {
+        "revision" : "286edd1fa22505a9e54d170e9fd07d775ea233f2",
+        "version" : "2.1.0"
+      }
+    }
+  ],
+  "version" : 2
 }

@@ -27,11 +27,13 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published var notesTransposed: Bool = false
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
+    @Published var midiDeviceNames: [String] = []
 
     @Published var floatWindow: Bool = false
 
     private var bardEngine: BardEngine
     private var songLoader: SongLoader
+    private var midiController: MIDIController
 
     private var seekTimer: Timer?
     private var isSeeking: Bool = false
@@ -40,10 +42,12 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     init(
         bardEngine: BardEngine = BardEngine(playMode: .perform),
-        songLoader: SongLoader = SongLoader()
+        songLoader: SongLoader = SongLoader(),
+        midiController: MIDIController = MIDIController()
     ) {
         self.bardEngine = bardEngine
         self.songLoader = songLoader
+        self.midiController = midiController
 
         // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
@@ -108,11 +112,21 @@ class PlayerViewModel: PlayerViewModelProtocol {
             }
         }).store(in: &cancellables)
 
-        // When the playMode changes, update that in bardEngine
+        // When the playMode changes, update that in bardEngine and midiController
         $playMode.assign(to: \.playMode, on: self.bardEngine).store(in: &cancellables)
+        $playMode.assign(to: \.playMode, on: self.midiController).store(in: &cancellables)
 
         // When the loopMode changes, update that in bardEngine
         $loopMode.assign(to: \.loopMode, on: self.bardEngine).store(in: &cancellables)
+
+        // When MIDI devices change, update the list of MIDI device names
+        self.midiController.$midiDeviceNames.sink(receiveValue: { [weak self] deviceNames in
+            guard let self = self else { return }
+
+            withAnimation(.spring()) {
+                self.midiDeviceNames = deviceNames
+            }
+        }).store(in: &cancellables)
 
         // Float window on change
         $floatWindow.sink(receiveValue: {
