@@ -32,6 +32,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     private var bardEngine: BardEngine
     private var songLoader: SongLoader
+    private var midiController: MIDIController
 
     private var seekTimer: Timer?
     private var isSeeking: Bool = false
@@ -40,10 +41,12 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
     init(
         bardEngine: BardEngine = BardEngine(playMode: .perform),
-        songLoader: SongLoader = SongLoader()
+        songLoader: SongLoader = SongLoader(),
+        midiController: MIDIController = MIDIController()
     ) {
         self.bardEngine = bardEngine
         self.songLoader = songLoader
+        self.midiController = midiController
 
         // Update state from bardEngine
         self.bardEngine.$isPlaying.assign(to: &$isPlaying)
