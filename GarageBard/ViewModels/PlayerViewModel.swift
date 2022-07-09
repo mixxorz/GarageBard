@@ -27,6 +27,7 @@ class PlayerViewModel: PlayerViewModelProtocol {
     @Published var notesTransposed: Bool = false
     @Published var hasAccessibilityPermissions: Bool = false
     @Published var foundXIVprocess: Bool = false
+    @Published var midiDeviceNames: [String] = []
 
     @Published var floatWindow: Bool = false
 
@@ -117,6 +118,15 @@ class PlayerViewModel: PlayerViewModelProtocol {
 
         // When the loopMode changes, update that in bardEngine
         $loopMode.assign(to: \.loopMode, on: self.bardEngine).store(in: &cancellables)
+
+        // When MIDI devices change, update the list of MIDI device names
+        self.midiController.$midiDeviceNames.sink(receiveValue: { [weak self] deviceNames in
+            guard let self = self else { return }
+
+            withAnimation(.spring()) {
+                self.midiDeviceNames = deviceNames
+            }
+        }).store(in: &cancellables)
 
         // Float window on change
         $floatWindow.sink(receiveValue: {

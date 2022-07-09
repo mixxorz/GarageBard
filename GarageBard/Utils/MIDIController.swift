@@ -9,9 +9,13 @@ import AudioKit
 import CoreMIDI
 import Foundation
 
+/**
+    Listens for inputs from available midi controllers
+ */
 class MIDIController: MIDIListener {
     private var sampler = ToneSampler()
     private var keyboard = KeyboardController()
+    private var midi = MIDI.sharedInstance
 
     var playMode: PlayMode = .perform {
         didSet {
@@ -23,8 +27,9 @@ class MIDIController: MIDIListener {
         }
     }
 
+    @Published private(set) var midiDeviceNames: [String] = []
+
     init() {
-        let midi = MIDI.sharedInstance
         midi.openInput()
         midi.addListener(self)
     }
@@ -65,7 +70,9 @@ class MIDIController: MIDIListener {
 
     func receivedMIDISystemCommand(_: [MIDIByte], portID _: MIDIUniqueID?, timeStamp _: MIDITimeStamp?) {}
 
-    func receivedMIDISetupChange() {}
+    func receivedMIDISetupChange() {
+        midiDeviceNames = midi.inputNames
+    }
 
     func receivedMIDIPropertyChange(propertyChangeInfo _: MIDIObjectPropertyChangeNotification) {}
 

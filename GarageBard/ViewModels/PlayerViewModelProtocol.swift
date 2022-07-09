@@ -22,6 +22,7 @@ protocol PlayerViewModelProtocol: ObservableObject {
     var hasAccessibilityPermissions: Bool { get }
     var foundXIVprocess: Bool { get }
     var floatWindow: Bool { get set }
+    var midiDeviceNames: [String] { get }
 
     func playOrPause()
     func stop()

@@ -34,6 +34,16 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
                 }
             }
 
+            if vm.midiDeviceNames.count > 0 {
+                let devices = vm.midiDeviceNames.joined(separator: ", ")
+                Toast(image: Image(systemName: "pianokeys")) {
+                    Text("Playing notes with MIDI device")
+                    Text("Connected to: \(devices)")
+                        .font(.system(size: 12.0))
+                        .foregroundColor(Color("grey400"))
+                }
+            }
+
             if !vm.foundXIVprocess, vm.playMode == .perform {
                 Toast(image: Image(systemName: "gamecontroller")) {
                     Text("Can't find game instance. Is the game running?")
@@ -74,7 +84,8 @@ struct Notifications_Previews: PreviewProvider {
             .environmentObject(
                 FakePlayerViewModel(
                     hasAccessibilityPermissions: false,
-                    foundXIVprocess: false
+                    foundXIVprocess: false,
+                    midiDeviceNames: ["My Keyboard", "My Other Keyboard"]
                 )
             )
             .frame(width: space(100))
