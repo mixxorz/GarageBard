@@ -14,10 +14,13 @@ struct Note {
     let desiredState: Bool
 }
 
-class BardController {
+/**
+    Sends keystrokes based on MIDI notes to the appropriate process
+ */
+class KeyboardController {
     private var hasAccessibilityPermissions = false
     private let sourceRef = CGEventSource(stateID: .combinedSessionState)
-    private let noteKeyMap = [
+    let noteKeyMap = [
         // C
         84: kVK_ANSI_8,
         72: kVK_ANSI_1,
@@ -68,40 +71,31 @@ class BardController {
         71: kVK_ANSI_T,
         59: kVK_ANSI_S,
     ]
-    private var keyBuffer: CGKeyCode?
-    private let queue = DispatchQueue(label: "bardcontroller.queue", qos: .userInteractive)
-    private var noteBuffer: [Note] = []
 
-    private var running = false
-
-    var tickRateMs: UInt32
-
-    init(tickRateMs: UInt32 = 25) {
-        self.tickRateMs = tickRateMs
-
+    init() {
         hasAccessibilityPermissions = AXIsProcessTrusted()
 
         if sourceRef == nil {
-            NSLog("BardController: No event source")
+            NSLog("KeyboardController: No event source")
         }
 
         if !hasAccessibilityPermissions {
-            NSLog("Do not have accessbility permissions")
+            NSLog("KeyboardController: Do not have accessbility permissions")
         }
     }
 
-    private func getKeyCode(note: MIDINoteNumber) -> CGKeyCode? {
+    func getKeyCode(note: MIDINoteNumber) -> CGKeyCode? {
         let keyNumber = noteKeyMap[Int(note)] ?? -1
 
         if keyNumber == -1 {
-            NSLog("Note '\(note)' is out of bounds")
+            NSLog("KeyboardController: Note '\(note)' is out of bounds")
             return nil
         }
 
         return CGKeyCode(keyNumber)
     }
 
-    private func keyDown(_ keyCode: CGKeyCode) {
+    func keyDown(_ keyCode: CGKeyCode) {
         let keyDownEvent = CGEvent(
             keyboardEventSource: sourceRef,
             virtualKey: keyCode,
@@ -115,7 +109,7 @@ class BardController {
         }
     }
 
-    private func keyUp(_ keyCode: CGKeyCode) {
+    func keyUp(_ keyCode: CGKeyCode) {
         let keyUpEvent = CGEvent(
             keyboardEventSource: sourceRef,
             virtualKey: keyCode,
@@ -128,22 +122,41 @@ class BardController {
             keyUpEvent?.post(tap: .cghidEventTap)
         }
     }
+}
+
+/**
+    Queues and executes notes to be played
+ */
+class BardController {
+    private var keyBuffer: CGKeyCode?
+    private let queue = DispatchQueue(label: "bardcontroller.queue", qos: .userInteractive)
+    private var noteBuffer: [Note] = []
+
+    private var running = false
+
+    private var tickRateMs: UInt32
+    private var keyboard: KeyboardController
+
+    init(tickRateMs: UInt32 = 25, keyboard: KeyboardController = KeyboardController()) {
+        self.tickRateMs = tickRateMs
+        self.keyboard = keyboard
+    }
 
     func noteOn(_ note: MIDINoteNumber) {
-        if let keyCode = getKeyCode(note: note) {
+        if let keyCode = keyboard.getKeyCode(note: note) {
             noteBuffer.append(Note(keyCode: keyCode, desiredState: true))
         }
     }
 
     func noteOff(_ note: MIDINoteNumber) {
-        if let keyCode = getKeyCode(note: note) {
+        if let keyCode = keyboard.getKeyCode(note: note) {
             noteBuffer.append(Note(keyCode: keyCode, desiredState: false))
         }
     }
 
     func allNotesOff() {
-        for (_, key) in noteKeyMap {
-            keyUp(CGKeyCode(key))
+        for (_, key) in keyboard.noteKeyMap {
+            keyboard.keyUp(CGKeyCode(key))
         }
     }
 
@@ -166,13 +179,13 @@ class BardController {
 
                         if note.desiredState {
                             if let prevKeyCode = self.keyBuffer {
-                                self.keyUp(prevKeyCode)
+                                self.keyboard.keyUp(prevKeyCode)
                                 usleep(tickRate)
                             }
-                            self.keyDown(note.keyCode)
+                            self.keyboard.keyDown(note.keyCode)
                             self.keyBuffer = note.keyCode
                         } else {
-                            self.keyUp(note.keyCode)
+                            self.keyboard.keyUp(note.keyCode)
                             self.keyBuffer = nil
                         }
                     }

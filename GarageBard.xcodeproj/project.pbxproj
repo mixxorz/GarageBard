@@ -33,6 +33,7 @@
 		5EA3896B27D2663600C4C2D3 /* GarageBardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3896A27D2663600C4C2D3 /* GarageBardTests.swift */; };
 		5EA3897527D2663600C4C2D3 /* GarageBardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3897427D2663600C4C2D3 /* GarageBardUITests.swift */; };
 		5EA3897727D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3897627D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift */; };
+		5EE4C19A2879331E00D7C320 /* MIDIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE4C1992879331E00D7C320 /* MIDIController.swift */; };
 		5EE9E07827D3778F006F70BD /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE9E07727D3778F006F70BD /* AudioKit */; };
 		5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3524727D6478C006E3A06 /* TimeFormatter.swift */; };
 		5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF408E227DC1C62004AD546 /* PopoverMenu.swift */; };
@@ -102,6 +103,7 @@
 		5EA3897027D2663600C4C2D3 /* GarageBardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GarageBardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EA3897427D2663600C4C2D3 /* GarageBardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardUITests.swift; sourceTree = "<group>"; };
 		5EA3897627D2663600C4C2D3 /* GarageBardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageBardUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		5EE4C1992879331E00D7C320 /* MIDIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIController.swift; sourceTree = "<group>"; };
 		5EF3524727D6478C006E3A06 /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 		5EF408E227DC1C62004AD546 /* PopoverMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverMenu.swift; sourceTree = "<group>"; };
 		5EF408E727DCA272004AD546 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				5E693B5927D3F18900EAA678 /* BardEngine.swift */,
 				5EF408F327DD8316004AD546 /* ProcessManager.swift */,
 				5EF3524727D6478C006E3A06 /* TimeFormatter.swift */,
+				5EE4C1992879331E00D7C320 /* MIDIController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				5EF408EA27DCA5EB004AD546 /* Notifications.swift in Sources */,
 				5EA3895927D2663500C4C2D3 /* GarageBardApp.swift in Sources */,
 				5EF408E327DC1C62004AD546 /* PopoverMenu.swift in Sources */,
+				5EE4C19A2879331E00D7C320 /* MIDIController.swift in Sources */,
 				5E431BCC27D52CE4005016D3 /* SongLibrary.swift in Sources */,
 				5E50C6BC27E7158C00CE9EBD /* CheckForUpdatesView.swift in Sources */,
 				5EF3524827D6478C006E3A06 /* TimeFormatter.swift in Sources */,
