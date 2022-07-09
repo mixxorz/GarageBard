@@ -4,7 +4,7 @@
 
 A macOS app that lets you play songs as a bard on Final Fantasy XIV.
 
-<a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.2.0.dmg">
+<a href="https://github.com/mixxorz/GarageBard/releases/latest/download/GarageBard-1.3.0.dmg">
    <img width="150" src="https://user-images.githubusercontent.com/3102758/158105072-519b1bbe-2d58-4aa0-a534-f1858add2e9b.png" alt="Download button">
 </a>
 
