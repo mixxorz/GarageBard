@@ -23,10 +23,9 @@ enum LoopMode {
 class BardEngine {
     private let sequencer = AppleSequencer()
     private let instrument = MIDICallbackInstrument()
+    private let sampler = ToneSampler()
     private let controlInstrument = MIDICallbackInstrument()
     private let nullInstrument = MIDICallbackInstrument()
-    private let sampler = MIDISampler()
-    private let engine = AudioEngine()
     private let bardController = BardController()
     private var controlTrack: MusicTrackManager?
     private var musicTrack: MusicTrackManager?
@@ -41,9 +40,9 @@ class BardEngine {
     var playMode: PlayMode = .perform {
         didSet {
             if playMode == .perform {
-                engine.stop()
+                sampler.stop()
             } else if playMode == .listen {
-                try? engine.start()
+                sampler.start()
                 bardController.allNotesOff()
             }
         }
@@ -66,11 +65,6 @@ class BardEngine {
 
         instrument.callback = instrumentCallback
         controlInstrument.callback = controlCallback
-        engine.output = sampler
-    }
-
-    deinit {
-        engine.stop()
     }
 
     private func instrumentCallback(_ status: UInt8, _ note: MIDINoteNumber, _ velocity: MIDIVelocity) {
