@@ -37,7 +37,7 @@ struct Notifications<ViewModel: PlayerViewModelProtocol>: View {
             if vm.midiDeviceNames.count > 0 {
                 let devices = vm.midiDeviceNames.joined(separator: ", ")
                 Toast(image: Image(systemName: "pianokeys")) {
-                    Text("Playing notes with MIDI device")
+                    Text("Playing with MIDI controller")
                     Text("Connected to: \(devices)")
                         .font(.system(size: 12.0))
                         .foregroundColor(Color("grey400"))
